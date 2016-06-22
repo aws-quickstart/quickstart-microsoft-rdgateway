@@ -17,9 +17,9 @@ global:
   cis3bucket:  s3://quickstart-ci-bucket
  
 tests:
-  quickstart-microsoft-rdgatewayt1:
-    template_file: quickstart-microsoft-rdgateway-example1.template
-    parameter_input: quickstart-microsoft-rdgateway-exampleparms1.json
-  quickstart-microsoft-rdgatewayt2:
-    template_file: quickstart-microsoft-rdgateway-example2.template
-    parameter_input: quickstart-microsoft-rdgateway-exampleparms2.json
+  template1:
+    template_file: Template_1_RDGW_2012.template
+    parameter_input: Template_1_RDGW_2012.json
+  template2:
+    template_file: Template_2_RDGW_2012.template
+    parameter_input: Template_2_RDGW_2012.json
