@@ -5,8 +5,6 @@
     $UserName
     )
 
-#https://s3.amazonaws.com/microsoft_windows/scripts/Configure-RDGW.ps1
-
 Import-Module remotedesktopservices
 
 $name = new-object -com "X509Enrollment.CX500DistinguishedName.1"
@@ -50,4 +48,3 @@ new-item -Path RDS:\GatewayServer\RAP -Name Default-RAP -UserGroups "$GroupName@
 dir cert:\localmachine\my | where-object { $_.Subject -eq "CN=$ServerFQDN” } | ForEach-Object { Set-Item -Path RDS:\GatewayServer\SSLCertificate\Thumbprint -Value $_.Thumbprint }
 
 Restart-Service tsgateway
-
