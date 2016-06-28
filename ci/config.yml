@@ -15,11 +15,13 @@ global:
     - us-west-1
     - us-west-2
   cis3bucket:  s3://quickstart-ci-bucket
- 
+
 tests:
   template1:
     template_file: Template_1_RDGW_2012.template
     parameter_input: Template_1_RDGW_2012.json
-  template2:
-    template_file: Template_2_RDGW_2012.template
-    parameter_input: Template_2_RDGW_2012.json
+# Disabled template2 as it requires an existing VPC.
+# This will eventually be rewritten to include a master template with nesting.
+#  template2:
+#    template_file: Template_2_RDGW_2012.template
+#    parameter_input: Template_2_RDGW_2012.json
