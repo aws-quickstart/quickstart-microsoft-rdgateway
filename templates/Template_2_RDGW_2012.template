@@ -279,7 +279,7 @@
                                             "powershell.exe -ExecutionPolicy RemoteSigned",
                                             " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN ",
                                             {
-                                                "Ref": "RDGWNetBIOSName2"
+                                                "Ref": "RDGWNetBIOSName1"
                                             },
                                             ".",
                                             {
