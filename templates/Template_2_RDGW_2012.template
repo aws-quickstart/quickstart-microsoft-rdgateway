@@ -91,6 +91,9 @@
             "ap-northeast-2": {
                 "WS2012R2": "ami-082ee566"
             },
+            "ap-south-1": {
+                "WS2012R2": "ami-7aacc615"
+            },
             "ap-southeast-1": {
                 "WS2012R2": "ami-e113c082"
             },
