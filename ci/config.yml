@@ -1,8 +1,7 @@
 global:
-  qsname: quickstart-microsoft-rdgateway
-  owner: quickstart-eng@amazon.com
   marketplace-ami: false
-  reporting: true
+  owner: quickstart-eng@amazon.com
+  qsname: quickstart-microsoft-rdgateway
   regions:
     - ap-northeast-1
     - ap-northeast-2
@@ -15,8 +14,7 @@ global:
     - us-east-1
     - us-west-1
     - us-west-2
-  cis3bucket:  s3://quickstart-ci-bucket
-
+  reporting: true
 tests:
   template1:
     template_file: Template_1_RDGW_2012.template
