@@ -650,7 +650,7 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/rdgateway/latest/scripts/Configure-RDGW.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/activedirectory/latest/scripts/Configure-RDGW.ps1"
                             }
                         },
                         "services": {
@@ -896,7 +896,7 @@
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/rdgateway/latest/scripts/Configure-RDGW.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/activedirectory/latest/scripts/Configure-RDGW.ps1"
                             }
                         },
                         "services": {
