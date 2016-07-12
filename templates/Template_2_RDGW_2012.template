@@ -255,7 +255,8 @@
                                             " ",
                                             {
                                                 "Ref": "AdminPassword"
-                                            }
+                                            },
+                                            " /y"
                                         ]
                                     ]
                                 }
@@ -499,7 +500,8 @@
                                             " ",
                                             {
                                                 "Ref": "AdminPassword"
-                                            }
+                                            },
+                                            " /y"
                                         ]
                                     ]
                                 }
