@@ -289,10 +289,7 @@
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            " -DomainNetBiosName BUILTIN -GroupName administrators -UserName ",
-                                            {
-                                                "Ref": "AdminUser"
-                                            }
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }
@@ -528,13 +525,13 @@
                                             "powershell.exe -ExecutionPolicy RemoteSigned",
                                             " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN ",
                                             {
+                                                "Ref": "RDGWNetBIOSName1"
+                                            },
+                                            ".",
+                                            {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            " -DomainNetBiosName ",
-                                            {
-                                                "Ref": "RDGWNetBIOSName2"
-                                            },
-                                            " -GroupName administrators"
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }

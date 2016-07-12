@@ -743,10 +743,7 @@
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            " -DomainNetBiosName BUILTIN -GroupName administrators -UserName ",
-                                            {
-                                                "Ref": "AdminUser"
-                                            }
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }
@@ -989,10 +986,7 @@
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            " -DomainNetBiosName BUILTIN -GroupName administrators -UserName ",
-                                            {
-                                                "Ref": "AdminUser"
-                                            }
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }
