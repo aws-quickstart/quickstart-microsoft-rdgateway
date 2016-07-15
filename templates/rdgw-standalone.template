@@ -398,7 +398,7 @@
                         "DeviceIndex": "0",
                         "GroupSet": [
                             {
-                                "Ref": "RDGWSecurityGroup"
+                                "Ref": "RemoteDesktopGatewaySG"
                             }
                         ],
                         "PrivateIpAddress": {
@@ -680,7 +680,7 @@
                         "DeviceIndex": "0",
                         "GroupSet": [
                             {
-                                "Ref": "RDGWSecurityGroup"
+                                "Ref": "RemoteDesktopGatewaySG"
                             }
                         ],
                         "PrivateIpAddress": {
@@ -723,7 +723,7 @@
                 }
             }
         },
-        "RDGWSecurityGroup": {
+        "RemoteDesktopGatewaySG": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
                 "GroupDescription": "Enable RDP access from the Internet",
@@ -756,9 +756,9 @@
             "Value": {
                 "Ref": "RDGW1EIP"
             },
-            "Description": "Elastic IP address of the first Remote Desktop Gateway (RDGW1) in AZ1"
+            "Description": "Elastic IP address of the first Remote Desktop Gateway (RDGW1) in Availability Zone 1"
         },
-        "RootCert1": {
+        "RDGW1RootCert": {
             "Value": {
                 "Fn::Join": [
                     "",
@@ -771,15 +771,15 @@
                     ]
                 ]
             },
-            "Description": "Location of the root SSL certificate on the first Remote Desktop Gateway (RDGW1) in AZ1"
+            "Description": "Location of the root SSL certificate on the first Remote Desktop Gateway (RDGW1) in Availability Zone 1"
         },
         "RDGW2ElasticIP": {
             "Value": {
                 "Ref": "RDGW2EIP"
             },
-            "Description": "Elastic IP address of the second Remote Desktop Gateway (RDGW2) in AZ2"
+            "Description": "Elastic IP address of the second Remote Desktop Gateway (RDGW2) in Availability Zone 2"
         },
-        "RootCert2": {
+        "RDGW2RootCert": {
             "Value": {
                 "Fn::Join": [
                     "",
@@ -792,7 +792,13 @@
                     ]
                 ]
             },
-            "Description": "Location of the root SSL certificate on the second Remote Desktop Gateway (RDGW2) in AZ2"
+            "Description": "Location of the root SSL certificate on the second Remote Desktop Gateway (RDGW2) in Availability Zone 2"
+        },
+        "RemoteDesktopGatewaySGID": {
+            "Value": {
+                "Ref": "RemoteDesktopGatewaySG"
+            },
+            "Description": "Remote Desktop Gateway Security Group ID"
         }
     }
 }
