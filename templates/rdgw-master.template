@@ -287,24 +287,6 @@
             "Properties": {
                 "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/rdgateway/latest/templates/rdgw-standalone.template",
                 "Parameters": {
-                    "RDGW1InstanceType": {
-                        "Ref": "RDGW1InstanceType"
-                    },
-                    "RDGW1NetBIOSName": {
-                        "Ref": "RDGW1NetBIOSName"
-                    },
-                    "RDGW1PrivateIP": {
-                        "Ref": "RDGW1PrivateIP"
-                    },
-                    "RDGW2InstanceType": {
-                        "Ref": "RDGW2InstanceType"
-                    },
-                    "RDGW2NetBIOSName": {
-                        "Ref": "RDGW2NetBIOSName"
-                    },
-                    "RDGW2PrivateIP": {
-                        "Ref": "RDGW2PrivateIP"
-                    },
                     "AdminPassword": {
                         "Ref": "AdminPassword"
                     },
@@ -328,6 +310,24 @@
                             "VPCStack",
                             "Outputs.PublicSubnet2ID"
                         ]
+                    },
+                    "RDGW1InstanceType": {
+                        "Ref": "RDGW1InstanceType"
+                    },
+                    "RDGW1NetBIOSName": {
+                        "Ref": "RDGW1NetBIOSName"
+                    },
+                    "RDGW1PrivateIP": {
+                        "Ref": "RDGW1PrivateIP"
+                    },
+                    "RDGW2InstanceType": {
+                        "Ref": "RDGW2InstanceType"
+                    },
+                    "RDGW2NetBIOSName": {
+                        "Ref": "RDGW2NetBIOSName"
+                    },
+                    "RDGW2PrivateIP": {
+                        "Ref": "RDGW2PrivateIP"
                     },
                     "RDGWCIDR": {
                         "Ref": "RDGWCIDR"
