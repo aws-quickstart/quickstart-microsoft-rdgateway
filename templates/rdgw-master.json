@@ -1,0 +1,74 @@
+[
+    {
+        "ParameterKey": "AdminPassword",
+        "ParameterValue": "$[alfred_genpass_32]"
+    },
+    {
+        "ParameterKey": "AdminUser",
+        "ParameterValue": "StackAdmin"
+    },
+    {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": "us-east-1b,us-east-1c"
+    },
+    {
+        "ParameterKey": "DomainDNSName",
+        "ParameterValue": "example.com"
+    },
+    {
+        "ParameterKey": "KeyPairName",
+        "ParameterValue": "cikey"
+    },
+    {
+        "ParameterKey": "NATInstanceType",
+        "ParameterValue": "t2.small"
+    },
+    {
+        "ParameterKey": "PrivateSubnet1CIDR",
+        "ParameterValue": "10.0.0.0/19"
+    },
+    {
+        "ParameterKey": "PrivateSubnet2CIDR",
+        "ParameterValue": "10.0.32.0/19"
+    },
+    {
+        "ParameterKey": "PublicSubnet1CIDR",
+        "ParameterValue": "10.0.128.0/20"
+    },
+    {
+        "ParameterKey": "PublicSubnet2CIDR",
+        "ParameterValue": "10.0.144.0/20"
+    },
+    {
+        "ParameterKey": "RDGW1InstanceType",
+        "ParameterValue": "t2.large"
+    },
+    {
+        "ParameterKey": "RDGW1NetBIOSName",
+        "ParameterValue": "RDGW1"
+    },
+    {
+        "ParameterKey": "RDGW1PrivateIP",
+        "ParameterValue": "10.0.128.11"
+    },
+    {
+        "ParameterKey": "RDGW2InstanceType",
+        "ParameterValue": "t2.large"
+    },
+    {
+        "ParameterKey": "RDGW2NetBIOSName",
+        "ParameterValue": "RDGW2"
+    },
+    {
+        "ParameterKey": "RDGW2PrivateIP",
+        "ParameterValue": "10.0.144.11"
+    },
+    {
+        "ParameterKey": "RDGWCIDR",
+        "ParameterValue": "10.0.0.0/16"
+    },
+    {
+        "ParameterKey": "VPCCIDR",
+        "ParameterValue": "10.0.0.0/16"
+    }
+]
