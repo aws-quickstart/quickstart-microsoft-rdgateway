@@ -10,7 +10,7 @@
         },
         "ADServer2PrivateIP": {
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
-            "Default": "10.0.64.10",
+            "Default": "10.0.32.10",
             "Description": "Fixed private IP for the second Active Directory server located in Availability Zone 2",
             "Type": "String"
         },
