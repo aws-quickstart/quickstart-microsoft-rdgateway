@@ -16,7 +16,6 @@ global:
     - us-west-2
   reporting: true
 tests:
-  template1:
   master:
     parameter_input: rdgw-master.json
     template_file: rdgw-master.template
