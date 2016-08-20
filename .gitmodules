@@ -4,3 +4,6 @@
 [submodule "submodules/quickstart-aws-vpc"]
 	path = submodules/quickstart-aws-vpc
 	url = git@github.com:aws-quickstart/quickstart-aws-vpc.git
+[submodule "submodules/quickstart-microsoft-utilities"]
+	path = submodules/quickstart-microsoft-utilities
+	url = git@github.com:aws-quickstart/quickstart-microsoft-utilities.git
