@@ -168,7 +168,7 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2016.08.11"
+                "WS2012R2": "update"
             },
             "ap-northeast-1": {
                 "WS2012R2": "ami-281ad849"
