@@ -172,6 +172,9 @@
             "us-east-1": {
                 "WS2012R2": "ami-3f0c4628"
             },
+            "us-east-2": {
+                "WS2012R2": "ami-de164cbb"
+            },
             "us-west-1": {
                 "WS2012R2": "ami-123c7472"
             },
@@ -213,6 +216,10 @@
                 "QuickStartS3URL": "https://s3.amazonaws.com"
             },
             "us-east-1": {
+                "Partition": "aws",
+                "QuickStartS3URL": "https://s3.amazonaws.com"
+            },
+            "us-east-2": {
                 "Partition": "aws",
                 "QuickStartS3URL": "https://s3.amazonaws.com"
             },
