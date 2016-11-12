@@ -438,11 +438,11 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe Rename-Computer -NewName '",
+                                            "powershell.exe Rename-Computer -NewName ",
                                             {
                                                 "Ref": "RDGW1NetBIOSName"
                                             },
-                                            "' -Restart"
+                                            " -Restart"
                                         ]
                                     ]
                                 },
@@ -467,15 +467,15 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "net user /add '",
+                                            "net user /add ",
                                             {
                                                 "Ref": "AdminUser"
                                             },
-                                            "' '",
+                                            " ",
                                             {
                                                 "Ref": "AdminPassword"
                                             },
-                                            "' /y"
+                                            " /y"
                                         ]
                                     ]
                                 }
@@ -485,11 +485,11 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "net localgroup Administrators '",
+                                            "net localgroup Administrators ",
                                             {
                                                 "Ref": "AdminUser"
                                             },
-                                            "' /ADD"
+                                            " /ADD"
                                         ]
                                     ]
                                 }
@@ -500,7 +500,7 @@
                                         "",
                                         [
                                             "powershell.exe -ExecutionPolicy RemoteSigned",
-                                            " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN '",
+                                            " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN ",
                                             {
                                                 "Ref": "RDGW1NetBIOSName"
                                             },
@@ -508,7 +508,7 @@
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            "' -DomainNetBiosName BUILTIN -GroupName administrators"
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }
@@ -786,11 +786,11 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe Rename-Computer -NewName '",
+                                            "powershell.exe Rename-Computer -NewName ",
                                             {
                                                 "Ref": "RDGW2NetBIOSName"
                                             },
-                                            "' -Restart"
+                                            " -Restart"
                                         ]
                                     ]
                                 },
@@ -815,15 +815,15 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "net user /add '",
+                                            "net user /add ",
                                             {
                                                 "Ref": "AdminUser"
                                             },
-                                            "' '",
+                                            " ",
                                             {
                                                 "Ref": "AdminPassword"
                                             },
-                                            "' /y"
+                                            " /y"
                                         ]
                                     ]
                                 }
@@ -833,11 +833,11 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "net localgroup Administrators '",
+                                            "net localgroup Administrators ",
                                             {
                                                 "Ref": "AdminUser"
                                             },
-                                            "' /ADD"
+                                            " /ADD"
                                         ]
                                     ]
                                 }
@@ -848,7 +848,7 @@
                                         "",
                                         [
                                             "powershell.exe -ExecutionPolicy RemoteSigned",
-                                            " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN '",
+                                            " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN ",
                                             {
                                                 "Ref": "RDGW2NetBIOSName"
                                             },
@@ -856,7 +856,7 @@
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            "' -DomainNetBiosName BUILTIN -GroupName administrators"
+                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
                                 }
