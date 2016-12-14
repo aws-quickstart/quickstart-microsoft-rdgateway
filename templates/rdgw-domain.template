@@ -184,11 +184,17 @@
             "ap-southeast-2": {
                 "WS2012R2": "ami-9fe7d9fc"
             },
+            "ca-central-1": {
+                "WS2012R2": "ami-f57fcd91"
+            },
             "eu-central-1": {
                 "WS2012R2": "ami-21cb0f4e"
             },
             "eu-west-1": {
                 "WS2012R2": "ami-95d984e6"
+            },
+            "eu-west-2": {
+                "WS2012R2": "ami-bb353fdf"
             },
             "sa-east-1": {
                 "WS2012R2": "ami-628e100e"
@@ -227,11 +233,19 @@
                 "Partition": "aws",
                 "QuickStartS3URL": "https://s3.amazonaws.com"
             },
+            "ca-central-1": {
+                "Partition": "aws",
+                "QuickStartS3URL": "https://s3.amazonaws.com"
+            },
             "eu-central-1": {
                 "Partition": "aws",
                 "QuickStartS3URL": "https://s3.amazonaws.com"
             },
             "eu-west-1": {
+                "Partition": "aws",
+                "QuickStartS3URL": "https://s3.amazonaws.com"
+            },
+            "eu-west-2": {
                 "Partition": "aws",
                 "QuickStartS3URL": "https://s3.amazonaws.com"
             },
