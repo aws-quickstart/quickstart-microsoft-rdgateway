@@ -218,6 +218,69 @@
                 }
             }
         },
+        "RDGWHostRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": {
+                                        "Fn::Sub": [
+                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
+                                            {
+                                                "Partition": {
+                                                    "Fn::If": [
+                                                        "GovCloudCondition",
+                                                        "aws-us-gov",
+                                                        "aws"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        },
+                        "PolicyName": "aws-quick-start-s3-policy"
+                    }
+                ],
+                "Path": "/",
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Effect": "Allow"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            }
+        },
+        "RDGWHostProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Roles": [
+                    {
+                        "Ref": "RDGWHostRole"
+                    }
+                ],
+                "Path": "/"
+            }
+        },
         "RDGateway1": {
             "Type": "AWS::EC2::Instance",
             "Metadata": {
@@ -468,6 +531,9 @@
                         },
                         "WS2012R2"
                     ]
+                },
+                "IamInstanceProfile": {
+                    "Ref": "RDGWHostProfile"
                 },
                 "InstanceType": {
                     "Ref": "RDGW1InstanceType"
@@ -789,6 +855,9 @@
                         },
                         "WS2012R2"
                     ]
+                },
+                "IamInstanceProfile": {
+                    "Ref": "RDGWHostProfile"
                 },
                 "InstanceType": {
                     "Ref": "RDGW2InstanceType"
