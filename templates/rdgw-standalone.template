@@ -46,10 +46,10 @@
             "Type": "String"
         },
         "QSS3KeyPrefix": {
-            "AllowedPattern": "^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$",
-            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
             "Default": "microsoft/rdgateway/latest",
-            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
             "Type": "String"
         },
         "RDGW1InstanceType": {
@@ -116,6 +116,16 @@
         "VPCID": {
             "Description": "ID of the VPC (e.g., vpc-0343606e)",
             "Type": "AWS::EC2::VPC::Id"
+        }
+    },
+    "Conditions": {
+        "GovCloudCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
         }
     },
     "Rules": {
@@ -187,68 +197,6 @@
             "us-west-2": {
                 "WS2012R2": "ami-09f47d69"
             }
-        },
-        "AWSInfoRegionMap": {
-            "ap-northeast-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "ap-northeast-2": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "ap-south-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "ap-southeast-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "ap-southeast-2": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "ca-central-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "eu-central-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "eu-west-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "eu-west-2": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "sa-east-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "us-east-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "us-east-2": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "us-gov-west-1": {
-                "Partition": "aws-us-gov",
-                "QuickStartS3URL": "https://s3-us-gov-west-1.amazonaws.com"
-            },
-            "us-west-1": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            },
-            "us-west-2": {
-                "Partition": "aws",
-                "QuickStartS3URL": "https://s3.amazonaws.com"
-            }
         }
     },
     "Resources": {
@@ -268,6 +216,69 @@
                 "InstanceId": {
                     "Ref": "RDGateway2"
                 }
+            }
+        },
+        "RDGWHostRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": {
+                                        "Fn::Sub": [
+                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
+                                            {
+                                                "Partition": {
+                                                    "Fn::If": [
+                                                        "GovCloudCondition",
+                                                        "aws-us-gov",
+                                                        "aws"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        },
+                        "PolicyName": "aws-quick-start-s3-policy"
+                    }
+                ],
+                "Path": "/",
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Effect": "Allow"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            }
+        },
+        "RDGWHostProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Roles": [
+                    {
+                        "Ref": "RDGWHostRole"
+                    }
+                ],
+                "Path": "/"
             }
         },
         "RDGateway1": {
@@ -328,76 +339,49 @@
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             }
@@ -548,6 +532,9 @@
                         "WS2012R2"
                     ]
                 },
+                "IamInstanceProfile": {
+                    "Ref": "RDGWHostProfile"
+                },
                 "InstanceType": {
                     "Ref": "RDGW1InstanceType"
                 },
@@ -676,76 +663,49 @@
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::Join": [
-                                        "/",
-                                        [
-                                            {
-                                                "Fn::FindInMap": [
-                                                    "AWSInfoRegionMap",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    "QuickStartS3URL"
+                                    "Fn::Sub": [
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
+                                       {
+                                           "S3Region": {
+                                               "Fn::If": [
+                                                   "GovCloudCondition",
+                                                   "s3-us-gov-west-1",
+                                                   "s3"
                                                 ]
-                                            },
-                                            {
-                                                "Ref": "QSS3BucketName"
-                                            },
-                                            {
-                                                "Ref": "QSS3KeyPrefix"
-                                            },
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]
+                                            }
+                                        }
                                     ]
                                 }
                             }
@@ -895,6 +855,9 @@
                         },
                         "WS2012R2"
                     ]
+                },
+                "IamInstanceProfile": {
+                    "Ref": "RDGWHostProfile"
                 },
                 "InstanceType": {
                     "Ref": "RDGW2InstanceType"
