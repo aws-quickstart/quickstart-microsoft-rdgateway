@@ -360,7 +360,7 @@
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
                                        {   
                                            "S3Region": { 
                                                "Fn::If": [
@@ -724,7 +724,7 @@
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Configure-RDGW.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
