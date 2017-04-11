@@ -232,7 +232,7 @@
                                     ],
                                     "Resource": {
                                         "Fn::Sub": [
-                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
+                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}/*",
                                             {
                                                 "Partition": {
                                                     "Fn::If": [
@@ -340,7 +340,7 @@
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
@@ -356,7 +356,7 @@
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
@@ -372,7 +372,7 @@
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-RDGW.ps1",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
@@ -664,7 +664,7 @@
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
@@ -680,7 +680,7 @@
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
@@ -696,7 +696,7 @@
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/scripts/Configure-RDGW.ps1",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
