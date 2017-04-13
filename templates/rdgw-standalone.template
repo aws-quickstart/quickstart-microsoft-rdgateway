@@ -680,7 +680,7 @@
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Sub": [
-                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                       "https://${QSS3BucketName}.${S3Region}.amazonaws.com/microsoft/rdgateway/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                                        {
                                            "S3Region": {
                                                "Fn::If": [
