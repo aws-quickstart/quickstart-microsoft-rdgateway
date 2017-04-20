@@ -285,6 +285,14 @@
                 },
                 "us-gov-west-1"
             ]
+        },
+        "NestedStackCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "QSS3KeyPrefix"
+                },
+                "microsoft/rdgateway/latest"
+            ]
         }
     },
     "Resources": {
@@ -355,7 +363,7 @@
                                 ]
                             }
                         }
-                    ]                    
+                    ]
                 },
                 "Parameters": {
                     "AdminPassword": {
@@ -387,10 +395,7 @@
                     },
                     "QSS3KeyPrefix": {
                         "Ref": "QSS3KeyPrefix"
-                    },
-                    "RDGW1InstanceType": {
-                        "Ref": "RDGW1InstanceType"
-                    },
+                     },
                     "RDGW1NetBIOSName": {
                         "Ref": "RDGW1NetBIOSName"
                     },
