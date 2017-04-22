@@ -172,14 +172,6 @@
                 },
                 "us-gov-west-1"
             ]
-        },
-        "NestedStackCondition": {
-            "Fn::Equals": [
-                {
-                    "Ref": "QSS3KeyPrefix"
-                },
-                "microsoft/rdgateway/latest"
-            ]
         }
     },
     "Mappings": {
@@ -317,7 +309,7 @@
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",                                   
-                                         "scripts/AWSQuickStart.zip" 
+                                         "modules/AWSQuickStart.zip" 
                                     ]]
                                 }
                             },
@@ -330,7 +322,7 @@
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",                                   
+                                    "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/",                                   
                                          "scripts/Configure-RDGW.ps1" 
                                     ]]
                                 }
@@ -658,7 +650,7 @@
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",                                   
+                                    "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/",                                   
                                          "scripts/Configure-RDGW.ps1" 
                                     ]]
                                 }
