@@ -347,54 +347,50 @@
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    {                                    
-                                            "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",
-                                                "scripts/Unzip-Archive.ps1"
-                                            ]]
-                                    },
-                                    {                                   
-                                            "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/submodules/quickstart-microsoft-utilities/",
-                                                "scripts/Unzip-Archive.ps1"
-                                            ]]}
-
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
                                     ]
-                                }
-                        
+                                }                       
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    {   
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",
-                                            "modules/AWSQuickStart.zip"
-                                        ]]
-                                    },{
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/submodules/quickstart-microsoft-utilities/",
-                                            "modules/AWSQuickStart.zip"
-                                        ]]                                      
-                                    }]
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    { 
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/",
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]]
-                                    }, {
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/",
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]]
-                                    }]
-
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/Configure-RDGW.ps1",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         },
@@ -675,54 +671,51 @@
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    {                                    
-                                            "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",
-                                                "scripts/Unzip-Archive.ps1"
-                                            ]]
-                                    },
-                                    {                                   
-                                            "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/submodules/quickstart-microsoft-utilities/",
-                                                "scripts/Unzip-Archive.ps1"
-                                            ]]}
-
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
                                     ]
                                 }
                         
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    {   
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-utilities/",
-                                            "modules/AWSQuickStart.zip"
-                                        ]]
-                                    },{
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/submodules/quickstart-microsoft-utilities/",
-                                            "modules/AWSQuickStart.zip"
-                                        ]]                                      
-                                    }]
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
                                 "source": {
-                                    "Fn::If": [
-                                    "NestedStackCondition",
-
-                                    { 
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/",
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]]
-                                    }, {
-                                        "Fn::Join" : [ "", [{ "Fn::Sub" : "https://s3.amazonaws.com/${QSS3BucketName}/" }, {"Ref" : "QSS3KeyPrefix"}, "/submodules/quickstart-microsoft-rdgateway/",
-                                            "scripts/Configure-RDGW.ps1"
-                                        ]]
-                                    }]
-
+                                    "Fn::Sub": [
+                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/Configure-RDGW.ps1",
+                                        {
+                                            "S3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         },
