@@ -386,7 +386,7 @@
                         "Ref": "QSS3BucketName"
                     },
                     "QSS3KeyPrefix": {
-                        "Fn::Sub": "${QSS3KeyPrefix}submodules/quickstart-microsoft-rdgateway/" 
+                        "Ref": "QSS3KeyPrefix" 
                      },
                     "RDGW1NetBIOSName": {
                         "Ref": "RDGW1NetBIOSName"
