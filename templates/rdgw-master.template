@@ -26,6 +26,7 @@
                         "KeyPairName",
                         "NATInstanceType",
                         "RDGW1InstanceType",
+                        "NumberOfRDGWHosts",
                         "RDGW1NetBIOSName",
                         "RDGW1PrivateIP",
                         "RDGW2InstanceType",
@@ -84,14 +85,17 @@
                 "PublicSubnet2CIDR": {
                     "default": "Public Subnet 2 CIDR"
                 },
-                "QSS3BucketName": {
-                    "default": "Quick Start S3 Bucket Name"
+                "NumberOfRDGWHosts": {
+                    "default": "Enter the number of RDGW hosts to create"
                 },
                 "QSS3KeyPrefix": {
                     "default": "Quick Start S3 Key Prefix"
                 },
+                "RDGWInstanceType": {
+                    "default": "Remote Desktop Gateway Instance Type"
+                },
                 "RDGW1InstanceType": {
-                    "default": "Remote Desktop Gateway 1 Instance Type"
+                    "default": "Remote Desktop Gateway Instance Type"
                 },
                 "RDGW1NetBIOSName": {
                     "default": "Remote Desktop Gateway 1 NetBIOS Name"
@@ -205,6 +209,32 @@
             "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
             "Default": "microsoft/rdgateway/latest/",
             "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Type": "String"
+        },
+        "RDGWInstanceType": {
+            "Description": "Amazon EC2 instance type for the first Remote Desktop Gateway instance",
+            "Type": "String",
+            "Default": "t2.large",
+            "AllowedValues": [
+                "t2.large",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ]
+        },
+        "NumberOfRDGWHosts": {
+            "AllowedValues": [
+                "1",
+                "2",
+                "3",
+                "4"
+            ],
+            "Default": "1",
+            "Description": "Enter the number of RDGW hosts to create",
             "Type": "String"
         },
         "RDGW1InstanceType": {
@@ -391,8 +421,14 @@
                     "RDGW1NetBIOSName": {
                         "Ref": "RDGW1NetBIOSName"
                     },
+                    "NumberOfRDGWHosts": {
+                        "Ref": "NumberOfRDGWHosts"
+                    },
                     "RDGW1PrivateIP": {
                         "Ref": "RDGW1PrivateIP"
+                    },
+                    "RDGWInstanceType": {
+                        "Ref": "RDGWInstanceType"
                     },
                     "RDGW2InstanceType": {
                         "Ref": "RDGW2InstanceType"
