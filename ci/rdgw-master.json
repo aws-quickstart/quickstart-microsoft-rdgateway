@@ -17,11 +17,7 @@
     },
     {
         "ParameterKey": "KeyPairName",
-        "ParameterValue": "cikey"
-    },
-    {
-        "ParameterKey": "NATInstanceType",
-        "ParameterValue": "t2.small"
+        "ParameterValue": "$[alfred_getkeypair]"
     },
     {
         "ParameterKey": "PrivateSubnet1CIDR",
@@ -40,28 +36,8 @@
         "ParameterValue": "10.0.144.0/20"
     },
     {
-        "ParameterKey": "RDGW1InstanceType",
+        "ParameterKey": "RDGWInstanceType",
         "ParameterValue": "t2.large"
-    },
-    {
-        "ParameterKey": "RDGW1NetBIOSName",
-        "ParameterValue": "RDGW1"
-    },
-    {
-        "ParameterKey": "RDGW1PrivateIP",
-        "ParameterValue": "10.0.128.11"
-    },
-    {
-        "ParameterKey": "RDGW2InstanceType",
-        "ParameterValue": "t2.large"
-    },
-    {
-        "ParameterKey": "RDGW2NetBIOSName",
-        "ParameterValue": "RDGW2"
-    },
-    {
-        "ParameterKey": "RDGW2PrivateIP",
-        "ParameterValue": "10.0.144.11"
     },
     {
         "ParameterKey": "RDGWCIDR",
