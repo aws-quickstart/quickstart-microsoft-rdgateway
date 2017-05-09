@@ -1,6 +1,90 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "This template is intended to be installed into an existing VPC with two public subnets. It will deploy one RD Gateway in each public VPC subnet. **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template. QS(0005)",
+    "Description": "This template is intended to be installed into an existing VPC with two public subnets. It will create an auto-scaling group of RD Gateway instances in the public VPC subnets. **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template. QS(0005)",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Network Configuration"
+                    },
+                    "Parameters": [
+                        "VPCID",
+                        "PublicSubnet1ID",
+                        "PublicSubnet2ID",
+                        "RDGWCIDR"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon EC2 Configuration"
+                    },
+                    "Parameters": [
+                        "KeyPairName",
+                        "RDGWInstanceType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Remote Desktop Gateway Configuration"
+                    },
+                    "Parameters": [
+                        "NumberOfRDGWHosts",
+                        "AdminUser",
+                        "AdminPassword",
+                        "DomainDNSName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AWS Quick Start Configuration"
+                    },
+                    "Parameters": [
+                        "QSS3BucketName",
+                        "QSS3KeyPrefix"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "AdminPassword": {
+                    "default": "Admin Password"
+                },
+                "AdminUser": {
+                    "default": "Admin User Name"
+                },
+                "DomainDNSName": {
+                    "default": "Domain DNS Name"
+                },
+                "KeyPairName": {
+                    "default": "Key Pair Name"
+                },
+                "NumberOfRDGWHosts": {
+                    "default": "Number of RDGW Hosts"
+                },
+                "PublicSubnet1ID": {
+                    "default": "Public Subnet 1 ID"
+                },
+                "PublicSubnet2ID": {
+                    "default": "Public Subnet 2 ID"
+                },
+                "QSS3BucketName": {
+                    "default": "Quick Start S3 Bucket Name"
+                },
+                "QSS3KeyPrefix": {
+                    "default": "Quick Start S3 Key Prefix"
+                },
+                "RDGWInstanceType": {
+                    "default": "Remote Desktop Gateway Instance Type"
+                },
+                "RDGWCIDR": {
+                    "default": "Allowed Remote Desktop Gateway External Access CIDR"
+                },
+                "VPCID": {
+                    "default": "VPC ID"
+                }
+            }
+        }
+    },
     "Parameters": {
         "AdminPassword": {
             "Description": "Password for the administrative account. Must be at least 8 characters containing letters, numbers and symbols",
@@ -18,10 +102,6 @@
             "MaxLength": "25",
             "AllowedPattern": "[a-zA-Z0-9]*"
         },
-        "KeyPairName": {
-            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
-            "Type": "AWS::EC2::KeyPair::KeyName"
-        },
         "DomainDNSName": {
             "Description": "Fully qualified domain name (FQDN) e.g. example.com",
             "Type": "String",
@@ -29,6 +109,21 @@
             "MinLength": "3",
             "MaxLength": "25",
             "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+        },
+        "KeyPairName": {
+            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "NumberOfRDGWHosts": {
+            "AllowedValues": [
+                "1",
+                "2",
+                "3",
+                "4"
+            ],
+            "Default": "1",
+            "Description": "Enter the number of Remote Desktop Gateway hosts to create",
+            "Type": "String"
         },
         "PublicSubnet1ID": {
             "Description": "ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (e.g., subnet-a0246dcd)",
@@ -67,58 +162,6 @@
                 "m4.4xlarge"
             ]
         },
-        "NumberOfRDGWHosts": {
-            "AllowedValues": [
-                "1",
-                "2",
-                "3",
-                "4"
-            ],
-            "Default": "1",
-            "Description": "Enter the number of RDGW hosts to create",
-            "Type": "String"
-        },
-        "RDGW1NetBIOSName": {
-            "Description": "NetBIOS name of the first Remote Desktop Gateway (up to 15 characters)",
-            "Type": "String",
-            "Default": "RDGW1",
-            "MinLength": "1",
-            "MaxLength": "15",
-            "AllowedPattern": "[a-zA-Z0-9]+"
-        },
-        "RDGW1PrivateIP": {
-            "Description": "Fixed private IP for the first Remote Desktop Gateway located in Availability Zone 1",
-            "Type": "String",
-            "Default": "10.0.128.11"
-        },
-        "RDGW2InstanceType": {
-            "Description": "Amazon EC2 instance type for the second Remote Desktop Gateway instance",
-            "Type": "String",
-            "Default": "t2.large",
-            "AllowedValues": [
-                "t2.large",
-                "m3.large",
-                "m3.xlarge",
-                "m3.2xlarge",
-                "m4.large",
-                "m4.xlarge",
-                "m4.2xlarge",
-                "m4.4xlarge"
-            ]
-        },
-        "RDGW2NetBIOSName": {
-            "Description": "NetBIOS name of the second Remote Desktop Gateway (up to 15 characters)",
-            "Type": "String",
-            "Default": "RDGW2",
-            "MinLength": "1",
-            "MaxLength": "15",
-            "AllowedPattern": "[a-zA-Z0-9]+"
-        },
-        "RDGW2PrivateIP": {
-            "Description": "Fixed private IP for the second Remote Desktop Gateway located in Availability Zone 2",
-            "Type": "String",
-            "Default": "10.0.144.11"
-        },
         "RDGWCIDR": {
             "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
             "Description": "Allowed CIDR Block for external access to the Remote Desktop Gateways",
@@ -127,57 +170,6 @@
         "VPCID": {
             "Description": "ID of the VPC (e.g., vpc-0343606e)",
             "Type": "AWS::EC2::VPC::Id"
-        }
-    },
-    "Conditions": {
-        "2RDGWCondition": {
-            "Fn::Or": [
-                {
-                    "Fn::Equals": [
-                        {
-                            "Ref": "NumberOfRDGWHosts"
-                        },
-                        "2"
-                    ]
-                },
-                {
-                    "Condition": "3RDGWCondition"
-                },
-                {
-                    "Condition": "4RDGWCondition"
-                }
-            ]
-        },
-        "3RDGWCondition": {
-            "Fn::Or": [
-                {
-                    "Fn::Equals": [
-                        {
-                            "Ref": "NumberOfRDGWHosts"
-                        },
-                        "3"
-                    ]
-                },
-                {
-                    "Condition": "4RDGWCondition"
-                }
-            ]
-        },
-        "4RDGWCondition": {
-            "Fn::Equals": [
-                {
-                    "Ref": "NumberOfRDGWHosts"
-                },
-                "4"
-            ]
-        },
-        "GovCloudCondition": {
-            "Fn::Equals": [
-                {
-                    "Ref": "AWS::Region"
-                },
-                "us-gov-west-1"
-            ]
         }
     },
     "Rules": {
@@ -251,6 +243,57 @@
             }
         }
     },
+    "Conditions": {
+        "2RDGWCondition": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Ref": "NumberOfRDGWHosts"
+                        },
+                        "2"
+                    ]
+                },
+                {
+                    "Condition": "3RDGWCondition"
+                },
+                {
+                    "Condition": "4RDGWCondition"
+                }
+            ]
+        },
+        "3RDGWCondition": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Ref": "NumberOfRDGWHosts"
+                        },
+                        "3"
+                    ]
+                },
+                {
+                    "Condition": "4RDGWCondition"
+                }
+            ]
+        },
+        "4RDGWCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "NumberOfRDGWHosts"
+                },
+                "4"
+            ]
+        },
+        "GovCloudCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
+        }
+    },
     "Resources": {
         "EIP1": {
             "Type": "AWS::EC2::EIP",
@@ -310,6 +353,24 @@
                             ]
                         },
                         "PolicyName": "aws-quick-start-s3-policy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "ec2:AssociateAddress",
+                                        "ec2:DescribeAddresses"
+                                    ],
+                                    "Resource": [
+                                        "*"
+                                    ],
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        },
+                        "PolicyName": "rdgw-eip-policy"
                     }
                 ],
                 "Path": "/",
@@ -342,6 +403,47 @@
                 "Path": "/"
             }
         },
+        "RDGWAutoScalingGroup" : {
+            "Type" : "AWS::AutoScaling::AutoScalingGroup",
+                    "Properties": {
+                "LaunchConfigurationName": {
+                    "Ref": "RDGWLaunchConfiguration"
+                },
+                "VPCZoneIdentifier": [
+                    {
+                        "Ref": "PublicSubnet1ID"
+                    },
+                    {
+                        "Ref": "PublicSubnet2ID"
+                    }
+                ],
+                "MinSize": {
+                    "Ref": "NumberOfRDGWHosts"
+                },
+                "MaxSize": {
+                    "Ref": "NumberOfRDGWHosts"
+                },
+                "Cooldown": "300",
+                "DesiredCapacity": {
+                    "Ref": "NumberOfRDGWHosts"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "RDGW",
+                        "PropagateAtLaunch": "true"
+                    }
+                ]
+            },
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": {
+                        "Ref": "NumberOfRDGWHosts"
+                    },
+                    "Timeout": "PT30M"
+                }
+            }
+        },
         "RDGWLaunchConfiguration" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Metadata": {
@@ -349,7 +451,6 @@
                     "configSets": {
                         "config": [
                             "setup",
-                            "rename",
                             "installRDS",
                             "finalize"
                         ]
@@ -401,9 +502,9 @@
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
                                         {
-                                            "S3Region": {
+                                            "QSS3Region": {
                                                 "Fn::If": [
                                                     "GovCloudCondition",
                                                     "s3-us-gov-west-1",
@@ -417,9 +518,9 @@
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
                                         {
-                                            "S3Region": {
+                                            "QSS3Region": {
                                                 "Fn::If": [
                                                     "GovCloudCondition",
                                                     "s3-us-gov-west-1",
@@ -430,12 +531,28 @@
                                     ]
                                 }
                             },
-                            "c:\\cfn\\scripts\\Configure-RDGW.ps1": {
+                            "c:\\cfn\\scripts\\Initialize-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
-                                        "https://${S3Region}.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/Configure-RDGW.ps1",
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-RDGW.ps1",
                                         {
-                                            "S3Region": {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "c:\\cfn\\scripts\\Set-EIP.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-EIP.ps1",
+                                        {
+                                            "QSS3Region": {
                                                 "Fn::If": [
                                                     "GovCloudCondition",
                                                     "s3-us-gov-west-1",
@@ -478,7 +595,7 @@
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "' -Resource 'RDGWAutoScaleGroup' -Region '",
+                                            "' -Resource 'RDGWAutoScalingGroup' -Region '",
                                             {
                                                 "Ref": "AWS::Region"
                                             },
@@ -487,25 +604,6 @@
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
-                            }
-                        }
-                    },
-                    "rename": {
-                        "commands": {
-                            "1-execute-powershell-script-RenameComputer": {
-                                "command": {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "powershell.exe Rename-Computer -NewName ",
-                                            {
-                                                "Ref": "RDGW1NetBIOSName"
-                                            },
-                                            " -Restart"
-                                        ]
-                                    ]
-                                },
-                                "waitAfterCompletion": "forever"
                             }
                         }
                     },
@@ -519,7 +617,8 @@
                                             "powershell.exe \"Install-WindowsFeature RDS-Gateway,RSAT-RDS-Gateway\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion": "0"
                             },
                             "b-create-admin": {
                                 "command": {
@@ -537,7 +636,8 @@
                                             " /y"
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion": "0"
                             },
                             "c-set-admin-group": {
                                 "command": {
@@ -551,33 +651,81 @@
                                             " /ADD"
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion": "0"
                             },
                             "d-configure-rdgw": {
                                 "command": {
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned",
-                                            " C:\\cfn\\scripts\\Configure-RDGW.ps1 -ServerFQDN ",
-                                            {
-                                                "Ref": "RDGW1NetBIOSName"
-                                            },
-                                            ".",
+                                            "powershell.exe -ExecutionPolicy RemoteSigned ",
+                                            "C:\\cfn\\scripts\\Initialize-RDGW.ps1 -ServerFQDN $($env:COMPUTERNAME + '.",
                                             {
                                                 "Ref": "DomainDNSName"
                                             },
-                                            " -DomainNetBiosName BUILTIN -GroupName administrators"
+                                            "') -DomainNetBiosName BUILTIN -GroupName administrators"
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion": "0"
+                            },
+                            "e-assign-eip": {
+                                "command": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "powershell.exe -ExecutionPolicy RemoteSigned ",
+                                            "C:\\cfn\\scripts\\Set-EIP.ps1 -EIPs @('",
+                                            {
+                                                "Ref": "EIP1"
+                                            },
+                                            "','",
+                                            {
+                                                "Fn::If": [
+                                                    "2RDGWCondition",
+                                                    {
+                                                        "Ref": "EIP2"
+                                                    },
+                                                    "'Null'"
+                                                ]
+                                            },
+                                            "','",
+                                            {
+                                                "Fn::If": [
+                                                    "3RDGWCondition",
+                                                    {
+                                                        "Ref": "EIP3"
+                                                    },
+                                                    "'Null'"
+                                                ]
+                                            },
+                                            "','",
+                                            {
+                                                "Fn::If": [
+                                                    "4RDGWCondition",
+                                                    {
+                                                        "Ref": "EIP4"
+                                                    },
+                                                    "'Null'"
+                                                ]
+                                            },
+                                            "') -Region ",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            }
+                                        ]
+                                    ]
+                                },
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
                     "finalize": {
                         "commands": {
                             "1-signal-success": {
-                                "command": "powershell.exe -Command \"Write-AWSQuickStartStatus\""
+                                "command": "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
+                                "waitAfterCompletion": "0"
                             }
                         }
                     }
@@ -637,53 +785,6 @@
                         ]
                     }
                 }
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Count": "1",
-                    "Timeout": "PT30M"
-                }
-            }
-        },
-        "RDGWAutoScaleGroup" : {
-            "Type" : "AWS::AutoScaling::AutoScalingGroup",
-                    "Properties": {
-                "LaunchConfigurationName": {
-                    "Ref": "RDGWLaunchConfiguration"
-                },
-                "VPCZoneIdentifier": [
-                    {
-                        "Ref": "PublicSubnet1ID"
-                    },
-                    {
-                        "Ref": "PublicSubnet2ID"
-                    }
-                ],
-                "MinSize": {
-                    "Ref": "NumberOfRDGWHosts"
-                },
-                "MaxSize": {
-                    "Ref": "NumberOfRDGWHosts"
-                },
-                "Cooldown": "300",
-                "DesiredCapacity": {
-                    "Ref": "NumberOfRDGWHosts"
-                },
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "RDGW",
-                        "PropagateAtLaunch": "true"
-                    }
-                ]
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Count": {
-                        "Ref": "NumberOfRDGWHosts"
-                    },
-                    "Timeout": "PT30M"
-                }
             }
         },
         "RemoteDesktopGatewaySG": {
@@ -715,36 +816,6 @@
         }
     },
     "Outputs": {
-        "RDGW1RootCert": {
-            "Value": {
-                "Fn::Join": [
-                    "",
-                    [
-                        "c:\\",
-                        {
-                            "Ref": "RDGW1NetBIOSName"
-                        },
-                        ".cer"
-                    ]
-                ]
-            },
-            "Description": "Location of the root SSL certificate on the first Remote Desktop Gateway (RDGW1) in Availability Zone 1"
-        },
-        "RDGW2RootCert": {
-            "Value": {
-                "Fn::Join": [
-                    "",
-                    [
-                        "c:\\",
-                        {
-                            "Ref": "RDGW2NetBIOSName"
-                        },
-                        ".cer"
-                    ]
-                ]
-            },
-            "Description": "Location of the root SSL certificate on the second Remote Desktop Gateway (RDGW2) in Availability Zone 2"
-        },
         "EIP1": {
             "Description": "Elastic IP 1 for RDGW",
             "Value": {

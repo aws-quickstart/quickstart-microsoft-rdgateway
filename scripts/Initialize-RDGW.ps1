@@ -13,7 +13,7 @@ param (
 try {
     $ErrorActionPreference = "Stop"
 
-    Start-Transcript -Path c:\cfn\log\Configure-RDGW.ps1.txt -Append
+    Start-Transcript -Path c:\cfn\log\Initialize-RDGW.ps1.txt -Append
 
     Import-Module remotedesktopservices
 
@@ -49,13 +49,13 @@ try {
     $certdata = $enrollment.CreateRequest(0)
     $enrollment.InstallResponse(2, $certdata, 0, "")
 
-    dir cert:\localmachine\my | ? { $_.Subject -eq "CN=$ServerFQDN” } | % { [system.IO.file]::WriteAllBytes("c:\$env:computername.cer", ($_.Export('CERT', 'secret')) ) }
+    dir cert:\localmachine\my | ? { $_.Subject -eq "CN=$ServerFQDN" } | % { [system.IO.file]::WriteAllBytes("c:\$env:COMPUTERNAME.cer", ($_.Export('CERT', 'secret')) ) }
 
     new-item -path RDS:\GatewayServer\CAP -Name Default-CAP -UserGroups "$GroupName@$DomainNetBiosName" -AuthMethod 1
 
     new-item -Path RDS:\GatewayServer\RAP -Name Default-RAP -UserGroups "$GroupName@$DomainNetBiosName" -ComputerGroupType 2
 
-    dir cert:\localmachine\my | where-object { $_.Subject -eq "CN=$ServerFQDN” } | ForEach-Object { Set-Item -Path RDS:\GatewayServer\SSLCertificate\Thumbprint -Value $_.Thumbprint }
+    dir cert:\localmachine\my | where-object { $_.Subject -eq "CN=$ServerFQDN" } | ForEach-Object { Set-Item -Path RDS:\GatewayServer\SSLCertificate\Thumbprint -Value $_.Thumbprint }
 
     Restart-Service tsgateway
 }
