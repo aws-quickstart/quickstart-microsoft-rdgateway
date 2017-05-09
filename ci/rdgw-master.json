@@ -20,6 +20,10 @@
         "ParameterValue": "$[alfred_getkeypair]"
     },
     {
+        "ParameterKey": "NumberOfRDGWHosts",
+        "ParameterValue": "4"
+    },
+    {
         "ParameterKey": "PrivateSubnet1CIDR",
         "ParameterValue": "10.0.0.0/19"
     },
