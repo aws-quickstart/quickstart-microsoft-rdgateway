@@ -336,7 +336,7 @@
                                     ],
                                     "Resource": {
                                         "Fn::Sub": [
-                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}/*",
+                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
                                             {
                                                 "Partition": {
                                                     "Fn::If": [
