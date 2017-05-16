@@ -474,6 +474,19 @@
         "RDGWLaunchConfiguration" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "RDGWHostRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -541,7 +554,8 @@
                                             }
                                         }
                                     ]
-                                }
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
@@ -557,7 +571,8 @@
                                             }
                                         }
                                     ]
-                                }
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": {
@@ -573,7 +588,8 @@
                                             }
                                         }
                                     ]
-                                }
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "c:\\cfn\\scripts\\Initialize-RDGW.ps1": {
                                 "source": {
@@ -589,7 +605,8 @@
                                             }
                                         }
                                     ]
-                                }
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "c:\\cfn\\scripts\\Set-EIP.ps1": {
                                 "source": {
@@ -605,7 +622,8 @@
                                             }
                                         }
                                     ]
-                                }
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
