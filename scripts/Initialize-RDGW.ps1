@@ -10,7 +10,7 @@ param (
   [string]$GroupName,
 
   [Parameter(Mandatory = $false)]
-  [string]$KeyLength = '4096'
+  [string]$KeyLength = '2048'
 )
 
 try {
