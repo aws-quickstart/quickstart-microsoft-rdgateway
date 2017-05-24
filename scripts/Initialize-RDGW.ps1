@@ -7,7 +7,10 @@ param (
     [string]$DomainNetBiosName,
 
     [Parameter(Mandatory=$true)]
-    [string]$GroupName
+    [string]$GroupName,
+
+    [Parameter(Mandatory=$false)]
+    [string]$KeyLength='2048'
 )
 
 try {
@@ -23,7 +26,7 @@ try {
     $key = new-object -com "X509Enrollment.CX509PrivateKey.1"
     $key.ProviderName = "Microsoft RSA SChannel Cryptographic Provider"
     $key.KeySpec = 1
-    $key.Length = 1024
+    $key.Length = $KeyLength
     $key.SecurityDescriptor = "D:PAI(A;;0xd01f01ff;;;SY)(A;;0xd01f01ff;;;BA)(A;;0x80120089;;;NS)"
     $key.MachineContext = 1
     $key.Create()
