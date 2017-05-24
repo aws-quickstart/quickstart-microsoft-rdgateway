@@ -1,16 +1,16 @@
 ﻿[CmdletBinding()]
 param (
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory=$true)]
     [string]$ServerFQDN,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory=$true)]
     [string]$DomainNetBiosName,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory=$true)]
     [string]$GroupName,
 
-  [Parameter(Mandatory = $false)]
-  [string]$KeyLength = '2048'
+    [Parameter(Mandatory=$false)]
+    [string]$KeyLength='2048'
 )
 
 try {
