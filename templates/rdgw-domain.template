@@ -123,7 +123,7 @@
             "Default": "example.com",
             "MinLength": "3",
             "MaxLength": "25",
-            "AllowedPattern": "[a-zA-Z0-9\\-]+"
+            "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
         },
         "DomainMemberSGID": {
             "Description": "ID of the Domain Member Security Group (e.g., sg-7f16e910)",
