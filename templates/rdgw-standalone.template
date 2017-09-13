@@ -108,7 +108,7 @@
             "Default": "example.com",
             "MinLength": "3",
             "MaxLength": "25",
-            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+            "AllowedPattern": "[a-zA-Z0-9\\-]+"
         },
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",

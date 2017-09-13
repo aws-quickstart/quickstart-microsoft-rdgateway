@@ -123,14 +123,14 @@
             "Default": "example.com",
             "MinLength": "3",
             "MaxLength": "25",
-            "AllowedPattern": "[a-zA-Z0-9]+\\..+"
+            "AllowedPattern": "[a-zA-Z0-9\\-]+"
         },
         "DomainMemberSGID": {
             "Description": "ID of the Domain Member Security Group (e.g., sg-7f16e910)",
             "Type": "AWS::EC2::SecurityGroup::Id"
         },
         "DomainNetBIOSName": {
-            "AllowedPattern": "[a-zA-Z0-9]+",
+            "AllowedPattern": "[a-zA-Z0-9\\-]+",
             "Default": "example",
             "Description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
             "MaxLength": "15",
