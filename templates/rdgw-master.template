@@ -10,8 +10,8 @@
                     },
                     "Parameters": [
                         "AvailabilityZones",
+                        "VPCTenancy",
                         "VPCCIDR",
-                        "VPCTenancy",                        
                         "PrivateSubnet1CIDR",
                         "PrivateSubnet2CIDR",
                         "PublicSubnet1CIDR",
@@ -97,7 +97,7 @@
                 },
                 "VPCTenancy": {
                     "default": "VPC Tenancy"
-                }                 
+                }
             }
         }
     },
@@ -216,11 +216,14 @@
             "Type": "String"
         },
         "VPCTenancy": {
-            "AllowedValues" : ["default","dedicated"],
+            "AllowedValues": [
+                "default",
+                "dedicated"
+            ],
             "Default": "default",
-            "Description": "Please select the tenancy you would like to use for your VPC",
+            "Description": "The allowed tenancy of instances launched into the VPC",
             "Type": "String"
-        }         
+        }
     },
     "Conditions": {
         "GovCloudCondition": {
@@ -280,7 +283,7 @@
                     },
                     "VPCTenancy": {
                         "Ref": "VPCTenancy"
-                    }                    
+                    }
                 }
             }
         },
@@ -334,8 +337,8 @@
                         "Ref": "QSS3BucketName"
                     },
                     "QSS3KeyPrefix": {
-                        "Ref": "QSS3KeyPrefix" 
-                     },
+                        "Ref": "QSS3KeyPrefix"
+                    },
                     "RDGWInstanceType": {
                         "Ref": "RDGWInstanceType"
                     },
