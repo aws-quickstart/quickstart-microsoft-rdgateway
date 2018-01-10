@@ -11,6 +11,7 @@
                     "Parameters": [
                         "AvailabilityZones",
                         "VPCCIDR",
+                        "VPCTenancy",                        
                         "PrivateSubnet1CIDR",
                         "PrivateSubnet2CIDR",
                         "PublicSubnet1CIDR",
@@ -93,7 +94,10 @@
                 },
                 "VPCCIDR": {
                     "default": "VPC CIDR"
-                }
+                },
+                "VPCTenancy": {
+                    "default": "VPC Tenancy"
+                }                 
             }
         }
     },
@@ -210,7 +214,13 @@
             "Default": "10.0.0.0/16",
             "Description": "CIDR Block for the VPC",
             "Type": "String"
-        }
+        },
+        "VPCTenancy": {
+            "AllowedValues" : ["default","dedicated"],
+            "Default": "default",
+            "Description": "Please select the tenancy you would like to use for your VPC",
+            "Type": "String"
+        }         
     },
     "Conditions": {
         "GovCloudCondition": {
@@ -267,7 +277,10 @@
                     },
                     "VPCCIDR": {
                         "Ref": "VPCCIDR"
-                    }
+                    },
+                    "VPCTenancy": {
+                        "Ref": "VPCTenancy"
+                    }                    
                 }
             }
         },
