@@ -159,7 +159,11 @@
                 "m4.large",
                 "m4.xlarge",
                 "m4.2xlarge",
-                "m4.4xlarge"
+                "m4.4xlarge",
+                "m5.large",
+                "m5.xlarge",
+                "m5.2xlarge",
+                "m5.4xlarge"
             ]
         },
         "RDGWCIDR": {
@@ -190,6 +194,46 @@
                         ]
                     },
                     "AssertDescription": "All subnets must in the VPC"
+                }
+            ]
+        },
+        "CheckSupportedInstances": {
+            "RuleCondition": {
+                "Fn::Not": [
+                    {
+                        "Fn::Not": 
+                        [
+                            {
+                                "Fn::Contains": [
+                                    [
+                                        "m4.large", "m4.xlarge", "m4.2xlarge", "m4.4xlarge"
+                                    ],
+                                    {
+                                        "Ref": "RDGWInstanceType"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Assertions": [
+                {
+                    "Assert": {
+                        "Fn::Not": [
+                            {
+                                "Fn::Contains": [
+                                    [
+                                        "eu-west-3"
+                                    ],
+                                    {
+                                        "Ref": "AWS::Region"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "AssertDescription": "M4 instances are not available in the Paris region"
                 }
             ]
         }
@@ -225,6 +269,9 @@
             },
             "eu-west-2": {
                 "WS2012R2": "ami-9f677cfb"
+            },
+            "eu-west-3": {
+                "WS2012R2": "ami-a5fd4bd8"
             },
             "sa-east-1": {
                 "WS2012R2": "ami-d6c785ba"

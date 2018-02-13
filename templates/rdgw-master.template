@@ -199,7 +199,11 @@
                 "m4.large",
                 "m4.xlarge",
                 "m4.2xlarge",
-                "m4.4xlarge"
+                "m4.4xlarge",
+                "m5.large",
+                "m5.xlarge",
+                "m5.2xlarge",
+                "m5.4xlarge"
             ]
         },
         "RDGWCIDR": {
@@ -223,6 +227,48 @@
             "Default": "default",
             "Description": "The allowed tenancy of instances launched into the VPC",
             "Type": "String"
+        }
+    },
+    "Rules": {
+        "CheckSupportedInstances": {
+            "RuleCondition": {
+                "Fn::Not": [
+                    {
+                        "Fn::Not": 
+                        [
+                            {
+                                "Fn::Contains": [
+                                    [
+                                         "m4.xlarge", "m4.2xlarge", "m4.4xlarge", "m4.large"
+                                    ],
+                                    {
+                                        "Ref": "RDGWInstanceType"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Assertions": [
+                {
+                    "Assert": {
+                        "Fn::Not": [
+                            {
+                                "Fn::Contains": [
+                                    [
+                                        "eu-west-3"
+                                    ],
+                                    {
+                                        "Ref": "AWS::Region"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "AssertDescription": "M4 instances are not available in the Paris region"
+                }
+            ]
         }
     },
     "Conditions": {
