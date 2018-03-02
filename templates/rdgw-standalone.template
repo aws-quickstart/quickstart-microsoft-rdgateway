@@ -106,8 +106,8 @@
             "Description": "Fully qualified domain name (FQDN) e.g. example.com",
             "Type": "String",
             "Default": "example.com",
-            "MinLength": "3",
-            "MaxLength": "25",
+            "MinLength": "2",
+            "MaxLength": "255",
             "AllowedPattern": "[a-zA-Z0-9\\-]+\\..+"
         },
         "KeyPairName": {
@@ -199,25 +199,17 @@
         },
         "CheckSupportedInstances": {
             "RuleCondition": {
-                "Fn::Not": [
-                    {
-                        "Fn::Not": [
+                "Fn::Contains": [
+                            [
+                                "m4.large",
+                                "m4.xlarge",
+                                "m4.2xlarge",
+                                "m4.4xlarge"
+                            ],
                             {
-                                "Fn::Contains": [
-                                    [
-                                        "m4.large",
-                                        "m4.xlarge",
-                                        "m4.2xlarge",
-                                        "m4.4xlarge"
-                                    ],
-                                    {
-                                        "Ref": "RDGWInstanceType"
-                                    }
-                                ]
+                                "Ref": "RDGWInstanceType"
                             }
                         ]
-                    }
-                ]
             },
             "Assertions": [
                 {
@@ -243,52 +235,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.02.13"
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.02.23"
             },
             "ap-northeast-1": {
-                "WS2012R2": "ami-19b4c97f"
+                "WS2016FULLBASE": "ami-d36623b5"
             },
             "ap-northeast-2": {
-                "WS2012R2": "ami-2959fb47"
+                "WS2016FULLBASE": "ami-74a00d1a"
             },
             "ap-south-1": {
-                "WS2012R2": "ami-fd0d5092"
+                "WS2016FULLBASE": "ami-4bacf024"
             },
             "ap-southeast-1": {
-                "WS2012R2": "ami-8bd597f7"
+                "WS2016FULLBASE": "ami-c15910bd"
             },
             "ap-southeast-2": {
-                "WS2012R2": "ami-01c30663"
+                "WS2016FULLBASE": "ami-5d09ce3f"
             },
             "ca-central-1": {
-                "WS2012R2": "ami-63068207"
+                "WS2016FULLBASE": "ami-83db5ce7"
             },
             "eu-central-1": {
-                "WS2012R2": "ami-f8305197"
+                "WS2016FULLBASE": "ami-0145276e"
             },
             "eu-west-1": {
-                "WS2012R2": "ami-6d601014"
+                "WS2016FULLBASE": "ami-ba522ac3"
             },
             "eu-west-2": {
-                "WS2012R2": "ami-6a15f00d"
+                "WS2016FULLBASE": "ami-15cb2f72"
             },
             "eu-west-3": {
-                "WS2012R2": "ami-a79d2bda"
+                "WS2016FULLBASE": "ami-bf75c3c2"
             },
             "sa-east-1": {
-                "WS2012R2": "ami-ad256cc1"
+                "WS2016FULLBASE": "ami-b780c8db"
             },
             "us-east-1": {
-                "WS2012R2": "ami-a64855dc"
+                "WS2016FULLBASE": "ami-4176943c"
             },
             "us-east-2": {
-                "WS2012R2": "ami-1efbcf7b"
+                "WS2016FULLBASE": "ami-16370073"
             },
             "us-west-1": {
-                "WS2012R2": "ami-4a020b2a"
+                "WS2016FULLBASE": "ami-e8b6be88"
             },
             "us-west-2": {
-                "WS2012R2": "ami-a5d053dd"
+                "WS2016FULLBASE": "ami-74800e0c"
             }
         }
     },
@@ -595,6 +587,23 @@
                                 },
                                 "authentication": "S3AccessCreds"
                             },
+                            "c:\\cfn\\scripts\\Create-LocalUser.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Create-LocalUser.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
                             "c:\\cfn\\scripts\\Initialize-RDGW.ps1": {
                                 "source": {
                                     "Fn::Sub": [
@@ -690,16 +699,17 @@
                                 "command": {
                                     "Fn::Join": [
                                         "",
-                                        [
-                                            "net user /add ",
+                                       [
+                                            "powershell.exe -Command c:\\cfn\\scripts\\Create-LocalUser.ps1 -AdminUser ",
                                             {
                                                 "Ref": "AdminUser"
                                             },
-                                            " ",
+                                            " -AdminPassword ",
+                                            "'",
                                             {
                                                 "Ref": "AdminPassword"
                                             },
-                                            " /y"
+                                            "'"
                                         ]
                                     ]
                                 },
@@ -801,7 +811,7 @@
                         {
                             "Ref": "AWS::Region"
                         },
-                        "WS2012R2"
+                        "WS2016FULLBASE"
                     ]
                 },
                 "SecurityGroups": [
