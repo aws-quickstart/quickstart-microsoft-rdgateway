@@ -200,16 +200,16 @@
         "CheckSupportedInstances": {
             "RuleCondition": {
                 "Fn::Contains": [
-                            [
-                                "m4.large",
-                                "m4.xlarge",
-                                "m4.2xlarge",
-                                "m4.4xlarge"
-                            ],
-                            {
-                                "Ref": "RDGWInstanceType"
-                            }
-                        ]
+                    [
+                        "m4.large",
+                        "m4.xlarge",
+                        "m4.2xlarge",
+                        "m4.4xlarge"
+                    ],
+                    {
+                        "Ref": "RDGWInstanceType"
+                    }
+                ]
             },
             "Assertions": [
                 {
@@ -235,52 +235,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.02.23"
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.03.06"
             },
             "ap-northeast-1": {
-                "WS2016FULLBASE": "ami-d36623b5"
+                "WS2016FULLBASE": "ami-9b2e62fd"
             },
             "ap-northeast-2": {
-                "WS2016FULLBASE": "ami-74a00d1a"
+                "WS2016FULLBASE": "ami-1d1db073"
             },
             "ap-south-1": {
-                "WS2016FULLBASE": "ami-4bacf024"
+                "WS2016FULLBASE": "ami-bb9cc2d4"
             },
             "ap-southeast-1": {
-                "WS2016FULLBASE": "ami-c15910bd"
+                "WS2016FULLBASE": "ami-e36a3e9f"
             },
             "ap-southeast-2": {
-                "WS2016FULLBASE": "ami-5d09ce3f"
+                "WS2016FULLBASE": "ami-406fae22"
             },
             "ca-central-1": {
-                "WS2016FULLBASE": "ami-83db5ce7"
+                "WS2016FULLBASE": "ami-4748cf23"
             },
             "eu-central-1": {
-                "WS2016FULLBASE": "ami-0145276e"
+                "WS2016FULLBASE": "ami-f91a7496"
             },
             "eu-west-1": {
-                "WS2016FULLBASE": "ami-ba522ac3"
+                "WS2016FULLBASE": "ami-0284c77b"
             },
             "eu-west-2": {
-                "WS2016FULLBASE": "ami-15cb2f72"
+                "WS2016FULLBASE": "ami-8bee09ec"
             },
             "eu-west-3": {
-                "WS2016FULLBASE": "ami-bf75c3c2"
+                "WS2016FULLBASE": "ami-bc68dec1"
             },
             "sa-east-1": {
-                "WS2016FULLBASE": "ami-b780c8db"
+                "WS2016FULLBASE": "ami-0a175d66"
             },
             "us-east-1": {
-                "WS2016FULLBASE": "ami-4176943c"
+                "WS2016FULLBASE": "ami-cab14db7"
             },
             "us-east-2": {
-                "WS2016FULLBASE": "ami-16370073"
+                "WS2016FULLBASE": "ami-bc784ed9"
             },
             "us-west-1": {
-                "WS2016FULLBASE": "ami-e8b6be88"
+                "WS2016FULLBASE": "ami-aaa2a8ca"
             },
             "us-west-2": {
-                "WS2016FULLBASE": "ami-74800e0c"
+                "WS2016FULLBASE": "ami-ef9a0e97"
             }
         }
     },
@@ -699,7 +699,7 @@
                                 "command": {
                                     "Fn::Join": [
                                         "",
-                                       [
+                                        [
                                             "powershell.exe -Command c:\\cfn\\scripts\\Create-LocalUser.ps1 -AdminUser ",
                                             {
                                                 "Ref": "AdminUser"
