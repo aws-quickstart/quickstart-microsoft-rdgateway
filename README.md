@@ -15,4 +15,4 @@ You can also use the AWS CloudFormation templates as a starting point for your o
 
 ![Quick Start architecture for RD Gateway on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/rd-gateway-architecture-on-aws.png)
 
-For architectural details, best practices, step-by-step instructions, and customization options, see the [deployment guide](http://docs.aws.amazon.com/quickstart/latest/rd-gateway/).
+For architectural details, best practices, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/5VrKP).
