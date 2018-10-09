@@ -877,6 +877,22 @@
                         }
                     },
                     {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "CidrIp": {
+                            "Ref": "RDGWCIDR"
+                        }
+                    },
+                    {
+                        "IpProtocol": "udp",
+                        "FromPort": "3391",
+                        "ToPort": "3391",
+                        "CidrIp": {
+                            "Ref": "RDGWCIDR"
+                        }
+                    },
+                    {
                         "IpProtocol": "icmp",
                         "FromPort": "-1",
                         "ToPort": "-1",
