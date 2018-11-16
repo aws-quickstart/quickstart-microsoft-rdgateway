@@ -21,7 +21,8 @@
                     },
                     "Parameters": [
                         "KeyPairName",
-                        "RDGWInstanceType"
+                        "RDGWInstanceType",
+                        "LatestAmiId"
                     ]
                 },
                 {
@@ -72,6 +73,9 @@
                 },
                 "KeyPairName": {
                     "default": "Key Pair Name"
+                },
+                "LatestAmiId": {
+                    "default": "SSM Parameter to Grab Latest AMI ID"
                 },
                 "NumberOfRDGWHosts": {
                     "default": "Number of RDGW Hosts"
@@ -140,6 +144,10 @@
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
             "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "LatestAmiId": {
+            "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+            "Default": "/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base"
         },
         "NumberOfRDGWHosts": {
             "AllowedValues": [
@@ -257,58 +265,6 @@
                     "AssertDescription": "M4 instances are not available in the Paris region"
                 }
             ]
-        }
-    },
-    "Mappings": {
-        "AWSAMIRegionMap": {
-            "AMI": {
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.10.14"
-            },
-            "ap-northeast-1": {
-                "WS2016FULLBASE": "ami-0134dae8964ea643c"
-            },
-            "ap-northeast-2": {
-                "WS2016FULLBASE": "ami-0c6a4d561b38c05ed"
-            },
-            "ap-south-1": {
-                "WS2016FULLBASE": "ami-0e9c4931f7c9d73f6"
-            },
-            "ap-southeast-1": {
-                "WS2016FULLBASE": "ami-098731bcd06ea9ca6"
-            },
-            "ap-southeast-2": {
-                "WS2016FULLBASE": "ami-0096a7a7add65af89"
-            },
-            "ca-central-1": {
-                "WS2016FULLBASE": "ami-04a4290c9c20574d9"
-            },
-            "eu-central-1": {
-                "WS2016FULLBASE": "ami-06af8c775c56b30ca"
-            },
-            "eu-west-1": {
-                "WS2016FULLBASE": "ami-0cd8a780065ea078f"
-            },
-            "eu-west-2": {
-                "WS2016FULLBASE": "ami-0f5f78829606035fc"
-            },
-            "eu-west-3": {
-                "WS2016FULLBASE": "ami-0152e5e7567b014fc"
-            },
-            "sa-east-1": {
-                "WS2016FULLBASE": "ami-0c3faf6ff12a7f005"
-            },
-            "us-east-1": {
-                "WS2016FULLBASE": "ami-050202fb72f001b47"
-            },
-            "us-east-2": {
-                "WS2016FULLBASE": "ami-028779930ada5200c"
-            },
-            "us-west-1": {
-                "WS2016FULLBASE": "ami-08838e38cfe4854ad"
-            },
-            "us-west-2": {
-                "WS2016FULLBASE": "ami-017bf00eb0d4c7182"
-            }
         }
     },
     "Conditions": {
@@ -834,13 +790,7 @@
             },
             "Properties": {
                 "ImageId": {
-                    "Fn::FindInMap": [
-                        "AWSAMIRegionMap",
-                        {
-                            "Ref": "AWS::Region"
-                        },
-                        "WS2016FULLBASE"
-                    ]
+                    "Ref": "LatestAmiId"
                 },
                 "SecurityGroups": [
                     {
