@@ -21,7 +21,8 @@
                     },
                     "Parameters": [
                         "KeyPairName",
-                        "RDGWInstanceType"
+                        "RDGWInstanceType",
+                        "LatestAmiId"
                     ]
                 },
                 {
@@ -57,6 +58,9 @@
                 },
                 "KeyPairName": {
                     "default": "Key Pair Name"
+                },
+                "LatestAmiId": {
+                    "default": "SSM Parameter to Grab Latest AMI ID"
                 },
                 "NumberOfRDGWHosts": {
                     "default": "Number of RDGW Hosts"
@@ -113,6 +117,10 @@
         "KeyPairName": {
             "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
             "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "LatestAmiId": {
+            "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+            "Default": "/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base"
         },
         "NumberOfRDGWHosts": {
             "AllowedValues": [
@@ -806,13 +814,7 @@
             },
             "Properties": {
                 "ImageId": {
-                    "Fn::FindInMap": [
-                        "AWSAMIRegionMap",
-                        {
-                            "Ref": "AWS::Region"
-                        },
-                        "WS2016FULLBASE"
-                    ]
+                    "Ref": "LatestAmiId"
                 },
                 "SecurityGroups": [
                     {
