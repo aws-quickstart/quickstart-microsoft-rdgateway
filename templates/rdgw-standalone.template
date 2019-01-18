@@ -243,52 +243,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2018.12.12"
+                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2019.01.10"
             },
             "ap-northeast-1": {
-                "WS2016FULLBASE": "ami-0f57a86f53aa1c4ea"
+                "WS2016FULLBASE": "ami-09a8b61c4ca71d799"
             },
             "ap-northeast-2": {
-                "WS2016FULLBASE": "ami-05ec63f885e1c6f2a"
+                "WS2016FULLBASE": "ami-032e0e450148b3f25"
             },
             "ap-south-1": {
-                "WS2016FULLBASE": "ami-07e6b11175e3fa715"
+                "WS2016FULLBASE": "ami-0d6b59a9e1af5c3de"
             },
             "ap-southeast-1": {
-                "WS2016FULLBASE": "ami-04385f3f533c85af7"
+                "WS2016FULLBASE": "ami-0466364b7c95e4a7d"
             },
             "ap-southeast-2": {
-                "WS2016FULLBASE": "ami-02e3986f071e14a71"
+                "WS2016FULLBASE": "ami-027db56cee714db93"
             },
             "ca-central-1": {
-                "WS2016FULLBASE": "ami-0ee0c966a33759216"
+                "WS2016FULLBASE": "ami-0d789bff8415e0254"
             },
             "eu-central-1": {
-                "WS2016FULLBASE": "ami-014b173b0f52c004e"
+                "WS2016FULLBASE": "ami-0bd3cc88ca8ae88f5"
             },
             "eu-west-1": {
-                "WS2016FULLBASE": "ami-0dad95819a9372f76"
+                "WS2016FULLBASE": "ami-0a5cbbecdba7dfe83"
             },
             "eu-west-2": {
-                "WS2016FULLBASE": "ami-06a27ce600d784c71"
+                "WS2016FULLBASE": "ami-05d179634cef555b6"
             },
             "eu-west-3": {
-                "WS2016FULLBASE": "ami-0a729892011f4185b"
+                "WS2016FULLBASE": "ami-01142e623b44d2678"
             },
             "sa-east-1": {
-                "WS2016FULLBASE": "ami-0d44cef69e0b580f4"
+                "WS2016FULLBASE": "ami-0c602413fde84cb2c"
             },
             "us-east-1": {
-                "WS2016FULLBASE": "ami-041114ddee4a98333"
+                "WS2016FULLBASE": "ami-0f4c7e570f044b46f"
             },
             "us-east-2": {
-                "WS2016FULLBASE": "ami-0170ffc1abff2ebdc"
+                "WS2016FULLBASE": "ami-0aebcb5a7953a8fae"
             },
             "us-west-1": {
-                "WS2016FULLBASE": "ami-01238fbae24a14ace"
+                "WS2016FULLBASE": "ami-0caf8ef855671a2c0"
             },
             "us-west-2": {
-                "WS2016FULLBASE": "ami-019e99815e07ceb49"
+                "WS2016FULLBASE": "ami-02bc325deb3063e61"
             }
         }
     },
