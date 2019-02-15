@@ -1,7 +1,7 @@
 [
     {
         "ParameterKey": "AdminPassword",
-        "ParameterValue": "$[alfred_genpass_16]"
+        "ParameterValue": "$[taskcat_genpass_16]"
     },
     {
         "ParameterKey": "AdminUser",
@@ -9,7 +9,7 @@
     },
     {
         "ParameterKey": "AvailabilityZones",
-        "ParameterValue": "$[alfred_getaz_2]"
+        "ParameterValue": "$[taskcat_getaz_2]"
     },
     {
         "ParameterKey": "DomainDNSName",
@@ -17,7 +17,7 @@
     },
     {
         "ParameterKey": "KeyPairName",
-        "ParameterValue": "$[alfred_getkeypair]"
+        "ParameterValue": "$[taskcat_getkeypair]"
     },
     {
         "ParameterKey": "NumberOfRDGWHosts",
@@ -57,6 +57,6 @@
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "aws-quickstart"
+        "ParameterValue": "$[taskcat_autobucket]"
     }
 ]
