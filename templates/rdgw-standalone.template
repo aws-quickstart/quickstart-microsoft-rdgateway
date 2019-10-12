@@ -285,7 +285,7 @@
                 "WS2016FULLBASE": "ami-053cea4575d27b5d6"
             },
             "us-west-1": {
-                "WS2016FULLBASE": "ami-076ac373ed37322db"
+                "WS2016FULLBASE": "ami-00cb62f0977a10d07"
             },
             "us-west-2": {
                 "WS2016FULLBASE": "ami-0dca119820006527c"
