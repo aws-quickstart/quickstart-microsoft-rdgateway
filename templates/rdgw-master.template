@@ -292,8 +292,8 @@
                             "QSS3Region": {
                                 "Fn::If": [
                                     "GovCloudCondition",
-                                    "s3-us-gov-west-1",
-                                    "s3"
+                                    "s3.us-gov-west-1",
+                                    "s3.us-east-1"
                                 ]
                             }
                         }
@@ -344,8 +344,8 @@
                             "QSS3Region": {
                                 "Fn::If": [
                                     "GovCloudCondition",
-                                    "s3-us-gov-west-1",
-                                    "s3"
+                                    "s3.us-gov-west-1",
+                                    "s3.us-east-1"
                                 ]
                             }
                         }
