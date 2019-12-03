@@ -240,58 +240,6 @@
             ]
         }
     },
-    "Mappings": {
-        "AWSAMIRegionMap": {
-            "AMI": {
-                "WS2016FULLBASE": "Windows_Server-2016-English-Full-Base-2019.06.12"
-            },
-            "ap-northeast-1": {
-                "WS2016FULLBASE": "ami-0f8870c207dc4af69"
-            },
-            "ap-northeast-2": {
-                "WS2016FULLBASE": "ami-00ca4e793a7f026d7"
-            },
-            "ap-south-1": {
-                "WS2016FULLBASE": "ami-0d08c1bf7e46a5840"
-            },
-            "ap-southeast-1": {
-                "WS2016FULLBASE": "ami-09082d40574490760"
-            },
-            "ap-southeast-2": {
-                "WS2016FULLBASE": "ami-0202f51d204a8428f"
-            },
-            "ca-central-1": {
-                "WS2016FULLBASE": "ami-07cf57bc6e0b66c11"
-            },
-            "eu-central-1": {
-                "WS2016FULLBASE": "ami-02a6791b44938cfcd"
-            },
-            "eu-west-1": {
-                "WS2016FULLBASE": "ami-0737ec3d03742d38c"
-            },
-            "eu-west-2": {
-                "WS2016FULLBASE": "ami-0d3900ac08ee9aa1c"
-            },
-            "eu-west-3": {
-                "WS2016FULLBASE": "ami-072e7e4e02eeb267d"
-            },
-            "sa-east-1": {
-                "WS2016FULLBASE": "ami-0f06dcfea3d436659"
-            },
-            "us-east-1": {
-                "WS2016FULLBASE": "ami-08c7081300f7d9abb"
-            },
-            "us-east-2": {
-                "WS2016FULLBASE": "ami-02dca99d899d09cb3"
-            },
-            "us-west-1": {
-                "WS2016FULLBASE": "ami-0255ad7855945d5ef"
-            },
-            "us-west-2": {
-                "WS2016FULLBASE": "ami-000bf92d1a21bf9ac"
-            }
-        }
-    },
     "Conditions": {
         "2RDGWCondition": {
             "Fn::Or": [
@@ -480,7 +428,7 @@
                     {
                         "Key": "Name",
                         "Value": "RDGW",
-                        "PropagateAtLaunch": "true"
+                        "PropagateAtLaunch": true
                     }
                 ]
             },
@@ -831,7 +779,7 @@
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "50",
+                            "VolumeSize": 50,
                             "VolumeType": "gp2"
                         }
                     }
@@ -872,32 +820,32 @@
                 "SecurityGroupIngress": [
                     {
                         "IpProtocol": "tcp",
-                        "FromPort": "3389",
-                        "ToPort": "3389",
+                        "FromPort": 3389,
+                        "ToPort": 3389,
                         "CidrIp": {
                             "Ref": "RDGWCIDR"
                         }
                     },
                     {
                         "IpProtocol": "tcp",
-                        "FromPort": "443",
-                        "ToPort": "443",
+                        "FromPort": 443,
+                        "ToPort": 443,
                         "CidrIp": {
                             "Ref": "RDGWCIDR"
                         }
                     },
                     {
                         "IpProtocol": "udp",
-                        "FromPort": "3391",
-                        "ToPort": "3391",
+                        "FromPort": 3391,
+                        "ToPort": 3391,
                         "CidrIp": {
                             "Ref": "RDGWCIDR"
                         }
                     },
                     {
                         "IpProtocol": "icmp",
-                        "FromPort": "-1",
-                        "ToPort": "-1",
+                        "FromPort": -1,
+                        "ToPort": -1,
                         "CidrIp": {
                             "Ref": "RDGWCIDR"
                         }
