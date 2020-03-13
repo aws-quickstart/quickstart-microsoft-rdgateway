@@ -38,6 +38,7 @@ Metadata:
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
+          - QSS3BucketRegion
     ParameterLabels:
       DomainAdminPassword:
         default: Domain Admin Password
@@ -63,6 +64,8 @@ Metadata:
         default: Quick Start S3 Bucket Name
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
+      QSS3BucketRegion:
+        default: Bucket Region
       RDGWInstanceType:
         default: Remote Desktop Gateway Instance Type
       RDGWCIDR:
@@ -147,6 +150,10 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
     Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: "Region of Staging bucket (BucketName)"
+    Type: String
   RDGWInstanceType:
     Description: Amazon EC2 instance type for the Remote Desktop Gateway instances
     Type: String
@@ -189,6 +196,7 @@ Rules:
             - !Ref 'AWS::Region'
         AssertDescription: M4 instances are not available in the Paris region
 Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   2RDGWCondition: !Or
     - !Equals
       - !Ref 'NumberOfRDGWHosts'
@@ -239,12 +247,9 @@ Resources:
             Statement:
               - Action:
                   - s3:GetObject
-                Resource: !Sub
-                  - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
-                  - Partition: !If
-                      - GovCloudCondition
-                      - aws-us-gov
-                      - aws
+                Resource: !Sub 
+                  - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+                  - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
                 Effect: Allow
           PolicyName: aws-quick-start-s3-policy
         - PolicyDocument:
@@ -299,8 +304,8 @@ Resources:
         S3AccessCreds:
           type: S3
           roleName: !Ref 'RDGWHostRole'
-          buckets:
-            - !Ref 'QSS3BucketName'
+          buckets: 
+              - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       AWS::CloudFormation::Init:
         configSets:
           config:
@@ -334,43 +339,33 @@ Resources:
                   - "\n"
             C:\cfn\scripts\Unzip-Archive.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1
+                - S3Region: !If [UsingDefaultBucket, !Sub '${AWS::Region}', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               authentication: S3AccessCreds
             C:\cfn\modules\AWSQuickStart.zip:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip
+                - S3Region: !If [UsingDefaultBucket, !Sub '${AWS::Region}', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               authentication: S3AccessCreds
             C:\cfn\scripts\Join-Domain.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1
+                - S3Region: !If [UsingDefaultBucket, !Sub '${AWS::Region}', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               authentication: S3AccessCreds
             c:\cfn\scripts\Initialize-RDGW.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Initialize-RDGW.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Initialize-RDGW.ps1
+                - S3Region: !If [UsingDefaultBucket, !Sub '${AWS::Region}', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               authentication: S3AccessCreds
             c:\cfn\scripts\Set-EIP.ps1:
               source: !Sub
-                - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Set-EIP.ps1
-                - QSS3Region: !If
-                    - GovCloudCondition
-                    - s3.us-gov-west-1
-                    - s3.us-east-1
+                - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}scripts/Set-EIP.ps1
+                - S3Region: !If [UsingDefaultBucket, !Sub '${AWS::Region}', !Ref QSS3BucketRegion]
+                  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               authentication: S3AccessCreds
           services:
             windows:
