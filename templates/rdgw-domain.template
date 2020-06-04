@@ -65,7 +65,7 @@ Metadata:
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
       QSS3BucketRegion:
-        default: Bucket Region
+        default: Quick Start S3 bucket region
       RDGWInstanceType:
         default: Remote Desktop Gateway Instance Type
       RDGWCIDR:
@@ -74,21 +74,21 @@ Metadata:
         default: VPC ID
 Parameters:
   DomainAdminPassword:
-    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     Description: Password for the domain admin user. Must be at least 8 characters
       containing letters, numbers and symbols
-    MaxLength: '32'
-    MinLength: '8'
-    NoEcho: 'true'
     Type: String
+    MinLength: '8'
+    MaxLength: '32'
+    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
+    NoEcho: 'true'
   DomainAdminUser:
-    AllowedPattern: '[a-zA-Z0-9]*'
-    Default: StackAdmin
     Description: User name for the Domain Administrator. This is separate from the
       default "Administrator" account
-    MaxLength: '25'
-    MinLength: '5'
     Type: String
+    Default: StackAdmin
+    MinLength: '5'
+    MaxLength: '25'
+    AllowedPattern: '[a-zA-Z0-9]*'
   DomainDNSName:
     Description: Fully qualified domain name (FQDN) e.g. example.com
     Type: String
@@ -152,7 +152,7 @@ Parameters:
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
-    Description: "Region of Staging bucket (BucketName)"
+    Description: "The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value."
     Type: String
   RDGWInstanceType:
     Description: Amazon EC2 instance type for the Remote Desktop Gateway instances
@@ -247,7 +247,7 @@ Resources:
             Statement:
               - Action:
                   - s3:GetObject
-                Resource: !Sub 
+                Resource: !Sub
                   - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
                   - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
                 Effect: Allow

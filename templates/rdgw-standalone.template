@@ -134,7 +134,7 @@ Parameters:
     Description: "The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value."
     Type: String
   RDGWInstanceType:
-    Description: Amazon EC2 instance type for the first Remote Desktop Gateway instance
+    Description: Amazon EC2 instance type for the Remote Desktop Gateway instances
     Type: String
     Default: t2.large
     AllowedValues:
