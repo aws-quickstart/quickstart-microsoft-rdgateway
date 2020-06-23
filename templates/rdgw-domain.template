@@ -6,6 +6,8 @@ Description: >-
   Windows instance and related resources. You will be billed for the AWS resources
   used if you create a stack from this template. QS(0006)
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch into an existing VPC (domain-joined)"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
