@@ -1,2 +1,1 @@
-- _us-east-1 (N. Virginia)_ (EXAMPLE)
-- _us-east-2 (Ohio)_ (EXAMPLE)
+The services deployed by this Quick Start are available in all AWS regions.
