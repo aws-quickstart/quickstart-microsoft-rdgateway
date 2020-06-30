@@ -1,0 +1,38 @@
+
+.Network Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default Value|Description|Availability Zones
+(`AvailabilityZones`)|`**__Requires Input__**`|List of Availability Zones to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.|VPC Tenancy
+(`VPCTenancy`)|`default`|The allowed tenancy of instances launched into the VPC|VPC CIDR
+(`VPCCIDR`)|`10.0.0.0/16`|CIDR Block for the VPC|Private Subnet 1 CIDR
+(`PrivateSubnet1CIDR`)|`10.0.0.0/19`|CIDR block for private subnet 1 located in Availability Zone 1.|Private Subnet 2 CIDR
+(`PrivateSubnet2CIDR`)|`10.0.32.0/19`|CIDR block for private subnet 2 located in Availability Zone 2.|Public Subnet 1 CIDR
+(`PublicSubnet1CIDR`)|`10.0.128.0/20`|CIDR Block for the public DMZ subnet 1 located in Availability Zone 1|Public Subnet 2 CIDR
+(`PublicSubnet2CIDR`)|`10.0.144.0/20`|CIDR Block for the public DMZ subnet 2 located in Availability Zone 2|Allowed Remote Desktop Gateway External Access CIDR
+(`RDGWCIDR`)|`**__Requires Input__**`|Allowed CIDR Block for external access to the Remote Desktop Gateways
+|===
+.Amazon EC2 Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default Value|Description|Key Pair Name
+(`KeyPairName`)|`**__Requires Input__**`|Public/private key pairs allow you to securely connect to your instance after it launches|Remote Desktop Gateway Instance Type
+(`RDGWInstanceType`)|`t2.large`|Amazon EC2 instance type for Remote Desktop Gateway instances
+|===
+.Microsoft Remote Desktop Gateway Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default Value|Description|Number of RDGW Hosts
+(`NumberOfRDGWHosts`)|`1`|Enter the number of Remote Desktop Gateway hosts to create|Admin User Name
+(`AdminUser`)|`StackAdmin`|User name for the new local administrator account|Admin Password
+(`AdminPassword`)|`**__Requires Input__**`|Password for the administrative account. Must be at least 8 characters containing letters, numbers and symbols|Domain DNS Name
+(`DomainDNSName`)|`example.com`|Fully qualified domain name (FQDN) of the forest root domain e.g. example.com
+|===
+.AWS Quick Start Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default Value|Description|Quick Start S3 Bucket Name
+(`QSS3BucketName`)|`aws-quickstart`|S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|Quick Start S3 Key Prefix
+(`QSS3KeyPrefix`)|`quickstart-microsoft-rdgateway/`|S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).|Bucket Region
+(`QSS3BucketRegion`)|`us-east-1`|Region of Staging bucket (BucketName)
+|===
