@@ -7,6 +7,8 @@ Description: >-
   resources. You will be billed for the AWS resources used if you create a stack from
   this template.
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Deploy into a new VPC"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:

@@ -6,6 +6,8 @@ Description: >-
   You will be billed for the AWS resources used if you create a stack from this template.
   QS(0005)
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch into an existing VPC (standalone)"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:

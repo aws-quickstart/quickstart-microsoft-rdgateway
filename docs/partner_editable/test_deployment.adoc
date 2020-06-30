@@ -1,0 +1,2 @@
+// Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
+To test the deployment, use a Microsoft Remote Desktop client to establish an RDP session to any Remote Desktop Gateway servers that were deployed, using the credentials that were specified during the deployment.

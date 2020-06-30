@@ -1,0 +1,13 @@
+// Replace the content in <>
+// Briefly describe the software. Use consistent and clear branding. 
+// Include the benefits of using the software on AWS, and provide details on usage scenarios.
+
+AWS provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. RD Gateway uses RDP over HTTPS to establish a secure, encrypted connection between remote users on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This helps reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.
+
+This Quick Start automatically deploys and configures an RD Gateway infrastructure in the AWS Cloud from scratch, so you can securely administer your Windows-based, Amazon EC2 fleet using RDP over HTTPS. You can use the AWS CloudFormation templates included with the Quick Start to deploy a fully configured RD Gateway infrastructure in a new or existing VPC in your AWS account. You can also use the AWS CloudFormation templates as a starting point for your own implementation.
+
+We’ve also published a set of https://aws.amazon.com/quickstart/[Quick Starts] that provide solutions for deploying common Microsoft workloads, such as Microsoft Active Directory, Microsoft SharePoint, Microsoft Exchange, and Microsoft SQL Server, on AWS. Those Quick Starts include the RD Gateway deployment and architecture described in this guide—you can use them to deploy RD Gateway along with the additional Microsoft workload. For example, for an automated deployment that includes Active Directory Domain Services and RD gateways, see the https://fwd.aws/N6e7B[AWS Quick Start for Active Directory Domain Services].
+
+Implementing the RD Gateway on the AWS Cloud is an advanced topic. We recommend reviewing the Microsoft documentation for Windows Server 2016 and the AWS documentation https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/connecting_to_windows_instance.html[Connecting to Your Windows Instance].
+
+This guide focuses on infrastructure configuration topics that require careful consideration when you are planning and deploying an RD Gateway infrastructure on the AWS Cloud. It doesn’t cover general Windows Server installation and software configuration tasks. For general software configuration guidance and best practices, consult the Microsoft product documentation.

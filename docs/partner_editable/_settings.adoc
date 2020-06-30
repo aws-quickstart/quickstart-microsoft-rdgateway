@@ -1,0 +1,14 @@
+:quickstart-project-name: quickstart-microsoft-rdgateway
+:partner-product-name: Remote Desktop Gateway
+:partner-company-name: Microsoft
+:doc-month: April
+:doc-year: 2014
+:partner-contributors: 
+:quickstart-contributors: Santiago Cardenas - Solutions Architect, AWS Quick Start Team
+:deployment_time: 20 minutes
+:default_deployment_region: us-east-1
+// Uncomment these two attributes if you are leveraging
+// - an AWS Marketplace listing.
+// Additional content will be auto-generated based on these attributes.
+// :marketplace_subscription:
+// :marketplace_listing_url: https://example.com/

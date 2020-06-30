@@ -1,0 +1,122 @@
+
+== Best practices for using Microsoft RD Gateway on AWS
+// Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+=== The Principle of Least Privilege
+
+When considering remote administrative access to your environment, it is important to follow the principle of _least privilege_. This principle refers to users having the fewest possible permissions necessary to perform their job functions. This helps reduce the attack surface of your environment, making it much harder for an adversary to exploit. An attack surface can be defined as the set of exploitable vulnerabilities in your environment, including the network, software, and users who are involved in the ongoing operation of the system.
+
+Following the principle of least privilege, we recommend reducing the attack surface of your environment by exposing the absolute minimal set of ports to the network while also restricting the source network or IP address that will have access to your EC2 instances.
+
+In addition to the functionality that exists in the Microsoft platform, there are several AWS capabilities to help you implement the principle of least privilege, such as subnets, security groups, and trusted ingress CIDR blocks.
+
+=== VPC Configuration
+
+Amazon VPC lets you provision a private, isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. With Amazon VPC, you can define a virtual network topology closely resembling a traditional network that you might operate on your own premises. You have complete control over your virtual networking environment, including selection of your own IP address range, creation of subnets, and configuration of route tables and network gateways.
+
+When deploying a Windows-based architecture on the AWS Cloud, we recommend an VPC configuration that supports the following requirements:
+
+* Critical workloads should be placed in a minimum of two Availability Zones to provide high availability.
+* Instances should be placed into individual tiers. For example, in a Microsoft SharePoint deployment, you should have separate tiers for web servers, application servers, database servers, and domain controllers. Traffic between these groups can be controlled to adhere to the principle of least privilege.
+* Internal application servers and other non-internet facing servers should be placed in private subnets to prevent direct access to these instances from the internet.
+* RD gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.
+
+This Quick Start supports these best practices, as illustrated in link:#rd-gateway-architecture-on-aws[Figure 5]. For details on the VPC design used in this Quick Start, see the https://fwd.aws/9VdxN[Quick Start for building a modular and scalable virtual network architecture with Amazon VPC].
+
+=== Network Access Control Lists
+
+A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based on IP protocol, service port, or source or destination IP address. Figure 3 shows the default ACL configuration for a VPC subnet. This configuration is used for the subnets in the Quick Start architecture.
+
+image:./images/image3.png[image,width=543,height=255]
+
+Figure 3: Default network ACL configuration for a VPC subnet
+
+You may choose to keep the default network ACL configuration, or you may choose to lock it down with more specific rules to restrict traffic between subnets at the network level. For example, you could set a rule that would allow inbound administrative traffic on TCP port 3389 from a specific set of IP addresses. In either case, you’ll also need to implement security group rules to permit access from users connecting to RD gateways and between tiered groups of EC2 instances.
+
+=== Security Groups
+
+All EC2 instances are required to belong to one or more security groups. Security groups allow you to set policies to control open ports and provide isolation between application tiers. In a VPC, every instance runs behind a stateful firewall with all ports closed by default. The security group contains rules responsible for opening inbound and outbound ports on that firewall. While security groups act as an instance-level firewall, they can also be associated with multiple instances, providing isolation between application tiers in your environment. For example, you can create a security group for all your web servers that will allow traffic on TCP port 3389, but only from members of the security group containing your RD Gateway servers. This is illustrated in Figure 4.
+
+image:./images/image2.png[image,width=648,height=336]
+
+Figure 4: Security groups for RD Gateway administrative access
+
+Notice that inbound connections from the internet are only permitted over TCP port 443 to the RD gateways. The RD gateways have an Elastic IP address assigned and have direct access to the internet. The remaining Windows instances are deployed into private subnets and are assigned private IP addresses only. Security group rules allow only the RD gateways to initiate inbound connections for remote administration to TCP port 3389 for instances in the private subnets.
+
+In this architecture, RDP connections are established over HTTPS to the RD gateway and proxied to backend instances on the standard RDP TCP port 3389. This configuration helps you reduce the attack surface on your Windows-based instances while allowing administrators to establish connections to all your instances through a single gateway.
+
+It’s possible to provide remote administrative access to all your Windows-based instances through one RD gateway, but we recommend placing gateways in each Availability Zone for redundancy. The Quick Start implements this best practice, as illustrated in Figure 5.
+
+[[rd-gateway-architecture-on-aws]]
+== RD Gateway Architecture on AWS
+
+Deploying this Quick Start for a new VPC with *default parameters* builds the following RD Gateway environment in the AWS Cloud.
+
+image:./images/image4.png[image,width=685,height=661]
+
+Figure 5: Quick Start architecture for RD Gateway on AWS
+
+The Quick Start sets up the following:
+
+* A highly available architecture that spans two Availability Zones.*
+* A VPC configured with public and private subnets according to AWS best practices, to provide you with your own virtual network on AWS.*
+* An internet gateway to allow access to the internet. This gateway is used by the RD Gateway instances to send and receive traffic.*
+* Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
+* In each public subnet, up to four RD Gateway instances in an Auto Scaling group to provide secure remote access to instances in the private subnets. Each instance is assigned an Elastic IP address so it’s reachable directly from the internet.
+* A security group for Windows-based instances that will host the RD Gateway role, with an ingress rule permitting TCP port 3389 from your administrator IP address. After deployment, you’ll modify the security group ingress rules to configure administrative access through TCP port 443 instead, as illustrated in Figure 5.
+* An empty application tier for instances in private subnets. If more tiers are required, you can create additional private subnets with unique CIDR ranges.
+
+*** The template that deploys the Quick Start into an existing VPC skips the tasks marked by asterisks and prompts you for your existing VPC configuration.
+
+The Quick Start also installs a self-signed SSL certificate and configures RD CAP and RD RAP policies.
+
+[[_Considerations_When_Deploying]][[_Deployment_Scenarios]][[_Deployment_Options]][[_Toc462612194]]
+
+=== Initial Remote Administration Architecture
+
+In an initial RD gateway configuration, the servers in the public subnet will need an inbound security group rule permitting TCP port 3389 from the administrator’s source IP address or subnet. Windows instances sitting behind the RD Gateway in a private subnet will be in their own isolated tier. For example, a group of web server instances in a private subnet may be associated with their own web tier security group. This security group will need an inbound rule allowing connections from the RD Gateway on TCP port 3389.
+
+Using this architecture, an administrator can use a traditional RDP connection to an RD gateway to configure the local server. The RD gateway can also be used as a jump box; that is, when an RDP connection is established to the desktop of the RD gateway, an administrator can start a new RDP client session to initiate a connection to an instance in a private subnet, as illustrated in Figure 1.
+
+image:./images/image1.png[image,width=739,height=384]
+
+Figure 1: Initial architecture for remote administration
+
+Although this architecture works well for initial administration, it is not recommended for the long term. To further secure connections and reduce the number of RDP sessions required to administer the servers in the private subnets, the inbound rule should be changed to permit TCP port 443, and the RD gateway service should be installed and configured with an SSL certificate, and connection and authorization policies.
+
+The Quick Start sets up a standard TCP port 3389 connection from the administrator’s IP address. You’ll need to follow the link:#step-3.-perform-post-deployment-tasks[post-deployment steps] to modify the security group for RD Gateway to use a single inbound rule permitting TCP port 443, as illustrated in Figure 2. This modification will allow a Transport Layer Security (TLS) encrypted RDP connection to be proxied through the gateway over TCP port 443 directly to one or more Windows-based instances in private subnets on TCP port 3389. This configuration increases the security of the connection and also prevents the need to initiate an RDP session to the desktop of the RD gateway.
+
+image:./images/image2.png[image,width=648,height=336]
+
+Figure 2: Architecture for RD Gateway administrative access
+
+[[ssl-certificates]]
+=== SSL Certificates
+
+The RD Gateway role uses Transport Layer Security (TLS) to encrypt communications over the internet between administrators and gateway servers. To support TLS, a valid X.509 SSL certificate must be installed on each RD gateway. Certificates can be acquired in a number of ways, including:
+
+* Your own PKI infrastructure, such as a Microsoft Enterprise Certificate Authority (CA)
+* Certificates issued by a public CA, such as Verisign or Digicert
+* Self-signed certificates
+
+For smaller test environments, implementing a self-signed certificate is a straightforward process that helps you get up and running quickly. This Quick Start automatically generates a self-signed certificate for RD Gateway. If you’re setting up RD Gateway manually, see the instructions in link:#implementing-a-self-signed-certificate[Appendix A] for implementing a self-signed certificate.
+
+However, if you have a large number of varying administrative devices that need to establish a connection to your gateways, we recommend using a public certificate.
+
+In order for an RDP client to establish a secure connection with an RD gateway, the following certificate and DNS requirements must be met:
+
+* The issuing CA of the certificate installed on the gateway must be trusted by the RDP client. For example, the root CA certificate must be installed in the client machine’s _Trusted Root Certification Authorities_ store.
+* The subject name used on the certificate installed on the gateway must match the DNS name used by the client to connect to the server; for example, rdgw1.example.com.
+* The client must be able to resolve the host name (for example, rdgw1.example.com) to the Elastic IP address of the RD Gateway. This will require a Host (A) record in DNS.
+
+There are various considerations when choosing the right CA to obtain an SSL certificate. For example, a public certificate may be ideal since the issuing CA will be widely trusted by the majority of client devices that need to connect to your gateways. On the other hand, you may choose to utilize your own PKI infrastructure to ensure that only the machines that are part of your organization will trust the issuing CA.
+
+[[connection-and-resource-authorization-policies]]
+=== Connection and Resource Authorization Policies
+
+Users must meet specific requirements in order to connect to RD Gateway instances:
+
+* *Connection authorization policies* – Remote Desktop connection authorization policies (RD CAPs) allow you to specify who can connect to an RD Gateway instance. For example, you can select a group of users from your domain, such as _Domain Admins_.
+* *Resource authorization policies* – Remote Desktop resource authorization policies (RD RAPs) allow you to specify the internal Windows-based instances that remote users can connect to through an RD Gateway instance. For example, you can choose specific domain-joined computers, which administrators can connect to through the RD Gateway.
+
+This Quick Start automatically sets up connection and resource authorization policies. For instructions on manually configuring these policies, see link:#configuring-connection-and-resource-authorization-policies[Appendix] A.

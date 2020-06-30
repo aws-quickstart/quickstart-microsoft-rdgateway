@@ -1,0 +1,1 @@
+This product deploys one or more EC2 instances running Microsoft Windows Server. The Windows Server licenses are provided by Amazon.

@@ -1,0 +1,24 @@
+Deploying this Quick Start for a new virtual private cloud (VPC) with
+*default parameters* builds the following _{partner-product-name}_ environment in the
+AWS Cloud.
+
+Deploying this Quick Start for a new VPC with *default parameters* builds the following RD Gateway environment in the AWS Cloud.
+
+image:./images/image4.png[image,width=685,height=661]
+
+Figure 5: Quick Start architecture for RD Gateway on AWS
+
+The Quick Start sets up the following:
+
+* A highly available architecture that spans two Availability Zones.*
+* A VPC configured with public and private subnets according to AWS best practices, to provide you with your own virtual network on AWS.*
+* An internet gateway to allow access to the internet. This gateway is used by the RD Gateway instances to send and receive traffic.*
+* Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
+* In each public subnet, up to four RD Gateway instances in an Auto Scaling group to provide secure remote access to instances in the private subnets. Each instance is assigned an Elastic IP address so it’s reachable directly from the internet.
+* A security group for Windows-based instances that will host the RD Gateway role, with an ingress rule permitting TCP port 3389 from your administrator IP address. After deployment, you’ll modify the security group ingress rules to configure administrative access through TCP port 443 instead, as illustrated in Figure 5.
+* An empty application tier for instances in private subnets. If more tiers are required, you can create additional private subnets with unique CIDR ranges.
+
+*** The template that deploys the Quick Start into an existing VPC skips the tasks marked by asterisks and prompts you for your existing VPC configuration.
+
+The Quick Start also installs a self-signed SSL certificate and configures RD CAP and RD RAP policies.
+
