@@ -400,7 +400,7 @@ Resources:
             a-join-domain:
               command: !Join
                 - ''
-                - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName'
+                - - powershell.exe -Command "C:\cfn\scripts\Join-Domain.ps1 -DomainName '
                   - !Ref 'DomainDNSName'
                   - ''' -UserName '''
                   - !Ref 'DomainNetBIOSName'
