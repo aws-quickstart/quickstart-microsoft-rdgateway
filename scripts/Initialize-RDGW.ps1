@@ -1,7 +1,7 @@
 ﻿[CmdletBinding()]
 param (
     [Parameter(Mandatory=$true)]
-    [string]$ServerFQDN,
+    [string]$DomainDNSName,
 
     [Parameter(Mandatory=$true)]
     [string]$DomainNetBiosName,
@@ -19,7 +19,7 @@ try {
     Start-Transcript -Path c:\cfn\log\Initialize-RDGW.ps1.txt -Append
 
     Import-Module remotedesktopservices
-
+    $ServerFQDN = "$env:COMPUTERNAME.$DomainDNSName"
     $name = new-object -com "X509Enrollment.CX500DistinguishedName.1"
     $name.Encode("CN=$ServerFQDN", 0)
 
