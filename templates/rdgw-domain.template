@@ -787,12 +787,32 @@ Resources:
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: '60'
-  ALBListenerResource:
+        - Key: stickiness.enabled
+          Value: 'true'
+  ALBListener3389:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       LoadBalancerArn: !Ref 'ALBResource'
       Port: 3389
       Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref 'ALBTargetGroupResource'
+  ALBListener443:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref 'ALBResource'
+      Port: 443
+      Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref 'ALBTargetGroupResource'
+  ALBListener3391:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref 'ALBResource'
+      Port: 3391
+      Protocol: UDP
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref 'ALBTargetGroupResource'
