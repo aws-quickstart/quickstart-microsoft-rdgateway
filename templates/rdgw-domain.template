@@ -497,7 +497,7 @@ Resources:
                   - "False"
                 EnableDebugLogging:
                   - "False"
-          - name: "installRDS"
+          - name: "installRDP"
             action: aws:runCommand
             onFailure: "step:abandonHookAction"
             inputs:

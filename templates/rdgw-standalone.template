@@ -260,7 +260,7 @@ Resources:
               PropertySelector: "$.InstanceStatuses[0].InstanceState.Name"
               DesiredValues:
                 - running
-          - name: "installRDS"
+          - name: "installRDP"
             action: aws:runCommand
             onFailure: "step:abandonHookAction"
             inputs:
