@@ -260,19 +260,7 @@ Resources:
         PublicSubnet2CIDR: !Ref 'PublicSubnet2CIDR'
         VPCCIDR: !Ref 'VPCCIDR'
         VPCTenancy: !Ref 'VPCTenancy'
-  AutomationStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub 'https://${QSS3BucketName}.s3.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/automation-parts.template.yaml'
-      Parameters:
-        DomainAdminPassword: !Ref 'AdminPassword'
-        DomainAdminUser: !Ref 'AdminUser'
-        DomainNetBIOSName: !Ref 'DomainNetBIOSName'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        QSS3BucketRegion: !Ref QSS3BucketRegion
   RDGWStack:
-    DependsOn: VPCStack
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: 
