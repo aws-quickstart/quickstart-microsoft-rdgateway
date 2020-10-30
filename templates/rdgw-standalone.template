@@ -496,7 +496,7 @@ Resources:
   ALBTargetGroup3391:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Port: 3397
+      Port: 3391
       Protocol: UDP
       VpcId: !Ref 'VPCID'
       TargetGroupAttributes:
