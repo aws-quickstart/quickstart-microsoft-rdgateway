@@ -16,8 +16,6 @@ param (
 try {
     $ErrorActionPreference = "Stop"
 
-    Start-Transcript -Path c:\cfn\log\Initialize-RDGW.ps1.txt -Append
-
     Import-Module remotedesktopservices
     $ServerFQDN = "$env:COMPUTERNAME.$DomainDNSName"
     $name = new-object -com "X509Enrollment.CX500DistinguishedName.1"
@@ -62,7 +60,7 @@ try {
 
     Restart-Service tsgateway
 }
-catch {
-    Write-Verbose "$($_.exception.message)@ $(Get-Date)"
-    $_ | Write-AWSQuickStartException
+catch [System.Exception]{
+    Write-Output "Failed to Initialize RDGW with Certs $_"
+    Exit 1
 }

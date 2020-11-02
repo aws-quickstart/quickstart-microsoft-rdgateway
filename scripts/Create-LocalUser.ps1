@@ -26,12 +26,12 @@ $AdminUser = $AdminPassword.UserName
 
 try {
     $ErrorActionPreference = "Stop"
-    Start-Transcript -Path C:\cfn\log\$($MyInvocation.MyCommand.Name).log -Append
 
     $SecureString = ConvertTo-SecureString ($AdminPassword.Password) -AsPlainText -Force
     New-LocalUser $AdminUser -Password $SecureString -FullName $FullName -Description $Description
     net localgroup Administrators $AdminUser /ADD
 }
-catch {
-    $_ | Write-AWSQuickStartException
+catch [System.Exception]{
+    Write-Output "Failed to create local user $_"
+    Exit 1
 }
