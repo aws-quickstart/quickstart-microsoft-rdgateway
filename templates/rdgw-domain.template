@@ -212,174 +212,12 @@ Rules:
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
-  ConfigBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      LifecycleConfiguration:
-        Rules:
-          - Id: DeleteAfter30Days
-            ExpirationInDays: 30
-            Status: Enabled
-            Prefix: 'logs/'
   DomainJoinSecrets:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub 'DomainJoinSecrets-${AWS::StackName}'
       Description: Secrets to join AD domain
       SecretString: !Sub '{"username":"${DomainNetBIOSName}\\${DomainAdminUser}","password":"${DomainAdminPassword}"}'
-  WriteS3LambdaRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Policies:
-        - PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-            - Effect: Allow
-              Action:
-                - s3:PutObject
-                - s3:DeleteObject
-                - s3:ListBucket
-              Resource:
-                - !Sub "arn:aws:s3:::${ConfigBucket}"
-                - !Sub "arn:aws:s3:::${ConfigBucket}/*"
-          PolicyName: write-mof-s3
-      Path: /
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: 
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-  WriteMOFFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Code:
-        ZipFile: |
-          import json
-          import logging
-          import threading
-          import boto3
-          import cfnresponse
-          def create_object(bucket, body, key):
-              s3 = boto3.client('s3')
-              s3.put_object(Body=body,Bucket=bucket, Key=key)
-          def delete_objects(bucket, key):
-              s3 = boto3.client('s3')
-              objects = s3.list_objects_v2(Bucket=bucket)
-              logsobjects = s3.list_objects_v2(Bucket=bucket, Prefix='logs')
-              if logsobjects['KeyCount'] != 0:
-                for object in logsobjects['Contents']:
-                   s3.delete_object(Bucket=bucket, Key=object['Key'])
-                s3.delete_object(Bucket=bucket, Key=key)
-              else:
-                s3.delete_object(Bucket=bucket, Key=key)
-          def timeout(event, context):
-              logging.error('Execution is about to time out, sending failure response to CloudFormation')
-              cfnresponse.send(event, context, cfnresponse.FAILED, {}, None)
-          def handler(event, context):
-              # make sure we send a failure to CloudFormation if the function is going to timeout
-              timer = threading.Timer((context.get_remaining_time_in_millis() / 1000.00) - 0.5, timeout, args=[event, context])
-              timer.start()
-              print('Received event: %s' % json.dumps(event))
-              status = cfnresponse.SUCCESS
-              try:
-                  bucket = event['ResourceProperties']['Bucket']
-                  body = event['ResourceProperties']['Body']
-                  key = event['ResourceProperties']['Key']
-                  if event['RequestType'] == 'Delete':
-                      delete_objects(bucket, key)
-                  else:
-                      create_object(bucket, body, key)
-              except Exception as e:
-                  logging.error('Exception: %s' % e, exc_info=True)
-                  status = cfnresponse.FAILED
-              finally:
-                  timer.cancel()
-                  object_url = f'https://{bucket}.s3.amazonaws.com/{key}'
-                  cfnresponse.send(event, context, status, {}, object_url)
-      Handler: index.handler
-      Role: !GetAtt 'WriteS3LambdaRole.Arn'
-      Runtime: python3.7
-      Timeout: 240
-  WriteDomainJoinMOF:
-    Type: Custom::WriteMOFFile
-    Properties:
-      ServiceToken: !GetAtt WriteMOFFunction.Arn
-      Bucket: !Ref ConfigBucket
-      Key: "DomainJoin.mof"
-      Body: !Sub |
-        /*
-        @TargetNode='localhost'
-        */
-        instance of MSFT_Credential as $MSFT_Credential1ref
-        {
-        Password = "stringdoesntmatter";
-         UserName = "${DomainJoinSecrets}";
-        };
-        instance of DSC_Computer as $DSC_Computer1ref
-        {
-        ResourceID = "[Computer]JoinDomain";
-         Credential = $MSFT_Credential1ref;
-         DomainName = "{tag:DomainToJoin}";
-         Name = "{tag:Name}";
-         ModuleName = "ComputerManagementDsc";
-         ModuleVersion = "8.0.0";
-         ConfigurationName = "DomainJoin";
-        };
-        instance of OMI_ConfigurationDocument
-                            {
-         Version="2.0.0";
-                                MinimumCompatibleVersion = "1.0.0";
-                                CompatibleVersionAdditionalProperties= {"Omi_BaseResource:ConfigurationName"};
-                                Name="DomainJoin";
-                            };
-  WriteDomainRemoveMOF:
-    Type: Custom::WriteMOFFile
-    Properties:
-      ServiceToken: !GetAtt WriteMOFFunction.Arn
-      Bucket: !Ref ConfigBucket
-      Key: "DomainRemove.mof"
-      Body: !Sub |
-        /*
-        @TargetNode='localhost'
-        */
-        instance of MSFT_RoleResource as $MSFT_RoleResource1ref
-        {
-        ResourceID = "[WindowsFeature]RSAT-AD-PowerShell";
-         Ensure = "Present";
-         Name = "RSAT-AD-PowerShell";
-         ModuleName = "PSDesiredStateConfiguration";
-        ModuleVersion = "1.0";
-         ConfigurationName = "RemoveDomain";
-        };
-        instance of MSFT_Credential as $MSFT_Credential1ref
-        {
-        Password = "stringdoesntmatter";
-         UserName = "${DomainJoinSecrets}";
-        };
-        instance of MSFT_ADComputer as $MSFT_ADComputer1ref
-        {
-        ResourceID = "[ADComputer]RemoveDomain";
-         Ensure = "Absent";
-         Credential = $MSFT_Credential1ref;
-         ComputerName = "{tag:Name}";
-         ModuleName = "ActiveDirectoryDsc";
-         ModuleVersion = "6.0.1";
-        DependsOn = {
-            "[WindowsFeature]RSAT-AD-PowerShell"};
-         ConfigurationName = "RemoveDomain";
-        };
-        instance of OMI_ConfigurationDocument
-                            {
-         Version="2.0.0";
-                                MinimumCompatibleVersion = "1.0.0";
-                                CompatibleVersionAdditionalProperties= {"Omi_BaseResource:ConfigurationName"};
-                                Name="RemoveDomain";
-                            };
   SetupConfigurationDoc:
     Type: AWS::SSM::Document
     Properties:
@@ -394,9 +232,6 @@ Resources:
             type: "String" 
           ASGName:
             description: "Auto Scaling Group Name"
-            type: "String"
-          ConfigBucket:
-            description: "Bucket Containing Mof Files"
             type: "String"
           LCHName:
             description: "Life Cycle Hook Name"
@@ -447,7 +282,7 @@ Resources:
               PropertySelector: "$.InstanceStatuses[0].InstanceState.Name"
               DesiredValues:
                 - running
-          - name: "setNameTag"
+          - name: "InstallDSCmodules"
             action: aws:runCommand
             onFailure: "step:abandonHookAction"
             inputs:
@@ -460,14 +295,109 @@ Resources:
               Parameters:
                 commands: 
                   - |
-                     Import-Module AWSPowerShell
+                     <#
+                         .SYNOPSIS
+                         install-dsc-modules.ps1
+                     
+                         .DESCRIPTION
+                         This script downloads and installs the required PowerShell modules to create and configure Active Directory Domain Controllers. 
+                         It also creates a self signed certificate to be uses with PowerShell DSC.
+                         
+                         .EXAMPLE
+                         .\install-dsc-modules
+                     #>
+                     
+                     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                     
+                     Write-Output 'Installing NuGet Package Provider'
                      Try {
-                       $instanceid = (Invoke-RestMethod -Method Get -Uri http://169.254.169.254/latest/meta-data/instance-id)
-                       New-EC2Tag -Resource $instanceId -Tag @{Key="Name";Value=$env:COMPUTERNAME}
-                     }Catch [System.Exception] {
-                       Write-Output "Failed to set Name Tag $_"
-                       Exit 1
-                     }  
+                         Install-PackageProvider -Name 'NuGet' -MinimumVersion '2.8.5' -Force -ErrorAction Stop
+                     } Catch [System.Exception] {
+                         Write-Output "Failed to install NuGet Package Provider $_"
+                         Exit 1
+                     }
+                     
+                     Write-Output 'Setting PSGallery Respository to trusted'
+                     Try {
+                         Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -ErrorAction Stop
+                     } Catch [System.Exception] {
+                         Write-Output "Failed to set PSGallery Respository to trusted $_"
+                         Exit 1
+                     }
+                     
+                     Write-Output 'Installing the needed Powershell DSC modules for this Quick Start'
+                     $Modules = @(
+                         @{
+                             Name = 'ActiveDirectoryDsc'
+                             Version = '6.0.1'
+                         },
+                         @{
+                             Name = 'ComputerManagementDsc'
+                             Version = '8.4.0'
+                         }
+                     )
+                     
+                     Foreach ($Module in $Modules) {
+                         Try {
+                             Install-Module -Name $Module.Name -RequiredVersion $Module.Version -ErrorAction Stop
+                         } Catch [System.Exception] {
+                             Write-Output "Failed to Import Modules $_"
+                             Exit 1
+                         }
+                     }
+          - name: "GenerateDomainJoinMof"
+            action: aws:runCommand
+            onFailure: "step:abandonHookAction"
+            inputs:
+              DocumentName: AWS-RunPowerShellScript
+              InstanceIds: 
+                - "{{InstanceId}}"
+              CloudWatchOutputConfig:
+                CloudWatchOutputEnabled: "true"
+                CloudWatchLogGroupName: !Sub "/QuickStart/rdgateway/${AWS::StackName}/SetupConfiguration"
+              Parameters:
+                commands: 
+                  - !Sub |
+                     [CmdletBinding()]
+                     # Incoming Parameters for Script, CloudFormation\SSM Parameters being passed in
+                     param()
+                     
+                     # Creating Configuration Data Block that allows plain test password 
+                     # for DSC Configuration Processing
+                     $ConfigurationData = @{
+                         AllNodes = @(
+                             @{
+                                 NodeName="*"
+                                 PSDscAllowPlainTextPassword = $true
+                                 PSDscAllowDomainUser = $true
+                             },
+                             @{
+                                 NodeName = 'localhost'
+                             }
+                         )
+                     }
+                     
+                     Configuration DomainJoin {
+                         $ss = ConvertTo-SecureString -String 'stringdoesntmatter' -AsPlaintext -Force
+                         $Credentials = New-Object PSCredential('${DomainJoinSecrets}', $ss)
+                     
+                         Import-Module -Name PSDesiredStateConfiguration
+                         Import-Module -Name ComputerManagementDsc
+                         
+                         Import-DscResource -Module PSDesiredStateConfiguration
+                         Import-DscResource -Module ComputerManagementDsc
+                     
+                         Node 'localhost' {
+                     
+                             Computer JoinDomain {
+                                 Name = $env:COMPUTERNAME
+                                 DomainName = '{{DomainDNSName}}'
+                                 Credential = $Credentials
+                             }
+                         }
+                     }
+                     
+                     DomainJoin -OutputPath 'C:\AWSQuickstart\DomainJoin' -ConfigurationData $ConfigurationData
           - name: "applyDomainJoin"
             action: aws:runCommand
             onFailure: step:abandonHookAction
@@ -480,7 +410,7 @@ Resources:
                 CloudWatchLogGroupName: !Sub "/QuickStart/rdgateway/${AWS::StackName}/SetupConfiguration"
               Parameters:
                 MofsToApply:
-                  - "s3:{{ConfigBucket}}:DomainJoin.mof"
+                  - "C:\\AWSQuickstart\\DomainJoin\\localhost.mof"
                 ServicePath:
                   - default
                 MofOperationMode:
@@ -576,9 +506,6 @@ Resources:
           ASGName:
             description: "Auto Scaling Group Name"
             type: "String"
-          ConfigBucket:
-            description: "Bucket Containing Mof Files"
-            type: "String"
           LCHName:
             description: "Life Cycle Hook Name"
             type: "String"
@@ -587,6 +514,67 @@ Resources:
             description: "(Optional) The ARN of the role that allows Automation to perform the actions on your behalf."
             type: "String" 
         mainSteps:
+          - name: "GenerateRemoveJoinMof"
+            action: aws:runCommand
+            onFailure: "step:abandonHookAction"
+            inputs:
+              DocumentName: AWS-RunPowerShellScript
+              InstanceIds: 
+                - "{{InstanceId}}"
+              CloudWatchOutputConfig:
+                CloudWatchOutputEnabled: "true"
+                CloudWatchLogGroupName: !Sub "/QuickStart/rdgateway/${AWS::StackName}/RemoveConfiguration"
+              Parameters:
+                commands: 
+                  - !Sub |
+                      [CmdletBinding()]
+                      # Incoming Parameters for Script, CloudFormation\SSM Parameters being passed in
+                      param()
+                      
+                      $ConfigurationData = @{
+                          AllNodes = @(
+                              @{
+                                  NodeName="*"
+                                  PSDscAllowPlainTextPassword = $true
+                                  PSDscAllowDomainUser = $true
+                              },
+                              @{
+                                  NodeName = 'localhost'
+                              }
+                          )
+                      }
+                      
+                      Configuration RemoveDomain {
+                      
+                          $ss = ConvertTo-SecureString -String 'stringdoesntmatter' -AsPlaintext -Force
+                          $Credentials = New-Object PSCredential("${DomainJoinSecrets}", $ss)
+                          
+                      
+                          Import-Module -Name PSDesiredStateConfiguration
+                          Import-Module -Name ComputerManagementDsc
+                          Import-Module -Name ActiveDirectoryDsc
+                          
+                          Import-DscResource -Module PSDesiredStateConfiguration
+                          Import-DscResource -Module ComputerManagementDsc
+                          Import-DscResource -Module ActiveDirectoryDsc
+                      
+                      
+                          Node localhost {
+                              WindowsFeature RSAT-AD-PowerShell {
+                                  Name = 'RSAT-AD-PowerShell'
+                                  Ensure = 'Present'
+                              }
+                              
+                              ADComputer RemoveDomain {
+                                  ComputerName = $env:COMPUTERNAME
+                                  Ensure = 'Absent'
+                                  Credential = $Credentials
+                                  DependsOn = "[WindowsFeature]RSAT-AD-PowerShell"
+                              }
+                          }
+                      }
+                      
+                      RemoveDomain -OutputPath 'C:\AWSQuickstart\RemoveDomain' -ConfigurationData $ConfigurationData
           - name: "RemoveFromDomain"
             action: aws:runCommand
             onFailure: step:abandonHookAction
@@ -599,7 +587,7 @@ Resources:
                 CloudWatchLogGroupName: !Sub "/QuickStart/rdgateway/${AWS::StackName}/RemoveConfiguration"
               Parameters:
                 MofsToApply:
-                  - "s3:{{ConfigBucket}}:DomainRemove.mof"
+                  - "C:\\AWSQuickstart\\RemoveDomain\\localhost.mof"
                 ServicePath:
                   - default
                 MofOperationMode:
@@ -642,7 +630,6 @@ Resources:
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore'
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentServerPolicy'
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess'
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AmazonSSMDirectoryServiceAccess'
       Policies:
         - PolicyDocument:
@@ -685,27 +672,6 @@ Resources:
                 Resource: 
                   - !Ref 'DomainJoinSecrets'
           PolicyName: ssm-secrets-policy
-        - PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ec2:CreateTags
-                Resource: !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*'
-          PolicyName: qs-tags-Policy
-        - PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:PutObjectAcl
-                  - s3:ListBucket
-                Resource: 
-                  - !Sub "arn:aws:s3:::${ConfigBucket}"
-                  - !Sub "arn:aws:s3:::${ConfigBucket}/*"
-                Effect: Allow
-          PolicyName: s3-instance-bucket-policy
       Path: /
       AssumeRolePolicyDocument:
         Statement:
@@ -865,8 +831,8 @@ Resources:
            - 
             ResourceType: 'instance'
             Tags:
-              - Key: "DomainToJoin"
-                Value: !Ref "DomainDNSName"
+              - Key: "Name"
+                Value: "RDGW"
   RDGWAutoScalingGroup:
     DependsOn: ScaleUpEventBridgeResource
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -943,7 +909,7 @@ Resources:
               InstanceId: $.detail.EC2InstanceId
               ASGName: $.detail.AutoScalingGroupName
               LCHName: $.detail.LifecycleHookName
-            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"ConfigBucket":["${ConfigBucket}"],"DomainDNSName":["${DomainDNSName}"],"DomainNetBIOSName":["${DomainNetBIOSName}"],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"]}'
+            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"]}'
   ScaleDownEventBridgeResource:
     Type: AWS::Events::Rule
     Properties:
@@ -966,7 +932,7 @@ Resources:
               InstanceId: $.detail.EC2InstanceId
               ASGName: $.detail.AutoScalingGroupName
               LCHName: $.detail.LifecycleHookName
-            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"ConfigBucket":["${ConfigBucket}"]}'
+            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>]}'
 Outputs:
   RDPURL:
     Description: ELB DNS Name to connect to RDP Gateway
