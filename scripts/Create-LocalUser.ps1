@@ -1,10 +1,19 @@
+<#
+    .SYNOPSIS
+    Create-LocalUser.ps1
+
+    .DESCRIPTION
+    This script creates a new local user and adds them to the local administrators group
+    
+    .EXAMPLE
+    .\Create-LocalUser -AdminSecParam 'arn:aws:secretsmanager:us-west-2:############:secret:example-VX5fcW' -FullName 'John Doe' -Description 'This is a local user account'
+
+#>
+
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)][string]$AdminSecParam,
-
-    [Parameter(Mandatory=$false)][string]$FullName,
-
-    [Parameter(Mandatory=$false)][string]$Description
+    [Parameter(Mandatory = $true)]
+    [string]$AdminSecParam
 )
 
 # Getting Password from Secrets Manager for AD Admin User
@@ -22,16 +31,21 @@ Try {
     Exit 1
 }
 
-$AdminUser = $AdminPassword.UserName
+$AdminUserName = $AdminPassword.UserName
+$AdminUserPW = ConvertTo-SecureString ($AdminPassword.Password) -AsPlainText -Force
 
-try {
-    $ErrorActionPreference = "Stop"
-
-    $SecureString = ConvertTo-SecureString ($AdminPassword.Password) -AsPlainText -Force
-    New-LocalUser $AdminUser -Password $SecureString -FullName $FullName -Description $Description
-    net localgroup Administrators $AdminUser /ADD
-}
-catch [System.Exception]{
+Write-Output 'Creating local user'
+Try {
+    New-LocalUser -Name $AdminUserName -Password $AdminUserPW -ErrorAction Stop
+} Catch [System.Exception]{
     Write-Output "Failed to create local user $_"
+    Exit 1
+}
+
+Write-Output 'Adding local user to group'
+Try {
+    Add-LocalGroupMember -Group 'Administrators' -Member $AdminUserName -ErrorAction Stop
+} Catch [System.Exception]{
+    Write-Output "Failed to add local user to group $_"
     Exit 1
 }

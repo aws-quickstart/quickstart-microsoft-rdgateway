@@ -76,8 +76,7 @@ Metadata:
         default: VPC ID
 Parameters:
   DomainAdminPassword:
-    Description: Password for the domain admin user. Must be at least 8 characters
-      containing letters, numbers and symbols
+    Description: Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols
     Type: String
     MinLength: '8'
     MaxLength: '32'
@@ -93,16 +92,13 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
   DomainNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
-    Default: example
-    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier
-      versions of Windows e.g. EXAMPLE
+    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE
     MaxLength: '15'
     MinLength: '1'
     Type: String
   DomainDNSName:
     Description: Fully qualified domain name (FQDN) e.g. example.com
     Type: String
-    Default: example.com
     MinLength: '2'
     MaxLength: '255'
     AllowedPattern: '[a-zA-Z0-9\-]+\..+'
@@ -110,8 +106,7 @@ Parameters:
     Description: ID of the Domain Member Security Group (e.g., sg-7f16e910)
     Type: AWS::EC2::SecurityGroup::Id
   KeyPairName:
-    Description: Public/private key pairs allow you to securely connect to your instance
-      after it launches
+    Description: Public/private key pairs allow you to securely connect to your instance after it launches
     Type: AWS::EC2::KeyPair::KeyName
   LatestAmiId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
@@ -126,31 +121,22 @@ Parameters:
     Description: Enter the number of Remote Desktop Gateway hosts to create
     Type: String
   PublicSubnet1ID:
-    Description: ID of the public subnet 1 that you want to provision the first Remote
-      Desktop Gateway into (e.g., subnet-a0246dcd)
+    Description: ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (e.g., subnet-a0246dcd)
     Type: AWS::EC2::Subnet::Id
   PublicSubnet2ID:
-    Description: ID of the public subnet 2 you want to provision the second Remote
-      Desktop Gateway into (e.g., subnet-e3246d8e)
+    Description: ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (e.g., subnet-e3246d8e)
     Type: AWS::EC2::Subnet::Id
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
     Default: aws-quickstart
-    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
     Default: quickstart-microsoft-rdgateway/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
@@ -161,6 +147,8 @@ Parameters:
     Type: String
     Default: t3.2xlarge
     AllowedValues:
+      - t2.small
+      - t2.medium
       - t2.large
       - t3.micro
       - t3.small
@@ -177,6 +165,7 @@ Parameters:
       - m5.large
       - m5.xlarge
       - m5.2xlarge
+      - m5.4xlarge
       - m5a.large
       - m5a.xlarge
       - m5a.2xlarge
@@ -240,7 +229,7 @@ Resources:
             default: "example.com"
             description: "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com"
             type: "String"
-          DomainNetBIOSName: 
+          DomainNetBIOSName:
             default: "example"
             description: "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE"
             type: "String"
@@ -891,7 +880,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       State: ENABLED
-      Description: Run Configuration Document that Joins Domain and Configures IIS.
+      Description: Run Configuration Document that Joins Domain and Configures RDGW.
       EventPattern:
         source:
           - aws.autoscaling
@@ -909,7 +898,7 @@ Resources:
               InstanceId: $.detail.EC2InstanceId
               ASGName: $.detail.AutoScalingGroupName
               LCHName: $.detail.LifecycleHookName
-            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"]}'
+            InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"], "DomainNetBIOSName":["${DomainNetBIOSName}"], "DomainDNSName":["${DomainDNSName}"]}'
   ScaleDownEventBridgeResource:
     Type: AWS::Events::Rule
     Properties:
