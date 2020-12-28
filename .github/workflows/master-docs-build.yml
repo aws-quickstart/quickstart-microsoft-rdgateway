@@ -3,13 +3,14 @@ name: main-documentation
 on:
   push:
     branches:
+    - master
     - main
 jobs:
   build-adocs:
     runs-on: ubuntu-18.04
     name: asciidoc builder
     steps:
-    - name: Checkout (master)
+    - name: Checkout (main)
       uses: actions/checkout@v2
     - name: Get new doc updates
       run: |
@@ -17,9 +18,9 @@ jobs:
            chmod +x configure_git_env.sh
            ./configure_git_env.sh
     - name: Setup python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.7.7
+        python-version: 3.x
     - name: Generate dynamic content.
       run: ./docs/boilerplate/.utils/generate_dynamic_content.sh
     - name: Run local actions
