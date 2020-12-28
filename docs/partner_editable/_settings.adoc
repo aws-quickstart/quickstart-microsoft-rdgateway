@@ -1,5 +1,6 @@
 :quickstart-project-name: quickstart-microsoft-rdgateway
 :partner-product-name: Remote Desktop Gateway
+:partner-product-short-name: RD Gateway
 :partner-company-name: Microsoft
 :doc-month: April
 :doc-year: 2014

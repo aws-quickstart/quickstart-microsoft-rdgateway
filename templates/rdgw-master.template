@@ -33,7 +33,6 @@ Metadata:
           - NumberOfRDGWHosts
           - AdminUser
           - AdminPassword
-          - DomainDNSName
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
@@ -47,8 +46,6 @@ Metadata:
         default: Admin Password
       AdminUser:
         default: Admin User Name
-      DomainDNSName:
-        default: Domain DNS Name
       KeyPairName:
         default: Key Pair Name
       NumberOfRDGWHosts:
@@ -95,22 +92,6 @@ Parameters:
     Description: 'List of Availability Zones to use for the subnets in the VPC. Note:
       The logical order is preserved and only 2 AZs are used for this deployment.'
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  DomainDNSName:
-    AllowedPattern: '[a-zA-Z0-9\-]+\..+'
-    Default: example.com
-    Description: Fully qualified domain name (FQDN) of the forest root domain e.g.
-      example.com
-    MaxLength: '25'
-    MinLength: '3'
-    Type: String
-  DomainNetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9\-]+'
-    Default: example
-    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier
-      versions of Windows e.g. EXAMPLE
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
   KeyPairName:
     Description: Public/private key pairs allow you to securely connect to your instance
       after it launches
@@ -265,7 +246,6 @@ Resources:
       Parameters:
         AdminPassword: !Ref 'AdminPassword'
         AdminUser: !Ref 'AdminUser'
-        DomainDNSName: !Ref 'DomainDNSName'
         KeyPairName: !Ref 'KeyPairName'
         NumberOfRDGWHosts: !Ref 'NumberOfRDGWHosts'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
