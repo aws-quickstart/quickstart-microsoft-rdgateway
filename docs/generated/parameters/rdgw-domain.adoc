@@ -2,40 +2,40 @@
 .Network Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default Value|Description|VPC ID
-(`VPCID`)|`**__Requires Input__**`|ID of the VPC (e.g., vpc-0343606e)|Public Subnet 1 ID
-(`PublicSubnet1ID`)|`**__Requires Input__**`|ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (e.g., subnet-a0246dcd)|Public Subnet 2 ID
-(`PublicSubnet2ID`)|`**__Requires Input__**`|ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (e.g., subnet-e3246d8e)|Allowed Remote Desktop Gateway External Access CIDR
-(`RDGWCIDR`)|`**__Requires Input__**`|Allowed CIDR Block for external access to the Remote Desktop Gateways
+|Parameter label (name) |Default value|Description|VPC ID
+(`VPCID`)|`**__Requires input__**`|ID of the VPC (e.g., vpc-0343606e)|Public Subnet 1 ID
+(`PublicSubnet1ID`)|`**__Requires input__**`|ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (e.g., subnet-a0246dcd)|Public Subnet 2 ID
+(`PublicSubnet2ID`)|`**__Requires input__**`|ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (e.g., subnet-e3246d8e)|Allowed Remote Desktop Gateway External Access CIDR
+(`RDGWCIDR`)|`**__Requires input__**`|Allowed CIDR Block for external access to the Remote Desktop Gateways
 |===
 .Amazon EC2 Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default Value|Description|Key Pair Name
-(`KeyPairName`)|`**__Requires Input__**`|Public/private key pairs allow you to securely connect to your instance after it launches|Remote Desktop Gateway Instance Type
-(`RDGWInstanceType`)|`t2.large`|Amazon EC2 instance type for the Remote Desktop Gateway instances|SSM Parameter to Grab Latest AMI ID
+|Parameter label (name) |Default value|Description|Key Pair Name
+(`KeyPairName`)|`**__Requires input__**`|Public/private key pairs allow you to securely connect to your instance after it launches|Remote Desktop Gateway Instance Type
+(`RDGWInstanceType`)|`t3.2xlarge`|Amazon EC2 instance type for the Remote Desktop Gateway instances|SSM Parameter to Grab Latest AMI ID
 (`LatestAmiId`)|`/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base`|NO_DESCRIPTION
 |===
 .Microsoft Active Directory Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default Value|Description|Domain DNS Name
-(`DomainDNSName`)|`example.com`|Fully qualified domain name (FQDN) e.g. example.com|Domain NetBIOS Name
-(`DomainNetBIOSName`)|`example`|NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE|Domain Member Security Group ID
-(`DomainMemberSGID`)|`**__Requires Input__**`|ID of the Domain Member Security Group (e.g., sg-7f16e910)|Domain Admin User Name
-(`DomainAdminUser`)|`StackAdmin`|User name for the Domain Administrator. This is separate from the default "Administrator" account|Domain Admin Password
-(`DomainAdminPassword`)|`**__Requires Input__**`|Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols
+|Parameter label (name) |Default value|Description|Domain DNS Name
+(`DomainDNSName`)|`**__Requires input__**`|Fully qualified domain name (FQDN) e.g. example.com|Domain NetBIOS Name
+(`DomainNetBIOSName`)|`**__Requires input__**`|NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE|Domain Member Security Group ID
+(`DomainMemberSGID`)|`**__Requires input__**`|ID of the Domain Member Security Group (e.g., sg-7f16e910)|Domain Admin User Name
+(`DomainAdminUser`)|`Admin`|User name for the Domain Administrator. This is separate from the default "Administrator" account|Domain Admin Password
+(`DomainAdminPassword`)|`**__Requires input__**`|Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols
 |===
 .Microsoft Remote Desktop Gateway Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default Value|Description|Number of RDGW Hosts
+|Parameter label (name) |Default value|Description|Number of RDGW Hosts
 (`NumberOfRDGWHosts`)|`1`|Enter the number of Remote Desktop Gateway hosts to create
 |===
 .AWS Quick Start Configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default Value|Description|Quick Start S3 Bucket Name
+|Parameter label (name) |Default value|Description|Quick Start S3 Bucket Name
 (`QSS3BucketName`)|`aws-quickstart`|S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|Quick Start S3 Key Prefix
 (`QSS3KeyPrefix`)|`quickstart-microsoft-rdgateway/`|S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).|Quick Start S3 bucket region
 (`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
