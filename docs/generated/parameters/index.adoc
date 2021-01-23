@@ -1,9 +1,9 @@
 
-=== Launch into an existing VPC (domain-joined)
-include::rdgw-domain.adoc[]
-
 === Launch into an existing VPC (standalone)
 include::rdgw-standalone.adoc[]
+
+=== Launch into an existing VPC (domain-joined)
+include::rdgw-domain.adoc[]
 
 === Deploy into a new VPC
 include::rdgw-master.adoc[]
