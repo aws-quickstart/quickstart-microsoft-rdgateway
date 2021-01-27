@@ -2,7 +2,7 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
-AWS provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. RD Gateway uses RDP over HTTPS to establish a secure, encrypted connection between remote users on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This helps reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.
+AWS provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. {partner-product-name} uses RDP over HTTPS to establish a secure, encrypted connection between remote users on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This helps reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.
 
 This Quick Start automatically deploys and configures an RD Gateway infrastructure in the AWS Cloud from scratch, so you can securely administer your Windows-based, Amazon EC2 fleet using RDP over HTTPS. You can use the AWS CloudFormation templates included with the Quick Start to deploy a fully configured RD Gateway infrastructure in a new or existing VPC in your AWS account. You can also use the AWS CloudFormation templates as a starting point for your own implementation.
 
