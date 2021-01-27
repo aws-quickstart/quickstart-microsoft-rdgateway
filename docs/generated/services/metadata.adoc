@@ -13,6 +13,7 @@
 :template_aws_secretsmanager_secret:
 :template_aws_ssm_document:
 :template_cloudformation:
+:template_deterministic_ec2_instances:
 :template_ec2:
 :template_elasticloadbalancingv2:
 :template_events:
