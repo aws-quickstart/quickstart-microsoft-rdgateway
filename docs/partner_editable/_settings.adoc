@@ -5,7 +5,7 @@
 :doc-month: February
 :doc-year: 2021
 //:partner-contributors: 
-:quickstart-contributors: Dave May and Santiago Cardenas, Solutions Architects, AWS Quick Start Team
+:quickstart-contributors: Dave May and Santiago Cardenas, Solutions Architects, AWS Quick Start team
 :deployment_time: 20 minutes
 :default_deployment_region: us-east-1
 :parameters_as_appendix:
