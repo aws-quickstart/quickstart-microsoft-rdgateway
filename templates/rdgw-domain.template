@@ -249,7 +249,7 @@ Resources:
             type: "String"
           DomainNetBIOSName:
             default: "example"
-            description: "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (for example, EXAMPLE). 
+            description: "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (for example, EXAMPLE)."
             type: "String"
           QSS3BucketName:
             default: "aws-quickstart"
