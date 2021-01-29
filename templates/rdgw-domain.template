@@ -83,7 +83,7 @@ Parameters:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     NoEcho: 'true'
   DomainAdminUser:
-    Description: User name for the domain administrator. This is separate from the
+    Description: User name for the domain administrator. This parameter is separate from the
       default administrator account.
     Type: String
     Default: Admin
@@ -92,7 +92,7 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
   DomainNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
-    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (example: EXAMPLE).
+    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (for example, EXAMPLE).
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -103,7 +103,7 @@ Parameters:
     MaxLength: '255'
     AllowedPattern: '[a-zA-Z0-9\-]+\..+'
   DomainMemberSGID:
-    Description: ID of the domain member security group (example: sg-7f16e910).
+    Description: ID of the domain member security group (for example, sg-7f16e910).
     Type: AWS::EC2::SecurityGroup::Id
   KeyPairName:
     Description: Public/private key pairs allow you to securely connect to your instance after it launches.
@@ -121,10 +121,10 @@ Parameters:
     Description: Enter the number of Remote Desktop Gateway hosts to create.
     Type: String
   PublicSubnet1ID:
-    Description: ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (example: subnet-a0246dcd).
+    Description: ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (for example, subnet-a0246dcd).
     Type: AWS::EC2::Subnet::Id
   PublicSubnet2ID:
-    Description: ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (example: subnet-e3246d8e).
+    Description: ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (for example, subnet-e3246d8e).
     Type: AWS::EC2::Subnet::Id
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
@@ -192,7 +192,7 @@ Parameters:
     Description: Allowed CIDR Block for external access to the Remote Desktop Gateways.
     Type: String
   VPCID:
-    Description: ID of the VPC (example: vpc-0343606e).
+    Description: ID of the VPC (for example, vpc-0343606e).
     Type: AWS::EC2::VPC::Id
 Rules:
   SubnetsInVPC:
@@ -202,7 +202,7 @@ Rules:
             - AWS::EC2::Subnet::Id
             - VpcId
           - !RefAll 'AWS::EC2::VPC::Id'
-        AssertDescription: All subnets must in the VPC
+        AssertDescription: All subnets must be in the VPC.
   CheckSupportedInstances:
     RuleCondition: !Contains
       - - m4.large
@@ -215,7 +215,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region
+        AssertDescription: M4 instances are not available in the Paris region.
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
@@ -223,7 +223,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub 'DomainJoinSecrets-${AWS::StackName}'
-      Description: Secrets to join AD domain
+      Description: Secrets to join AD domain.
       SecretString: !Sub '{"username":"${DomainNetBIOSName}\\${DomainAdminUser}","password":"${DomainAdminPassword}"}'
   SetupConfigurationDoc:
     Type: AWS::SSM::Document
@@ -245,11 +245,11 @@ Resources:
             type: "String"
           DomainDNSName: 
             default: "example.com"
-            description: "Fully qualified domain name (FQDN) of the forest root domain (example: example.com)."
+            description: "Fully qualified domain name (FQDN) of the forest root domain (for example, example.com)."
             type: "String"
           DomainNetBIOSName:
             default: "example"
-            description: "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (example: EXAMPLE). 
+            description: "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows (for example, EXAMPLE). 
             type: "String"
           QSS3BucketName:
             default: "aws-quickstart"
