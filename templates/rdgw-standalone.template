@@ -7,7 +7,7 @@ Description: >-
   (qs-1qup6rag3)
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Parameters for launch into an existing VPC (standalone)"
+    EntrypointName: "Parameters for launching into an existing VPC (standalone)"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -67,7 +67,7 @@ Metadata:
         default: VPC ID
 Parameters:
   AdminPassword:
-    Description: Password for the administrative account. Must be at least 8 characters,
+    Description: Password for the administrative account. Must be at least 8 characters
       containing letters, numbers, and symbols.
     Type: String
     MinLength: '8'
@@ -106,11 +106,11 @@ Parameters:
     Type: String
   PublicSubnet1ID:
     Description: ID of the public subnet 1 that you want to provision the first Remote
-      Desktop Gateway into (example: subnet-a0246dcd).
+      Desktop Gateway into (for example, subnet-a0246dcd).
     Type: AWS::EC2::Subnet::Id
   PublicSubnet2ID:
     Description: ID of the public subnet 2 you want to provision the second Remote
-      Desktop Gateway into (example: subnet-e3246d8e).
+      Desktop Gateway into (for example, subnet-e3246d8e).
     Type: AWS::EC2::Subnet::Id
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
@@ -147,7 +147,7 @@ Parameters:
     See https://aws-quickstart.github.io/option1.html.'
     Type: String
   RDGWInstanceType:
-    Description: Amazon EC2 instance type for the Remote Desktop Gateway instancesz.
+    Description: Amazon EC2 instance type for the Remote Desktop Gateway instances.
     Type: String
     Default: t3.2xlarge
     AllowedValues:
@@ -175,7 +175,7 @@ Parameters:
     Description: Allowed CIDR Block for external access to the Remote Desktop Gateways.
     Type: String
   VPCID:
-    Description: ID of the VPC (example: vpc-0343606e).
+    Description: ID of the VPC (for example, vpc-0343606e).
     Type: AWS::EC2::VPC::Id
 Rules:
   SubnetsInVPC:
@@ -185,7 +185,7 @@ Rules:
             - AWS::EC2::Subnet::Id
             - VpcId
           - !RefAll 'AWS::EC2::VPC::Id'
-        AssertDescription: All subnets must in the VPC
+        AssertDescription: All subnets must be in the VPC.
   CheckSupportedInstances:
     RuleCondition: !Contains
       - - m4.large
@@ -198,7 +198,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region
+        AssertDescription: M4 instances are not available in the Paris region.
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
@@ -228,7 +228,7 @@ Resources:
             type: "String"
           DomainDNSName: 
             default: "example.com"
-            description: "Fully qualified domain name (FQDN) of the forest root domain (example: example.com)."
+            description: "Fully qualified domain name (FQDN) of the forest root domain (for example, example.com)."
             type: "String"
           AdminSecParam:
             description: "AWS Secrets parameter name that has password and user name for the domain administrator."
@@ -258,7 +258,7 @@ Resources:
             type: "String"
           AutomationAssumeRole:
             default: ""
-            description: "(Optional) The ARN of the role that allows automation to perform the actions on your behalf."
+            description: "(Optional) The ARN of the role that allows automation to perform actions on your behalf."
             type: "String" 
         mainSteps:
           - name: waitUntilInstanceStateRunning
@@ -603,7 +603,7 @@ Resources:
   RemoteDesktopGatewaySG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable RDP access from the Internet
+      GroupDescription: Enable RDP access from the internet.
       VpcId: !Ref 'VPCID'
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -630,7 +630,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       State: ENABLED
-      Description: Run Configuration Document that Joins Domain and Configures IIS.
+      Description: Run configuration document that joins domain and configures IIS.
       EventPattern:
         source:
           - aws.autoscaling
@@ -651,7 +651,7 @@ Resources:
             InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"DomainDNSName":["${DomainDNSName}"],"AdminSecParam":["${RDGWLocalUserSecrets}"],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"]}'
 Outputs:
   RDPURL:
-    Description: ELB DNS Name to connect to RDP Gateway
+    Description: ELB DNS name to connect to RDP Gateway.
     Value: !GetAtt 'ALBResource.DNSName'
   RemoteDesktopGatewaySGID:
     Value: !Ref 'RemoteDesktopGatewaySG'
