@@ -2,7 +2,7 @@
 :partner-product-name: Remote Desktop Gateway
 :partner-product-short-name: RD Gateway
 :partner-company-name: Microsoft
-:doc-month: February
+:doc-month: January
 :doc-year: 2021
 //:partner-contributors: 
 :quickstart-contributors: Dave May and Santiago Cardenas, Solutions Architects, AWS Quick Start team
