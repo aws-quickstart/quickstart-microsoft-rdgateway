@@ -1,9 +1,9 @@
 
+=== Parameters for launching into an existing VPC (domain-joined)
+include::rdgw-domain.adoc[]
+
 === Parameters for launching into an existing VPC (standalone)
 include::rdgw-standalone.adoc[]
 
 === Parameters for deploying into a new VPC
 include::rdgw-master.adoc[]
-
-=== Parameters for launching into an existing VPC (domain-joined)
-include::rdgw-domain.adoc[]
