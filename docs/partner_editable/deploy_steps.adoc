@@ -27,14 +27,14 @@ NOTE: You are responsible for the cost of the AWS services used while running th
 
 [cols=2*]
 |===
-^|https://fwd.aws/AdxKM[Deploy Remote Desktop Gateway into a new VPC on AWS^]
-^|https://fwd.aws/JVkXY[View template^]
+^|https://fwd.aws/66VB5[Deploy Remote Desktop Gateway into a new VPC on AWS^]
+^|https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-master.template[View template^]
 
-^|https://fwd.aws/z67Gy[Deploy a standalone Remote Desktop Gateway into an existing VPC on AWS^]
-^|https://fwd.aws/KyqPn[View template^]
+^|https://fwd.aws/QmmJN[Deploy a standalone Remote Desktop Gateway into an existing VPC on AWS^]
+^|https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-standalone.template[View template^]
 
-^|https://fwd.aws/AmVKK[Deploy a domain-joined Remote Desktop Gateway into an existing VPC on AWS^]
-^|https://fwd.aws/7j5z3[View template^]
+^|https://fwd.aws/EwEqm[Deploy a domain-joined Remote Desktop Gateway into an existing VPC on AWS^]
+^|https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-domain.template[View template^]
 |===
 
 WARNING: If you deploy {partner-product-short-name} into an existing VPC, ensure that your VPC has two private subnets in different Availability Zones for the workload instances, and that the subnets aren’t shared. This Quick Start doesn’t support https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html[shared subnets^]. These subnets require https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html[NAT gateways^] in their route tables, to allow the instances to download packages and software without exposing them to the internet.
