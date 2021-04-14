@@ -1,3 +1,14 @@
+== Post-deployment steps
+
+=== Run Windows Updates
+
+In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.
+
+1. Create an RDP session to the Remote Desktop Gateway server(s).
+2. Open the *Settings* application.
+3. Open *Update & Security*.
+4. Click *Check for updates*.
+5. Install any updates and reboot if necessary.
 
 == Best practices for using {partner-product-short-name} on AWS
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
