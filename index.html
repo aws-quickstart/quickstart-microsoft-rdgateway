@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.12">
+<meta name="generator" content="Asciidoctor 2.0.15">
 <title>Remote Desktop Gateway on the AWS Cloud</title>
 <style>
 
@@ -182,7 +182,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
   padding-top:0;
   overflow:hidden;
   background:#283e5b;
-  border-bottom: 4px solid #435c7c;
+  /* border-bottom: 4px solid #435c7c; */
   width:320px;
   height:154px;
   top:0;
@@ -411,7 +411,7 @@ span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
-.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";color: rgb(3, 87, 21);}
 .admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
 .admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
 .admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
@@ -747,8 +747,43 @@ p {
   font-weight  : 300 !important;
 }
 
-#toc.toc2 #toctitle{
-  background-image: url('images/AWS-Logo.svg');
+/* image layout */
+#toc.toc2 #toctitle {
+  background-image: url("images/AWS-Logo.svg");
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: center;
+  width: auto;
+  height: 15%;
+}
+
+/* Left Navbar size */
+#toc.toc2 {
+  width: 17%;
+  min-width: 15em;
+}
+
+/* auto width for main page */
+body.toc2 {
+  padding-left: 22%;
+  padding-right: 2%;
+}
+
+/* hide left nav bar if page size is smaller than 767px */
+@media screen and (max-width: 767px) {
+  #toc {
+      display: none !important;
+  }
+  body.toc2 {
+    padding-left: 1%;
+    padding-right: 1%;
+    position: relative;
+  }
+
+  #content {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
 }
 
 /* QS Tables */
@@ -807,6 +842,13 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_launch_the_quick_start">Launch the Quick Start</a></li>
 </ul>
 </li>
+<li><a href="#_post_deployment_steps">Post-deployment steps</a>
+<ul class="sectlevel2">
+<li><a href="#_install_the_root_certificate">Install the root certificate</a></li>
+<li><a href="#_configure_the_remote_desktop_connection_client">Configure the Remote Desktop Connection client</a></li>
+<li><a href="#_run_windows_updates">Run Windows Updates</a></li>
+</ul>
+</li>
 <li><a href="#_best_practices_for_using_rd_gateway_on_aws">Best practices for using RD Gateway on AWS</a>
 <ul class="sectlevel2">
 <li><a href="#_the_principle_of_least_privilege">The Principle of Least Privilege</a></li>
@@ -819,11 +861,12 @@ p.footer-text a{color:#d7d8d8}
 </ul>
 </li>
 <li><a href="#_faq">FAQ</a></li>
+<li><a href="#_customer_responsibility">Customer responsibility</a></li>
 <li><a href="#_parameter_reference">Parameter reference</a>
 <ul class="sectlevel2">
-<li><a href="#_parameters_for_deploying_into_a_new_vpc">Parameters for deploying into a new VPC</a></li>
-<li><a href="#_parameters_for_launching_into_an_existing_vpc_domain_joined">Parameters for launching into an existing VPC (domain-joined)</a></li>
 <li><a href="#_parameters_for_launching_into_an_existing_vpc_standalone">Parameters for launching into an existing VPC (standalone)</a></li>
+<li><a href="#_parameters_for_launching_into_an_existing_vpc_domain_joined">Parameters for launching into an existing VPC (domain-joined)</a></li>
+<li><a href="#_parameters_for_deploying_into_a_new_vpc">Parameters for deploying into a new VPC</a></li>
 </ul>
 </li>
 <li><a href="#_send_us_feedback">Send us feedback</a></li>
@@ -925,7 +968,7 @@ see the pricing pages for each AWS service you use. Prices are subject to change
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-After you deploy the Quick Start, <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-gettingstarted-turnonreports.html" target="_blank" rel="noopener">create AWS Cost and Usage Reports</a> to deliver billing metrics to an Amazon Simple Storage Service (Amazon S3) bucket in your account. These reports provide cost estimates based on usage throughout each month and aggregate the data at the end of the month. For more information, see <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-costusage.html" target="_blank" rel="noopener">What are AWS Cost and Usage Reports?</a>
+After you deploy the Quick Start, create <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-gettingstarted-turnonreports.html" target="_blank" rel="noopener">AWS Cost and Usage Reports</a> to deliver billing metrics to an Amazon Simple Storage Service (Amazon S3) bucket in your account. These reports provide cost estimates based on usage throughout each month and aggregate the data at the end of the month. For more information, see <a href="https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html" target="_blank" rel="noopener">What are AWS Cost and Usage Reports?</a>
 </td>
 </tr>
 </table>
@@ -1034,7 +1077,7 @@ deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
 <div class="sect3">
 <h4 id="_resource_quotas">Resource quotas</h4>
 <div class="paragraph">
-<p>If necessary, request <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">service quota increases</a> for the following resources. You might request quota increases to avoid exceeding the default limits for any resources that are shared across multiple deployments. The <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">Service Quotas console</a> displays your usage and quotas for some aspects of some services. For more information, see <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html" target="_blank" rel="noopener">What is Service Quotas?</a> and <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html" target="_blank" rel="noopener">AWS service quotas</a>.</p>
+<p>If necessary, request <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">service quota increases</a> for the following resources. You might need to request increases if your existing deployment currently uses these resources and if this Quick Start deployment could result in exceeding the default quotas. The <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">Service Quotas console</a> displays your usage and quotas for some aspects of some services. For more information, see <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html" target="_blank" rel="noopener">What is Service Quotas?</a> and <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html" target="_blank" rel="noopener">AWS service quotas</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1076,9 +1119,12 @@ deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_supported_regions">Supported Regions</h4>
+<h4 id="_supported_aws_regions">Supported AWS Regions</h4>
 <div class="paragraph">
-<p>The services deployed by this Quick Start are available in all AWS Regions.</p>
+<p>For any Quick Start to work in a Region other than its default Region, all the services it deploys must be supported in that Region. You can launch a Quick Start in any Region and see if it works. If you get an error such as “Unrecognized resource type,” the Quick Start is not supported in that Region.</p>
+</div>
+<div class="paragraph">
+<p>For an up-to-date list of AWS Regions and the AWS services they support, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/" target="_blank" rel="noopener">AWS Regional Services</a>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1094,9 +1140,9 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 </div>
 </div>
 <div class="sect3">
-<h4 id="_ec2_key_pairs">EC2 key pairs</h4>
+<h4 id="_amazon_ec2_key_pairs">Amazon EC2 key pairs</h4>
 <div class="paragraph">
-<p>Make sure that at least one <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank" rel="noopener">Amazon EC2 key pair</a> exists in your AWS account in the Region where you plan to deploy the Quick Start. Make note of the key pair name. You need it during deployment. To create a key pair, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank" rel="noopener">Amazon EC2 key pairs and Linux instances</a>.</p>
+<p>Ensure that at least one Amazon EC2 key pair exists in your AWS account in the Region where you plan to deploy the Quick Start. Note the key-pair name because you will use it during deployment. To create a key pair, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank" rel="noopener">Amazon EC2 key pairs and Linux instances</a>.</p>
 </div>
 <div class="paragraph">
 <p>For testing or proof-of-concept purposes, we recommend creating a new key pair instead of using one that’s already being used by a production instance.</p>
@@ -1230,17 +1276,187 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 </div>
 <div class="paragraph">
 <p>+
-. On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you’re finished, choose <strong>Next</strong>.
+. On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.
 . On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources and might require the ability to automatically expand macros.
 . Choose <strong>Create stack</strong> to deploy the stack.
 . Monitor the status of the stack. When the status is <strong>CREATE_COMPLETE</strong>, the RD Gateway deployment is ready.
-. Use the values displayed in the <strong>Outputs</strong> tab for the stack, as shown in <a href="#cfn_outputs">Figure 2</a>, to view the created resources.</p>
+. To view the created resources, see the values displayed in the <strong>Outputs</strong> tab for the stack.</p>
 </div>
-<div id="cfn_outputs" class="imageblock">
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_post_deployment_steps">Post-deployment steps</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you launch the AWS CloudFormation template for one of the three scenarios in the previous sections and build the stack, follow these steps to complete the configuration of your AWS environment:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create security groups for your Windows-based instances that will be located in private VPC subnets. Create an ingress rule permitting TCP port 3389 from the RD Gateway security group, CIDR range, or IP address. Associate these groups with instances as they are launched into the private subnets.</p>
+</li>
+<li>
+<p>Make sure that your administrative clients can resolve the name for the RD Gateway endpoint (e.g., win-1a2b3c4d5e6.example.com). You can create an A (Host) record in DNS that maps the FQDN to the RD gateway’s Elastic IP or public IP address. For testing purposes, you can configure this mapping in the local host’s file on the machine.</p>
+</li>
+<li>
+<p>Configure administrative clients with the proper configuration settings. This includes installing the root certificate from each RD Gateway server on the client machines (see the next section for instructions). When you use the AWS CloudFormation templates, the default location for the root certificate will be c:\&lt;servername&gt;.cer on each RD Gateway server.</p>
+</li>
+<li>
+<p>Modify the RD Gateway security group. Remove the ingress rule permitting TCP port 3389. Create a new ingress rule permitting TCP port 443 from your administrator’s IP address.</p>
+</li>
+<li>
+<p>Make sure that instances in private subnets are associated with a security group containing ingress rules permitting the RD Gateway server IP address to connect via TCP port 3389.</p>
+</li>
+<li>
+<p>Configure the Remote Desktop connection for administrative clients, as described later in this section</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_install_the_root_certificate">Install the root certificate</h3>
+<div class="paragraph">
+<p>The Quick Start implements a self-signed certificate on the RD gateway intances. After deployment, you must install the root certificate on your administrative clients before you configure the RDP client to connect to your RD gateway instances. The root certificate will automatically be stored as c:\&lt;servername&gt;.cer.</p>
+</div>
+<div class="paragraph">
+<p>To distribute this file to administrator workstations and install it, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open a Command Prompt window using administrative credentials.</p>
+</li>
+<li>
+<p>Type <strong>mmc</strong> and press <strong>Enter</strong>.</p>
+</li>
+<li>
+<p>In the Console Root window, on the <strong>File</strong> menu, choose <strong>Add/Remove Snap In</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Add Standalone Snap-in</strong> dialog box, choose <strong>Certificates</strong>, and then choose <strong>Add</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Certificates snap-in</strong> dialog box, choose <strong>Computer account</strong>, and then choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Select Computer</strong> dialog box, choose <strong>Finish</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Add Standalone Snap-in</strong> dialog box, choose <strong>Close</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Add/Remove Snap-in</strong> dialog box, choose <strong>OK</strong>.</p>
+</li>
+<li>
+<p>In the Console Root window, expand <strong>Certificates (Local Computer)</strong>.</p>
+</li>
+<li>
+<p>Under <strong>Certificates (Local Computer)</strong>, expand <strong>Trusted Root Certification Authorities</strong>.</p>
+</li>
+<li>
+<p>Open the context (right-click) window for <strong>Certificates</strong>, and choose <strong>All Tasks &gt; Import</strong>.</p>
+</li>
+<li>
+<p>Navigate to the root certificate (e.g., RDGW1.cer) to complete the installation.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gateway when deploying servers using the CloudFormation templates.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configure_the_remote_desktop_connection_client">Configure the Remote Desktop Connection client</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the Remote Desktop Connection client.</p>
+</li>
+<li>
+<p>In the computer name field, type the name or IP address of the Windows instance you want to connect to. Keep in mind that this instance needs to be reachable only from the RD gateway, not from the client machine.</p>
+</li>
+</ol>
+</div>
+<div id="postdeploy1" class="imageblock">
 <div class="content">
-<a class="image" href="images/cfn_outputs.png"><img src="images/cfn_outputs.png" alt="cfn_outputs" width="100%" height="100%"></a>
+<img src="images/image21.png" alt="Post-deployment 1" width="50%">
 </div>
-<div class="title">Figure 2. RD Gateway outputs after successful deployment</div>
+<div class="title">Figure 2. The Remote Desktop Connection client</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Choose <strong>Show Options</strong>. On the <strong>Advanced</strong> tab, choose <strong>Settings</strong>.</p>
+</li>
+<li>
+<p>Choose <strong>Use these RD Gateway server settings</strong>. For server name, specify the FQDN of the RD gateway. If the RD gateway and the server you want to connect to are in the same domain, choose <strong>Use my RD Gateway credentials for the remote computer</strong>, and then choose <strong>OK</strong>.</p>
+</li>
+</ol>
+</div>
+<div id="postdeploy2" class="imageblock">
+<div class="content">
+<img src="images/image22.png" alt="Post-deployment 2" width="50%">
+</div>
+<div class="title">Figure 3. Advanced properties for the Remote Desktop Connection client</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The FQDN server name of the RD Gateway host must match the certificate and the DNS record (or local HOSTS file entry). Otherwise, the secure connection will generate warnings and might fail.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>Enter your credentials, and then choose <strong>OK</strong> to connect to the server. You can supply the same set of credentials for the RD gateway and the destination server, as shown. If your servers are not domain-joined, you will need to authenticate twice: once for the RD gateway and once for the destination server. If your servers aren’t domain-joined, when prompted for the RD Gateway server credentials, provide the <strong>Admin User Name</strong> and <strong>Admin Password</strong> credentials you set in when you launched the Quick Start. Check the <strong>Remember my credentials</strong> box. (Otherwise, if you’re connecting from a Windows computer, you’ll get prompted for your credentials repeatedly, and will be blocked from entering your remote computer credentials.)</p>
+</li>
+</ol>
+</div>
+<div id="postdeploy3" class="imageblock">
+<div class="content">
+<img src="images/image23.png" alt="Post-deployment 3" width="50%">
+</div>
+<div class="title">Figure 4. Providing credentials for the RD gateway and destination server</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_windows_updates">Run Windows Updates</h3>
+<div class="paragraph">
+<p>In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create an RDP session to the Remote Desktop Gateway server(s).</p>
+</li>
+<li>
+<p>Open the <strong>Settings</strong> application.</p>
+</li>
+<li>
+<p>Open <strong>Update &amp; Security</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Check for updates</strong>.</p>
+</li>
+<li>
+<p>Install any updates and reboot if necessary.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -1297,7 +1513,7 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <img src="images/image3.png" alt="image" width="543" height="255">
 </div>
-<div class="title">Figure 3. Default network ACL configuration for a VPC subnet</div>
+<div class="title">Figure 5. Default network ACL configuration for a VPC subnet</div>
 </div>
 <div class="paragraph">
 <p>You may choose to keep the default network ACL configuration, or you may choose to lock it down with more specific rules to restrict traffic between subnets at the network level. For example, you could set a rule that would allow inbound administrative traffic on TCP port 3389 from a specific set of IP addresses. In either case, you’ll also need to implement security group rules to permit access from users connecting to RD gateways and between tiered groups of EC2 instances.</p>
@@ -1312,7 +1528,7 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <img src="images/image2.png" alt="image" width="648" height="336">
 </div>
-<div class="title">Figure 4. Security groups for RD Gateway administrative access</div>
+<div class="title">Figure 6. Security groups for RD Gateway administrative access</div>
 </div>
 <div class="paragraph">
 <p>Notice that inbound connections from the internet are only permitted over TCP port 443 to the RD gateways. The RD gateways have an Elastic IP address assigned and have direct access to the internet. The remaining Windows instances are deployed into private subnets and are assigned private IP addresses only. Security group rules allow only the RD gateways to initiate inbound connections for remote administration to TCP port 3389 for instances in the private subnets.</p>
@@ -1336,7 +1552,7 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <img src="images/image1.png" alt="image" width="739" height="384">
 </div>
-<div class="title">Figure 5. Initial architecture for remote administration</div>
+<div class="title">Figure 7. Initial architecture for remote administration</div>
 </div>
 <div class="paragraph">
 <p>Although this architecture works well for initial administration, it is not recommended for the long term. To further secure connections and reduce the number of RDP sessions required to administer the servers in the private subnets, the inbound rule should be changed to permit TCP port 443, and the RD gateway service should be installed and configured with an SSL certificate, and connection and authorization policies.</p>
@@ -1348,7 +1564,7 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <img src="images/image2.png" alt="image" width="648" height="336">
 </div>
-<div class="title">Figure 6. Architecture for RD Gateway administrative access</div>
+<div class="title">Figure 8. Architecture for RD Gateway administrative access</div>
 </div>
 </div>
 <div class="sect2">
@@ -1440,6 +1656,14 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 </div>
 </div>
 <div class="sect1">
+<h2 id="_customer_responsibility">Customer responsibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you successfully deploy this Quick Start, confirm that your resources and services are updated and configured — including any required patches — to meet your security and other needs. For more information, see the <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">AWS Shared Responsibility Model</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_parameter_reference">Parameter reference</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
@@ -1449,14 +1673,13 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Unless you are customizing the Quick Start templates for your own deployment projects, we recommend that you keep the default settings for the parameters labeled <code>Quick Start S3 bucket name</code>, <code>Quick Start S3 bucket
-Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parameter settings automatically updates code references to point to a new Quick Start location. For more information, see the <a href="https://aws-quickstart.github.io/option1.html" target="_blank" rel="noopener">AWS Quick Start Contributor’s Guide</a>.
+Unless you are customizing the Quick Start templates for your own deployment projects, keep the default settings for the parameters labeled <strong>Quick Start S3 bucket name</strong>, <strong>Quick Start S3 bucket Region</strong>, and <strong>Quick Start S3 key prefix</strong>. Changing these parameter settings automatically updates code references to point to a new Quick Start location. For more information, see the <a href="https://aws-quickstart.github.io/option1.html" target="_blank" rel="noopener">AWS Quick Start Contributor’s Guide</a>.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_parameters_for_deploying_into_a_new_vpc">Parameters for deploying into a new VPC</h3>
+<h3 id="_parameters_for_launching_into_an_existing_vpc_standalone">Parameters for launching into an existing VPC (standalone)</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Network configuration</caption>
 <colgroup>
@@ -1473,52 +1696,28 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Availability Zones
-(<code>AvailabilityZones</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
+(<code>VPCID</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of Availability Zones (AZs) to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (for example, vpc-0343606e).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC tenancy
-(<code>VPCTenancy</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The allowed tenancy of instances launched into the VPC.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 1 ID
+(<code>PublicSubnet1ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (for example, subnet-a0246dcd).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
-(<code>VPCCIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 1 CIDR
-(<code>PrivateSubnet1CIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/19</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for private subnet 1 located in Availability Zone 1.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 2 CIDR
-(<code>PrivateSubnet2CIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.32.0/19</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for private subnet 2 located in Availability Zone 2.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 1 CIDR
-(<code>PublicSubnet1CIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.128.0/20</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR Block for the public DMZ subnet 1 located in Availability Zone 1.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 2 CIDR
-(<code>PublicSubnet2CIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.144.0/20</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR Block for the public DMZ subnet 2 located in Availability Zone 2.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 2 ID
+(<code>PublicSubnet2ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (for example, subnet-e3246d8e).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allowed Remote Desktop Gateway external access CIDR
 (<code>RDGWCIDR</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed CIDR block for external access to the Remote Desktop Gateways.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed CIDR Block for external access to the Remote Desktop Gateways.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1548,6 +1747,12 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 (<code>RDGWInstanceType</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>t3.2xlarge</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EC2 instance type for the Remote Desktop Gateway instances.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSM parameter to grab latest AMI ID
+(<code>LatestAmiId</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NO_DESCRIPTION</p></td>
 </tr>
 </tbody>
 </table>
@@ -1582,7 +1787,13 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <td class="tableblock halign-left valign-top"><p class="tableblock">Admin password
 (<code>AdminPassword</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the administrative account. Must be at least 8 characters containing letters, numbers and symbols.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the administrative account. Must be at least 8 characters containing letters, numbers, and symbols.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
+(<code>DomainDNSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN), such as example.com.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1617,7 +1828,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <td class="tableblock halign-left valign-top"><p class="tableblock">Quick Start S3 bucket Region
 (<code>QSS3BucketRegion</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Region of staging bucket (BucketName).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Keep the default Region unless you are customizing the template. Changing this Region updates code references to point to a new Quick Start location. When using your own bucket, specify the Region. See <a href="https://aws-quickstart.github.io/option1.html" class="bare">https://aws-quickstart.github.io/option1.html</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1807,7 +2018,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </table>
 </div>
 <div class="sect2">
-<h3 id="_parameters_for_launching_into_an_existing_vpc_standalone">Parameters for launching into an existing VPC (standalone)</h3>
+<h3 id="_parameters_for_deploying_into_a_new_vpc">Parameters for deploying into a new VPC</h3>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 10. Network configuration</caption>
 <colgroup>
@@ -1824,28 +2035,52 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
-(<code>VPCID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Availability Zones
+(<code>AvailabilityZones</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (for example, vpc-0343606e).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of Availability Zones (AZs) to use for the subnets in the VPC. Note: The logical order is preserved and only 2 AZs are used for this deployment.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 1 ID
-(<code>PublicSubnet1ID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the public subnet 1 that you want to provision the first Remote Desktop Gateway into (for example, subnet-a0246dcd).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC tenancy
+(<code>VPCTenancy</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The allowed tenancy of instances launched into the VPC.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 2 ID
-(<code>PublicSubnet2ID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the public subnet 2 you want to provision the second Remote Desktop Gateway into (for example, subnet-e3246d8e).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
+(<code>VPCCIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 1 CIDR
+(<code>PrivateSubnet1CIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/19</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for private subnet 1 located in Availability Zone 1.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 2 CIDR
+(<code>PrivateSubnet2CIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.32.0/19</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for private subnet 2 located in Availability Zone 2.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 1 CIDR
+(<code>PublicSubnet1CIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.128.0/20</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR Block for the public DMZ subnet 1 located in Availability Zone 1.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public subnet 2 CIDR
+(<code>PublicSubnet2CIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.144.0/20</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR Block for the public DMZ subnet 2 located in Availability Zone 2.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Allowed Remote Desktop Gateway external access CIDR
 (<code>RDGWCIDR</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed CIDR Block for external access to the Remote Desktop Gateways.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allowed CIDR block for external access to the Remote Desktop Gateways.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1875,12 +2110,6 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 (<code>RDGWInstanceType</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>t3.2xlarge</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EC2 instance type for the Remote Desktop Gateway instances.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SSM parameter to grab latest AMI ID
-(<code>LatestAmiId</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">NO_DESCRIPTION</p></td>
 </tr>
 </tbody>
 </table>
@@ -1915,13 +2144,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <td class="tableblock halign-left valign-top"><p class="tableblock">Admin password
 (<code>AdminPassword</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the administrative account. Must be at least 8 characters containing letters, numbers, and symbols.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
-(<code>DomainDNSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN), such as example.com.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the administrative account. Must be at least 8 characters containing letters, numbers and symbols.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1956,7 +2179,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <td class="tableblock halign-left valign-top"><p class="tableblock">Quick Start S3 bucket Region
 (<code>QSS3BucketRegion</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Keep the default Region unless you are customizing the template. Changing this Region updates code references to point to a new Quick Start location. When using your own bucket, specify the Region. See <a href="https://aws-quickstart.github.io/option1.html" class="bare">https://aws-quickstart.github.io/option1.html</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Region of staging bucket (BucketName).</p></td>
 </tr>
 </tbody>
 </table>
@@ -1975,7 +2198,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <h2 id="_quick_start_reference_deployments">Quick Start reference deployments</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>See the <a href="https://aws.amazon.com/quickstart/">AWS Quick Start home page</a>.</p>
+<p>See the <a href="https://aws.amazon.com/quickstart/" target="_blank" rel="noopener">AWS Quick Start home page</a>.</p>
 </div>
 </div>
 </div>
@@ -2004,17 +2227,17 @@ and to share your customizations with others.</p>
 </div>
 <p class="footer-text">
 <!-- We can use document attributes: -->
-<!-- Generated with Asciidoctor v2.0.12. -->
+<!-- Generated with Asciidoctor v2.0.15. -->
 <a href="https://aws.amazon.com/privacy/">Privacy</a> | <a href="https://aws.amazon.com/terms/">Site terms</a> | &copy; 2021, Amazon Web Services, Inc. or its affiliates and Microsoft. All rights reserved.
 </p>
 </body>
 </html>
 <!--
 repo commit:
-fc143f1cd0837721598a758e8efde96b41829d3a
+e1a8a865b75fcd8759582a9388f922940a178969
 
 submodule config:
- d15f338e5c2b27efea5af124e7da7d589e0bee78 docs/boilerplate (heads/main)
- 53fbedf058adaea101a587ec0fa9d84cb2a05587 submodules/quickstart-aws-vpc (v1.0-56-g53fbedf)
+ 4ee94d6b60ec455e5b452e8ad9841eb825704b70 docs/boilerplate (heads/main)
+ ffc7af4e59a09dbf52199a3ecf70f3805abeff48 submodules/quickstart-aws-vpc (v1.0-58-gffc7af4)
  e1f1a322eff1014be7fbaa8f8384e9dea2fa218c submodules/quickstart-microsoft-utilities (heads/main)
 -->
