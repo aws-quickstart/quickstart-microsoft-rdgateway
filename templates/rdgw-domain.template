@@ -758,7 +758,7 @@ Resources:
               - sts:AssumeRole
       Path: /
       ManagedPolicyArns:
-        - arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole
       Description: New IAM role to allow SSM access.
   ALBResource:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
