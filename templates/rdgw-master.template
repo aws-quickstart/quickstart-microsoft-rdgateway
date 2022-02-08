@@ -3,8 +3,8 @@ Description: >-
   This template creates a VPC infrastructure for a multi-AZ, multi-tier deployment
   of a Windows based Application infrastructure. It will deploy a Remote Desktop Gateway
   and manage NAT gateways or NAT instances into the public subnet for each Availability
-  Zone. **WARNING** This template creates Amazon EC2 Windows instance and related
-  resources. You will be billed for the AWS resources used if you create a stack from
+  Zone. **WARNING** This template creates Amazon EC2 Windows instance and related resources. 
+  You will be billed for the AWS resources used if you create a stack from
   this template. (qs-1qup6rafe)
 Metadata:
   QuickStartDocumentation:
@@ -121,15 +121,13 @@ Parameters:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.128.0/20
-    Description: CIDR Block for the public DMZ subnet 1 located in Availability Zone
-      1.
+    Description: CIDR Block for the public DMZ subnet 1 located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.144.0/20
-    Description: CIDR Block for the public DMZ subnet 2 located in Availability Zone
-      2.
+    Description: CIDR Block for the public DMZ subnet 2 located in Availability Zone 2.
     Type: String
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
