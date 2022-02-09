@@ -3,8 +3,7 @@ Description: >-
   This template is intended to be installed into an existing VPC with two public subnets.
   It will create an auto-scaling group of RD Gateway instances in the public VPC subnets.
   **WARNING** This template creates Amazon EC2 Windows instance and related resources.
-  You will be billed for the AWS resources used if you create a stack from this template.
-  (qs-1qup6rag3)
+  You will be billed for the AWS resources used if you create a stack from this template. (qs-1qup6rag3)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Parameters for launching into an existing VPC (standalone)"

@@ -4,8 +4,7 @@ Description: >-
   of a Windows based Application infrastructure. It will deploy a Remote Desktop Gateway
   and manage NAT gateways or NAT instances into the public subnet for each Availability
   Zone. **WARNING** This template creates Amazon EC2 Windows instance and related resources. 
-  You will be billed for the AWS resources used if you create a stack from
-  this template. (qs-1qup6rafe)
+  You will be billed for the AWS resources used if you create a stack from this template. (qs-1qup6rafe)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Parameters for deploying into a new VPC"
