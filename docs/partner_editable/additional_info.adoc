@@ -1,6 +1,6 @@
 == Post-deployment steps
 
-After you launch the AWS CloudFormation template for one of the three scenarios in the previous sections and build the stack, follow these steps to complete the configuration of your AWS environment:
+After you launch the AWS CloudFormation template for one of the non-domain scenarios in the previous sections and build the stack, follow these steps to complete the configuration of your AWS environment:
 
 1. Create security groups for your Windows-based instances that will be located in private VPC subnets. Create an ingress rule permitting TCP port 3389 from the RD Gateway security group, CIDR range, or IP address. Associate these groups with instances as they are launched into the private subnets.
 2. Make sure that your administrative clients can resolve the name for the RD Gateway endpoint (e.g., win-1a2b3c4d5e6.example.com). You can create an A (Host) record in DNS that maps the FQDN to the RD gateway’s Elastic IP or public IP address. For testing purposes, you can configure this mapping in the local host’s file on the machine.
@@ -9,7 +9,7 @@ After you launch the AWS CloudFormation template for one of the three scenarios 
 5. Make sure that instances in private subnets are associated with a security group containing ingress rules permitting the RD Gateway server IP address to connect via TCP port 3389.
 6. Configure the Remote Desktop connection for administrative clients, as described later in this section
 
-=== Install the root certificate
+=== Steps for non-domain-joined deployment
 
 The Quick Start implements a self-signed certificate on the RD gateway intances. After deployment, you must install the root certificate on your administrative clients before you configure the RDP client to connect to your RD gateway instances. The root certificate will automatically be stored as c:\<servername>.cer.
 
@@ -29,6 +29,26 @@ To distribute this file to administrator workstations and install it, follow the
 12. Navigate to the root certificate (e.g., RDGW1.cer) to complete the installation.
 
 NOTE: The root certificate will be stored as c:\<servername>.cer on each RD gateway when deploying servers using the CloudFormation templates.
+
+=== Steps for domain-joined deployment
+
+To utilize the Remote Desktop Gateway functionality in an Active Directory environment, a trusted certificate through your private Certificate Authority or a public DNS registrar is required.
+
+. For secure connectivity through the deployed NLB, acquire a trusted certificate through your private Certificate Authority or a public DNS registrar.
+. Create a DNS CNAME record in your DNS zone with your preferred DNS endpoint name for RDGW connections and the NLB DNS endpoint as the value. Alternately, for testing, create an entry in you local HOSTS file pointing the DNS endpoint name to the NLB IP address.
+. Connect to each RD Gateway instance, copy the trusted certificate to a local path, and import into the computer's personal certificate folder as follows.
+.. Type *mmc* and press *Enter*.
+.. In the Console Root window, on the *File* menu, choose *Add/Remove Snap In*.
+.. In the *Add Standalone Snap-in* dialog box, choose *Certificates*, and then choose *Add*.
+.. In the *Certificates snap-in* dialog box, choose *Computer account*, and then choose *Next*.
+.. In the *Select Computer* dialog box, choose *Finish*.
+.. In the *Add Standalone Snap-in* dialog box, choose *Close*.
+.. On the *Add/Remove Snap-in* dialog box, choose *OK*.
+.. In the Console Root window, expand *Certificates (Local Computer)*.
+.. Under *Certificates (Local Computer)*, expand *Personal*.
+.. Open the context (right-click) window for *Certificates*, and choose *All Tasks > Import*.
+.. Navigate to the trusted certificate (e.g., test.example.com.cer) to complete the installation.
+. On each RD Gateway instance, open the Remote Desktop Gateway Manager console, and then specify your trusted certificate for RD Gateway use.
 
 === Configure the Remote Desktop Connection client
 
