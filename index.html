@@ -1359,6 +1359,28 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 </tr>
 </table>
 </div>
+<div class="sect3">
+<h4 id="_add_hosts_entries_for_servers_in_private_subnets">Add HOSTS entries for servers in private subnets</h4>
+<div class="paragraph">
+<p>In order to utilize the Remote Desktop Gateway functionality in a non-domain environment, each Remote Desktop Gateway server must be able to resolve the hostnames of servers and workstations in the private subnets. To accomplish this, add the IP addresses and hostnames to each Remote Desktop Gateway&#8217;s HOSTS file.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open Notepad with administrative privileges.</p>
+</li>
+<li>
+<p>From the <strong>File</strong> menu, select <strong>Open</strong> and navigate to C:\Windows\System32\drivers\etc.</p>
+</li>
+<li>
+<p>Open the <strong>HOSTS</strong> file.</p>
+</li>
+<li>
+<p>Add entries for any internal resources to which you will be connecting.</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_steps_for_domain_joined_deployment">Steps for domain-joined deployment</h3>
@@ -1421,18 +1443,6 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 </div>
 <div class="sect2">
 <h3 id="_configure_the_remote_desktop_connection_client">Configure the Remote Desktop Connection client</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This configuration only works for domain-joined deployments. For non domain-joined deployments, create an RDP session directly to the RD Gateway load balancer, and from there create a second RDP session to the instance in the private subnet which you would like to access.
-</td>
-</tr>
-</table>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
