@@ -1421,6 +1421,18 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 </div>
 <div class="sect2">
 <h3 id="_configure_the_remote_desktop_connection_client">Configure the Remote Desktop Connection client</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This configuration only works for domain-joined deployments. For non domain-joined deployments, create an RDP session directly to the RD Gateway load balancer, and from there create a second RDP session to the instance in the private subnet which you would like to access.
+</td>
+</tr>
+</table>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
