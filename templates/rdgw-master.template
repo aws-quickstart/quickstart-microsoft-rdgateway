@@ -32,6 +32,7 @@ Metadata:
           - NumberOfRDGWHosts
           - AdminUser
           - AdminPassword
+          - SetupAppInsightsMonitoring
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -67,6 +68,8 @@ Metadata:
         default: Remote Desktop Gateway instance type
       RDGWCIDR:
         default: Allowed Remote Desktop Gateway external access CIDR
+      SetupAppInsightsMonitoring:
+        default: Setup Application Insights Monitoring
       VPCCIDR:
         default: VPC CIDR
       VPCTenancy:
@@ -187,6 +190,13 @@ Parameters:
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x.
     Description: Allowed CIDR block for external access to the Remote Desktop Gateways.
     Type: String
+  SetupAppInsightsMonitoring:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: Setup Application Insights monitoring for RDGW resources.
+    Type: String
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
@@ -258,4 +268,5 @@ Resources:
         QSS3BucketRegion: !Ref QSS3BucketRegion
         RDGWInstanceType: !Ref 'RDGWInstanceType'
         RDGWCIDR: !Ref 'RDGWCIDR'
+        SetupAppInsightsMonitoring: !Ref SetupAppInsightsMonitoring
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
