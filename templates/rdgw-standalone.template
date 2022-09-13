@@ -29,6 +29,7 @@ Metadata:
           - AdminUser
           - AdminPassword
           - DomainDNSName
+          - SetupAppInsightsMonitoring
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -62,6 +63,8 @@ Metadata:
         default: Remote Desktop Gateway instance type
       RDGWCIDR:
         default: Allowed Remote Desktop Gateway external access CIDR
+      SetupAppInsightsMonitoring:
+        default: Setup Application Insights Monitoring
       VPCID:
         default: VPC ID
 Parameters:
@@ -173,6 +176,13 @@ Parameters:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     Description: Allowed CIDR Block for external access to the Remote Desktop Gateways.
     Type: String
+  SetupAppInsightsMonitoring:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: Setup Application Insights monitoring for RDGW resources. 
+    Type: String
   VPCID:
     Description: ID of the VPC (for example, vpc-0343606e).
     Type: AWS::EC2::VPC::Id
@@ -200,6 +210,7 @@ Rules:
         AssertDescription: M4 instances are not available in the Paris region.
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  appInsightsMonitoring: !Equals [!Ref SetupAppInsightsMonitoring, 'true']
 Resources:
   RDGWLocalUserSecrets:
     Type: AWS::SecretsManager::Secret
@@ -648,6 +659,25 @@ Resources:
               ASGName: $.detail.AutoScalingGroupName
               LCHName: $.detail.LifecycleHookName
             InputTemplate: !Sub '{"AutomationAssumeRole":["${ExecutionResourceRole.Arn}"],"InstanceId":[<InstanceId>],"ASGName":[<ASGName>],"LCHName":[<LCHName>],"DomainDNSName":["${DomainDNSName}"],"AdminSecParam":["${RDGWLocalUserSecrets}"],"QSS3BucketName":["${QSS3BucketName}"],"QSS3KeyPrefix":["${QSS3KeyPrefix}"],"URLSuffix":["${AWS::URLSuffix}"]}'
+  RDGWResourceGroup:
+    Condition: appInsightsMonitoring
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name: 'ApplicationInsights-RDGWResources'
+      ResourceQuery:
+        Query:
+          TagFilters:
+            - Key: 'aws:cloudformation:stack-name'
+              Values:
+                - !Sub "${AWS::StackName}"
+        Type: 'TAG_FILTERS_1_0'          
+  ApplicationInsightsRDGW:
+    Condition: appInsightsMonitoring
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName: !Ref 'RDGWResourceGroup'
+      AutoConfigurationEnabled: true
+    DependsOn: RDGWResourceGroup
 Outputs:
   RDPURL:
     Description: ELB DNS name to connect to RDP Gateway.
