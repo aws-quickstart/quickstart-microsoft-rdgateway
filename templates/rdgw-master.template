@@ -227,6 +227,7 @@ Rules:
             - !Ref 'AWS::Region'
         AssertDescription: M4 instances are not available in the Paris region.
 Conditions:
+  AppInsightsEnabled: !Equals [!Ref SetupAppInsightsMonitoring, true]
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
   VPCStack:
@@ -259,6 +260,7 @@ Resources:
       Parameters:
         AdminPassword: !Ref 'AdminPassword'
         AdminUser: !Ref 'AdminUser'
+        AppInsightsApplicationName: !If [AppInsightsEnabled, !Sub "ApplicationInsights-${AWS::StackName}", !Ref AWS::NoValue]
         KeyPairName: !Ref 'KeyPairName'
         NumberOfRDGWHosts: !Ref 'NumberOfRDGWHosts'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'

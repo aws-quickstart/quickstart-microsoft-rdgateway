@@ -30,6 +30,7 @@ Metadata:
           - AdminPassword
           - DomainDNSName
           - SetupAppInsightsMonitoring
+          - AppInsightsApplicationName
       - Label:
           default: AWS Quick Start configuration
         Parameters:
@@ -41,6 +42,8 @@ Metadata:
         default: Admin password
       AdminUser:
         default: Admin user name
+      AppInsightsApplicationName:
+        default: Registered Application Name
       DomainDNSName:
         default: Domain DNS name
       KeyPairName:
@@ -83,6 +86,12 @@ Parameters:
     MinLength: '5'
     MaxLength: '25'
     AllowedPattern: '[a-zA-Z0-9]*'
+  AppInsightsApplicationName:
+    Description: Application name to be used with AppInsights monitoring.
+    Type: String
+    Default: ''
+    MaxLength: '300'
+    AllowedPattern: '^[a-zA-Z0-9\-]*'
   DomainDNSName:
     Description: Fully qualified domain name (FQDN), such as example.com.
     Type: String
@@ -209,6 +218,7 @@ Rules:
             - !Ref 'AWS::Region'
         AssertDescription: M4 instances are not available in the Paris region.
 Conditions:
+  UsingDefaultAppName: !Equals [!Ref AppInsightsApplicationName, '']
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   appInsightsMonitoring: !Equals [!Ref SetupAppInsightsMonitoring, 'true']
 Resources:
@@ -663,7 +673,7 @@ Resources:
     Condition: appInsightsMonitoring
     Type: AWS::ResourceGroups::Group
     Properties:
-      Name: 'ApplicationInsights-RDGWResources'
+      Name: !If [UsingDefaultAppName, !Sub "ApplicationInsights-${AWS::StackName}", !Ref AppInsightsApplicationName]
       ResourceQuery:
         Query:
           TagFilters:
