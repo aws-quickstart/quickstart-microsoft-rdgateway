@@ -91,7 +91,7 @@ Parameters:
     Type: String
     Default: ''
     MaxLength: '300'
-    AllowedPattern: '^[a-zA-Z0-9\-]*'
+    AllowedPattern: '^[a-zA-Z0-9\-]*$'
   DomainDNSName:
     Description: Fully qualified domain name (FQDN), such as example.com.
     Type: String
