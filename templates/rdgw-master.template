@@ -81,7 +81,7 @@ Parameters:
     Type: String
     MinLength: '8'
     MaxLength: '32'
-    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
+    AllowedPattern: '(?=^.{8,32}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*'
     NoEcho: 'true'
   AdminUser:
     Description: User name for the new local administrator account.
@@ -89,7 +89,7 @@ Parameters:
     Default: StackAdmin
     MinLength: '5'
     MaxLength: '25'
-    AllowedPattern: '[a-zA-Z0-9]*'
+    AllowedPattern: '^[a-zA-Z0-9]+$'
   AvailabilityZones:
     Description: 'List of Availability Zones (AZs) to use for the subnets in the VPC. Note:
       The logical order is preserved and only 2 AZs are used for this deployment.'
@@ -108,31 +108,31 @@ Parameters:
     Description: Enter the number of Remote Desktop Gateway hosts to create.
     Type: String
   PrivateSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.0.0/19
     Description: CIDR block for private subnet 1 located in Availability Zone 1.
     Type: String
   PrivateSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.32.0/19
     Description: CIDR block for private subnet 2 located in Availability Zone 2.
     Type: String
   PublicSubnet1CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.128.0/20
     Description: CIDR Block for the public DMZ subnet 1 located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.144.0/20
     Description: CIDR Block for the public DMZ subnet 2 located in Availability Zone 2.
     Type: String
   QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    AllowedPattern: '^[a-z0-9]+[a-z0-9\.\-]*[a-z0-9]+$'
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
       letters, uppercase letters, and hyphens (-). It cannot start or end with a 
       hyphen (-).
@@ -143,9 +143,11 @@ Parameters:
       Start location. This name can include numbers, lowercase letters, 
       uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
       See https://aws-quickstart.github.io/option1.html.
+    MinLength: '3'
+    MaxLength: '63'
     Type: String
   QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    AllowedPattern: '^[a-zA-Z0-9\-\/]+$'
     ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
       uppercase letters, hyphens (-), and forward slash (/).
     Default: quickstart-microsoft-rdgateway/
@@ -158,6 +160,7 @@ Parameters:
       and https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
+    AllowedPattern: '^[a-z]+\-[a-z\-]+\-[0-9]{1}$'
     Default: 'us-east-1'
     Description: "Region of staging bucket (BucketName)."
     Type: String
@@ -186,7 +189,7 @@ Parameters:
       - m5a.xlarge
       - m5a.2xlarge
   RDGWCIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x.
     Description: Allowed CIDR block for external access to the Remote Desktop Gateways.
     Type: String
@@ -198,7 +201,7 @@ Parameters:
     Description: Setup Application Insights monitoring for RDGW resources.
     Type: String
   VPCCIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$'
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.0.0/16
     Description: CIDR block for the VPC.
