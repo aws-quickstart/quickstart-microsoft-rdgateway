@@ -19,17 +19,28 @@ param (
     [string]$DomainNetBiosName,
 
     [Parameter(Mandatory=$true)]
-    [string]$GroupName
+    [string[]]$GroupName
 )
 
 Import-Module -Name 'RemoteDesktopServices'
 
+$UserGroups=@()
 If ($DomainNetBiosName -eq 'BUILTIN') {
-    $UserGroups = "$GroupName@$DomainNetBiosName"
     $ServerFQDN = $env:COMPUTERNAME
+    foreach ($group in $GroupName) {
+        # Determining whether we should use Group@BUILTIN or GROUP@ComputerName syntax based on SID length of the group
+        if((Get-LocalGroup $group).sid.BinaryLength -eq 16) {
+            $UserGroups += "$group@$DomainNetBiosName"
+        }
+        else {
+            $UserGroups += "$group@$env:COMPUTERNAME"
+        }
+    }
 } Else {
-    $UserGroups = "$GroupName@$DomainDNSName"
     $ServerFQDN = "$env:COMPUTERNAME.$DomainDNSName"
+    foreach ($group in $GroupName) {
+        $UserGroups += "$GroupName@$DomainDNSName"
+    }
 }
 
 Write-Output 'Creating DSC Certificate to Encrypt Credentials in MOF File'

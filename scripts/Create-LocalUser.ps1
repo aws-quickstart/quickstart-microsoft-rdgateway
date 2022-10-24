@@ -3,7 +3,7 @@
     Create-LocalUser.ps1
 
     .DESCRIPTION
-    This script creates a new local user and adds them to the local administrators group
+    This script creates a new local user, a local group and adds the user to that group as well as the local administrators group
     
     .EXAMPLE
     .\Create-LocalUser -AdminSecParam 'arn:aws:secretsmanager:us-west-2:############:secret:example-VX5fcW' -FullName 'John Doe' -Description 'This is a local user account'
@@ -42,9 +42,18 @@ Try {
     Exit 1
 }
 
+Write-Output 'Creating local group'
+Try {
+    New-LocalGroup -Name "RDGWUsers" -Description "Users who will be authorized by default RDGW RAP" -ErrorAction Stop
+} Catch [System.Exception]{
+    Write-Output "Failed to create local Group $_"
+    Exit 1
+}
+
 Write-Output 'Adding local user to group'
 Try {
     Add-LocalGroupMember -Group 'Administrators' -Member $AdminUserName -ErrorAction Stop
+    Add-LocalGroupMember -Group "RDGWUsers" -Member $AdminUserName -ErrorAction Stop
 } Catch [System.Exception]{
     Write-Output "Failed to add local user to group $_"
     Exit 1
