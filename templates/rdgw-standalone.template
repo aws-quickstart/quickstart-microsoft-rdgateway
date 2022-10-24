@@ -391,7 +391,7 @@ Resources:
                         - UsingDefaultBucket
                         - !Ref AWS::Region
                         - !Ref QSS3BucketRegion
-                commandLine: "./Initialize-RDGW.ps1 -DomainDNSName {{DomainDNSName}} -DomainNetBiosName BUILTIN -GroupName administrators"
+                commandLine: "./Initialize-RDGW.ps1 -DomainDNSName {{DomainDNSName}} -DomainNetBiosName BUILTIN -GroupName administrators,RDGWUsers"
           - name: "completeHookAction"
             action: aws:executeAwsApi
             isEnd: true
