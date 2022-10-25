@@ -672,7 +672,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       State: ENABLED
-      Description: Run configuration document that joins domain and configures IIS.
+      Description: Run configuration document that joins domain and configures RDGW instances.
       EventPattern:
         source:
           - aws.autoscaling
