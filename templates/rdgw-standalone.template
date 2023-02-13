@@ -600,6 +600,9 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       LaunchTemplateData:
+        MetadataOptions:
+          HttpEndpoint: enabled
+          HttpTokens: required
         InstanceType: !Ref 'RDGWInstanceType'
         ImageId: !Ref 'LatestAmiId'
         SecurityGroupIds:
