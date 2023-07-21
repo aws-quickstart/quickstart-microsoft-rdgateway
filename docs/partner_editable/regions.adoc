@@ -1,1 +1,0 @@
-The services deployed by this Quick Start are available in all AWS Regions.
