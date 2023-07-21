@@ -1,0 +1,29 @@
+:xrefstyle: short
+
+Deploying this Partner Solution with default parameters builds the following {partner-product-short-name} environment in the
+AWS Cloud.
+
+// Replace this example diagram with your own. Follow our wiki guidelines: https://w.amazon.com/bin/view/AWS_Quick_Starts/Process_for_PSAs/#HPrepareyourarchitecturediagram. Upload your source PowerPoint file to the GitHub {deployment name}/docs/images/ directory in its repository.
+
+[#architecture1]
+.Partner Solution architecture for {partner-product-short-name} on AWS
+image::../docs/deployment_guide/images/rdgateway-architecture-diagram.png[Architecture]
+
+As shown in <<architecture1>>, this Partner Solution sets up the following:
+
+* A highly available architecture that spans two Availability Zones.*
+* A virtual private cloud (VPC) configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
+* An internet gateway to allow access to the internet. This gateway is used by the {partner-product-short-name} instances to send and receive traffic.*
+* Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
+* In the public subnets:
+** Up to four {partner-product-short-name} instances in an Auto Scaling group to provide secure remote access to instances in the private subnets. Each instance is assigned an Elastic IP address so it’s reachable directly from the internet.
+* A Network Load Balancer to provide RDP access to the {partner-product-short-name} instances. 
+* A security group for Windows-based instances that will host the {partner-product-short-name} role, with an ingress rule permitting TCP port 3389 from your administrator IP address. After deployment, you’ll modify the security group ingress rules to configure administrative access through TCP port 443 instead.
+* An empty application tier for instances in private subnets. If more tiers are required, you can create additional private subnets with unique CIDR ranges.
+* AWS Secrets Manager to securely store credentials used for accessing the {partner-product-short-name} instances.
+* AWS Systems Manager to automate the deployment of the {partner-product-short-name} Auto Scaling group.
+
+// Add bullet points for any additional components that are included in the deployment. Ensure that the additional components are shown in the architecture diagram. End each bullet with a period.
+// * <describe any additional components>.
+
+[.small]#* The template that deploys this Partner Solution into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#

@@ -1,0 +1,186 @@
+// Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
+
+== Postdeployment steps
+
+After you launch the AWS CloudFormation template for one of the non-domain scenarios in the previous sections and build the stack, follow these steps to complete the configuration of your AWS environment:
+
+1. Create security groups for your Windows-based instances that will be located in private VPC subnets. Create an ingress rule permitting TCP port 3389 from the {partner-product-short-name} security group, CIDR range, or IP address. Associate these groups with instances as they are launched into the private subnets.
+2. Make sure that your administrative clients can resolve the name for the {partner-product-short-name} endpoint (for example, win-1a2b3c4d5e6.example.com). You can create an A (Host) record in DNS that maps the FQDN to the {partner-product-short-name}’s Elastic IP or public IP address. For testing purposes, you can configure this mapping in the local host’s file on the machine.
+3. Configure administrative clients with the proper configuration settings. This includes installing the root certificate from each {partner-product-short-name} server on the client machines (see the next section for instructions). When you use the AWS CloudFormation templates, the default location for the root certificate will be c:\<servername>.cer on each RD Gateway server.
+4. Modify the {partner-product-short-name} security group. Remove the ingress rule permitting TCP port 3389. Create a new ingress rule permitting TCP port 443 from your administrator’s IP address.
+5. Make sure that instances in private subnets are associated with a security group containing ingress rules permitting the {partner-product-short-name} server IP address to connect via TCP port 3389.
+6. Configure the Remote Desktop connection for administrative clients, as described later in this section.
+
+=== Steps for non-domain-joined deployment
+
+The Partner Solution implements a self-signed certificate on the {partner-product-short-name} intances. After deployment, you must install the root certificate on your administrative clients before you configure the RDP client to connect to your {partner-product-short-name} instances. The root certificate will automatically be stored as c:\<servername>.cer.
+
+To distribute this file to administrator workstations and install it, follow these steps:
+
+1. Open a Command Prompt window using administrative credentials.
+2. Type *mmc* and press *Enter*.
+3. In the Console Root window, on the *File* menu, choose *Add/Remove Snap In*.
+4. In the *Add Standalone Snap-in* dialog box, choose *Certificates*, and then choose *Add*.
+5. In the *Certificates snap-in* dialog box, choose *Computer account*, and then choose *Next*.
+6. In the *Select Computer* dialog box, choose *Finish*.
+7. In the *Add Standalone Snap-in* dialog box, choose *Close*.
+8. On the *Add/Remove Snap-in* dialog box, choose *OK*.
+9. In the Console Root window, expand *Certificates (Local Computer)*.
+10. Under *Certificates (Local Computer)*, expand *Trusted Root Certification Authorities*.
+11. Open the context window (right-click) for *Certificates*, and choose *All Tasks > Import*.
+12. Navigate to the root certificate (for example, RDGW1.cer) to complete the installation.
+
+NOTE: The root certificate will be stored as c:\<servername>.cer on each {partner-product-short-name} when deploying servers using the CloudFormation templates.
+
+=== Steps for domain-joined deployment
+
+To utilize the Remote Desktop Gateway functionality in an Active Directory environment, a trusted certificate through your private Certificate Authority or a public DNS registrar is required.
+
+. For secure connectivity through the deployed NLB, acquire a trusted certificate through your private Certificate Authority or a public DNS registrar.
+. Create a DNS CNAME record in your DNS zone with your preferred DNS endpoint name for RDGW connections and the NLB DNS endpoint as the value. Alternately, for testing, create an entry in you local HOSTS file pointing the DNS endpoint name to the NLB IP address.
+. Connect to each {partner-product-short-name} instance, copy the trusted certificate to a local path, and import into the computer's personal certificate folder as follows.
+.. Type *mmc* and press *Enter*.
+.. In the Console Root window, on the *File* menu, choose *Add/Remove Snap In*.
+.. In the *Add Standalone Snap-in* dialog box, choose *Certificates*, and then choose *Add*.
+.. In the *Certificates snap-in* dialog box, choose *Computer account*, and then choose *Next*.
+.. In the *Select Computer* dialog box, choose *Finish*.
+.. In the *Add Standalone Snap-in* dialog box, choose *Close*.
+.. On the *Add/Remove Snap-in* dialog box, choose *OK*.
+.. In the Console Root window, expand *Certificates (Local Computer)*.
+.. Under *Certificates (Local Computer)*, expand *Personal*.
+.. Open the context window (right-click) for *Certificates*, and choose *All Tasks > Import*.
+.. Navigate to the trusted certificate (for example, test.example.com.cer) to complete the installation.
+. On each {partner-product-short-name} instance, open the Remote Desktop Gateway Manager console, and then specify your trusted certificate for RD Gateway use.
+
+=== Configure the Remote Desktop Connection client
+
+1. Start the Remote Desktop Connection client. 
+2. In the computer name field, type the name or IP address of the Windows instance you want to connect to. Keep in mind that this instance needs to be reachable only from the {partner-product-short-name}, not from the client machine.
+
+[#postdeploy1]
+.The Remote Desktop Connection client
+image::../docs/deployment_guide/images/image21.png[Post-deployment 1, 50%]
+
+[start=3]
+3. Choose *Show Options*. On the *Advanced* tab, choose *Settings*.
+4. Choose *Use these {partner-product-short-name} server settings*. For server name, specify the FQDN of the {partner-product-short-name}. If the {partner-product-short-name} and the server you want to connect to are in the same domain, choose *Use my {partner-product-short-name} credentials for the remote computer*, and then choose *OK*.
+
+[#postdeploy2]
+.Advanced properties for the Remote Desktop Connection client
+image::../docs/deployment_guide/images/image22.png[Post-deployment 2, 50%]
+
+NOTE: The FQDN server name of the {partner-product-short-name} host must match the certificate and the DNS record (or local HOSTS file entry). Otherwise, the secure connection will generate warnings and might fail.
+
+[start=5]
+5. Enter your credentials, and then choose *OK* to connect to the server. You can supply the same set of credentials for the {partner-product-short-name} and the destination server, as shown. If your servers are not domain-joined, you will need to authenticate twice: once for the {partner-product-short-name} and once for the destination server. If your servers aren’t domain-joined, when prompted for the {partner-product-short-name} server credentials, provide the *Admin User Name* and *Admin Password* credentials you set in when you launched the Partner Solution. Check the *Remember my credentials* box. (Otherwise, if you’re connecting from a Windows computer, you’ll get prompted for your credentials repeatedly, and will be blocked from entering your remote computer credentials.)
+
+[#postdeploy3]
+.Providing credentials for the {partner-product-short-name} and destination server
+image::../docs/deployment_guide/images/image23.png[Post-deployment 3, 50%]
+
+=== Run Windows Updates
+
+To ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.
+
+1. Create an RDP session to the Remote Desktop Gateway server(s).
+2. Open the *Settings* application.
+3. Open *Update & Security*.
+4. Choose *Check for updates*.
+5. Install any updates and reboot if necessary.
+
+== Best practices for using {partner-product-short-name} on AWS
+// Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+=== The Principle of Least Privilege
+
+When considering remote administrative access to your environment, it is important to follow the principle of _least privilege_. This principle refers to users having the fewest possible permissions necessary to perform their job functions. This helps reduce the attack surface of your environment, making it much harder for an adversary to exploit. An attack surface can be defined as the set of exploitable vulnerabilities in your environment, including the network, software, and users who are involved in the ongoing operation of the system.
+
+Following the principle of least privilege, we recommend reducing the attack surface of your environment by exposing the absolute minimal set of ports to the network while also restricting the source network or IP address that will have access to your EC2 instances.
+
+In addition to the functionality that exists in the Microsoft platform, there are several AWS capabilities to help you implement the principle of least privilege, such as subnets, security groups, and trusted ingress CIDR blocks.
+
+=== VPC configuration
+
+Amazon VPC lets you provision a private, isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. With Amazon VPC, you can define a virtual network topology closely resembling a traditional network that you might operate on your own premises. You have complete control over your virtual networking environment, including selection of your own IP address range, creation of subnets, and configuration of route tables and network gateways.
+
+When deploying a Windows-based architecture on the AWS Cloud, we recommend a VPC configuration that supports the following requirements:
+
+* Critical workloads should be placed in a minimum of two Availability Zones to provide high availability.
+* Instances should be placed into individual tiers. For example, in a Microsoft SharePoint deployment, you should have separate tiers for web servers, application servers, database servers, and domain controllers. Traffic between these groups can be controlled to adhere to the principle of least privilege.
+* Internal application servers and other non-internet facing servers should be placed in private subnets to prevent direct access to these instances from the internet.
+* {partner-product-short-name}s should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.
+
+This Partner Solution supports these best practices, as illustrated earlier in this guide. For details on the VPC design used in this Partner Solution, see the https://fwd.aws/9VdxN[Quick Start for building a modular and scalable virtual network architecture with Amazon VPC].
+
+=== Network Access Control Lists
+
+A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based on IP protocol, service port, or source or destination IP address. Figure 3 shows the default ACL configuration for a VPC subnet. This configuration is used for the subnets in the Partner Solution architecture.
+
+[#additional1]
+.Default network ACL configuration for a VPC subnet
+image::../docs/deployment_guide/images/image3.png[image,width=543,height=255]
+
+You may choose to keep the default network ACL configuration, or you may choose to lock it down with more specific rules to restrict traffic between subnets at the network level. For example, you could set a rule that would allow inbound administrative traffic on TCP port 3389 from a specific set of IP addresses. In either case, you’ll also need to implement security group rules to permit access from users connecting to {partner-product-short-name}s and between tiered groups of EC2 instances.
+
+=== Security groups
+
+All EC2 instances are required to belong to one or more security groups. Security groups allow you to set policies to control open ports and provide isolation between application tiers. In a VPC, every instance runs behind a stateful firewall with all ports closed by default. The security group contains rules responsible for opening inbound and outbound ports on that firewall. While security groups act as an instance-level firewall, they can also be associated with multiple instances, providing isolation between application tiers in your environment. For example, you can create a security group for all your web servers that will allow traffic on TCP port 3389, but only from members of the security group containing your RD Gateway servers. This is illustrated in Figure 4.
+
+[#additional2]
+.Security groups for {partner-product-short-name} administrative access
+image::../docs/deployment_guide/images/image2.png[image,width=648,height=336]
+
+Notice that inbound connections from the internet are only permitted over TCP port 443 to the RD gateways. The {partner-product-short-name}s have an Elastic IP address assigned and have direct access to the internet. The remaining Windows instances are deployed into private subnets and are assigned private IP addresses only. Security group rules allow only the {partner-product-short-name}s to initiate inbound connections for remote administration to TCP port 3389 for instances in the private subnets.
+
+In this architecture, RDP connections are established over HTTPS to the {partner-product-short-name} and proxied to backend instances on the standard RDP TCP port 3389. This configuration helps you reduce the attack surface on your Windows-based instances while allowing administrators to establish connections to all your instances through a single gateway.
+
+It’s possible to provide remote administrative access to all your Windows-based instances through one {partner-product-short-name}, but we recommend placing gateways in each Availability Zone for redundancy. The Partner Solution implements this best practice, as illustrated in Figure 5.
+
+=== Initial Remote Administration Architecture
+
+In an initial {partner-product-short-name} configuration, the servers in the public subnet will need an inbound security group rule permitting TCP port 3389 from the administrator’s source IP address or subnet. Windows instances sitting behind the {partner-product-short-name} in a private subnet will be in their own isolated tier. For example, a group of web server instances in a private subnet may be associated with their own web tier security group. This security group will need an inbound rule allowing connections from the RD Gateway on TCP port 3389.
+
+Using this architecture, an administrator can use a traditional RDP connection to an {partner-product-short-name} to configure the local server. The {partner-product-short-name} can also be used as a jump box; that is, when an RDP connection is established to the desktop of the {partner-product-short-name}, an administrator can start a new RDP client session to initiate a connection to an instance in a private subnet, as illustrated in Figure 1.
+
+[#additional4]
+.Initial architecture for remote administration
+image::../docs/deployment_guide/images/image1.png[image,width=739,height=384]
+
+Although this architecture works well for initial administration, it is not recommended for the long term. To further secure connections and reduce the number of RDP sessions required to administer the servers in the private subnets, the inbound rule should be changed to permit TCP port 443, and the {partner-product-short-name} service should be installed and configured with an SSL certificate, and connection and authorization policies.
+
+The Partner Solution sets up a standard TCP port 3389 connection from the administrator’s IP address. You’ll need to follow the https://aws-quickstart.github.io/quickstart-microsoft-rdgateway/#_post_deployment_steps[post-deployment steps] to modify the security group for {partner-product-short-name} to use a single inbound rule permitting TCP port 443, as illustrated in Figure 2. This modification will allow a Transport Layer Security (TLS) encrypted RDP connection to be proxied through the gateway over TCP port 443 directly to one or more Windows-based instances in private subnets on TCP port 3389. This configuration increases the security of the connection and also prevents the need to initiate an RDP session to the desktop of the {partner-product-short-name}.
+
+[#additional5]
+.Architecture for {partner-product-short-name} administrative access
+image::../docs/deployment_guide/images/image2.png[image,width=648,height=336]
+
+[[ssl-certificates]]
+=== SSL Certificates
+
+The {partner-product-short-name} role uses Transport Layer Security (TLS) to encrypt communications over the internet between administrators and gateway servers. To support TLS, a valid X.509 SSL certificate must be installed on each {partner-product-short-name}. Certificates can be acquired in a number of ways, including:
+
+* Your own PKI infrastructure, such as a Microsoft Enterprise Certificate Authority (CA)
+* Certificates issued by a public CA, such as Verisign or Digicert
+* Self-signed certificates
+
+For smaller test environments, implementing a self-signed certificate is a straightforward process that helps you get up and running quickly. This Partner Solution automatically generates a self-signed certificate for {partner-product-short-name}. 
+
+However, if you have a large number of varying administrative devices that need to establish a connection to your gateways, we recommend using a public certificate.
+
+For an RDP client to establish a secure connection with an {partner-product-short-name}, the following certificate and DNS requirements must be met:
+
+* The issuing CA of the certificate installed on the gateway must be trusted by the RDP client. For example, the root CA certificate must be installed in the client machine’s _Trusted Root Certification Authorities_ store.
+* The subject name used on the certificate installed on the gateway must match the DNS name used by the client to connect to the server; for example, rdgw1.example.com.
+* The client must be able to resolve the host name (for example, rdgw1.example.com) to the Elastic IP address of the {partner-product-short-name}. This will require a Host (A) record in DNS.
+
+There are various considerations when choosing the right CA to obtain an SSL certificate. For example, a public certificate may be ideal since the issuing CA will be widely trusted by the majority of client devices that need to connect to your gateways. On the other hand, you may choose to utilize your own PKI infrastructure to ensure that only the machines that are part of your organization will trust the issuing CA.
+
+[[connection-and-resource-authorization-policies]]
+=== Connection and Resource Authorization Policies
+
+Users must meet specific requirements to connect to {partner-product-short-name} instances:
+
+* *Connection authorization policies* – Remote Desktop connection authorization policies (RD CAPs) allow you to specify who can connect to an {partner-product-short-name} instance. For example, you can select a group of users from your domain, such as _Domain Admins_.
+* *Resource authorization policies* – Remote Desktop resource authorization policies (RD RAPs) allow you to specify the internal Windows-based instances that remote users can connect to through an {partner-product-short-name} instance. For example, you can choose specific domain-joined computers, which administrators can connect to through the {partner-product-short-name}.
+
+This Partner Solution automatically sets up connection and resource authorization policies. 

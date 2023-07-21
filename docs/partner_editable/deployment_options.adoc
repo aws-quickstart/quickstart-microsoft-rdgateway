@@ -1,8 +1,0 @@
-This Quick Start provides three deployment options:
-
-
-* *Deploy {partner-product-short-name} into a new VPC (end-to-end deployment)* This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, and other infrastructure components, and then deploys {partner-product-short-name} into this new VPC.
-* *Deploy {partner-product-short-name} into an existing VPC*. This option provisions standalone {partner-product-short-name} instances in your existing AWS infrastructure.
-* *Deploy domain-joined RD Gateway into an existing VPC.* This is similar to the second option, except that it provides domain-joined {partner-product-short-name} instances in the existing VPC, and provides a few additional parameters for customizing this configuration.
-
-The Quick Start provides separate templates for these three options. You can also configure CIDR blocks, instance types, and {partner-product-short-name} settings, as discussed later in the deployment steps.
