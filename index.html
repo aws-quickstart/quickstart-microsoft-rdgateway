@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.15">
-<title>Remote Desktop Gateway on the AWS Cloud</title>
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Remote Desktop Gateway Deployment Guide on AWS">
+<meta name="keywords" content="Partner Solution, AWS, Remote Desktop Gateway">
+<title>Remote Desktop Gateway on AWS</title>
 <style>
-
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
 /* Uncomment @import statement to use as custom stylesheet */
 @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
@@ -749,7 +750,7 @@ p {
 
 /* image layout */
 #toc.toc2 #toctitle {
-  background-image: url("images/AWS-Logo.svg");
+  background-image: url("docs/boilerplate/.images/AWS-Logo.svg");
   background-repeat: no-repeat;
   background-size: 50%;
   background-position: center;
@@ -814,8 +815,37 @@ a img {
   background:#ffffb3;
 }
 
+.watermark {
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  color:#00f;
+  cursor: default;
+  display: block;
+  font-size: 400px;
+  font-weight: 1000;
+  margin: 0;
+  opacity:0.05;
+  top: 30%;
+  position: fixed;
+  text-align: center;
+  transform: rotate(-30deg);
+  user-select: none;
+  z-index: -1;
+}
+
 .footer-text{color:rgba(255,255,255,.8);line-height:1.44;background:#1c222a;padding:1.25em;max-width:100%;margin-bottom:unset}
 p.footer-text a{color:#d7d8d8}
+
+/* This is for the 'dummy' image in the docs to help with reporting on guide views. */
+/* DO NOT MODIFY */
+.image-container img {
+  width: 1px;
+  height: 1px;
+  }
+/* END dummy image */
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -825,24 +855,11 @@ p.footer-text a{color:#d7d8d8}
 <div id="toctitle"></div>
 <ul class="sectlevel1">
 <li><a href="#_overview">Overview</a></li>
-<li><a href="#_remote_desktop_gateway_on_aws">Remote Desktop Gateway on AWS</a></li>
-<li><a href="#_aws_costs">AWS costs</a></li>
-<li><a href="#_software_licenses">Software licenses</a></li>
+<li><a href="#_costs_and_licenses">Costs and licenses</a></li>
 <li><a href="#_architecture">Architecture</a></li>
-<li><a href="#_planning_the_deployment">Planning the deployment</a>
-<ul class="sectlevel2">
-<li><a href="#_specialized_knowledge">Specialized knowledge</a></li>
-<li><a href="#_aws_account">AWS account</a></li>
-<li><a href="#_technical_requirements">Technical requirements</a></li>
-</ul>
-</li>
-<li><a href="#_deployment_steps">Deployment steps</a>
-<ul class="sectlevel2">
-<li><a href="#_sign_in_to_your_aws_account">Sign in to your AWS account</a></li>
-<li><a href="#_launch_the_quick_start">Launch the Quick Start</a></li>
-</ul>
-</li>
-<li><a href="#_post_deployment_steps">Post-deployment steps</a>
+<li><a href="#_deployment_options">Deployment options</a></li>
+<li><a href="#_deployment_steps">Deployment steps</a></li>
+<li><a href="#_postdeployment_steps">Postdeployment steps</a>
 <ul class="sectlevel2">
 <li><a href="#_steps_for_non_domain_joined_deployment">Steps for non-domain-joined deployment</a></li>
 <li><a href="#_steps_for_domain_joined_deployment">Steps for domain-joined deployment</a></li>
@@ -861,12 +878,9 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#connection-and-resource-authorization-policies">Connection and Resource Authorization Policies</a></li>
 </ul>
 </li>
-<li><a href="#_faq">FAQ</a></li>
+<li><a href="#_troubleshooting">Troubleshooting</a></li>
 <li><a href="#_customer_responsibility">Customer responsibility</a></li>
-<li><a href="#_parameter_reference">Parameter reference</a></li>
-<li><a href="#_send_us_feedback">Send us feedback</a></li>
-<li><a href="#_quick_start_reference_deployments">Quick Start reference deployments</a></li>
-<li><a href="#_github_repository">GitHub repository</a></li>
+<li><a href="#_feedback">Feedback</a></li>
 <li><a href="#_notices">Notices</a></li>
 </ul>
 </div>
@@ -874,87 +888,21 @@ p.footer-text a{color:#d7d8d8}
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<h2 id="_remote_desktop_gateway_on_the_aws_cloud" class="discrete text-center">Remote Desktop Gateway on the AWS Cloud</h2>
-<h2 id="_quick_start_reference_deployment" class="discrete text-left text-center">Quick Start Reference Deployment</h2>
+<h2 id="_remote_desktop_gateway_on_aws" class="discrete text-center">Remote Desktop Gateway on AWS</h2>
+<h2 id="_partner_solution_deployment_guide" class="discrete text-left text-center">Partner Solution Deployment Guide</h2>
 <div class="imageblock text-center">
 <div class="content">
-<img src="https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-rdgateway/docs/boilerplate/.images/aws-quickstart-graphic.png" alt="QS" width="80" height="80">
+<img src="https://aws-quickstart.s3.amazonaws.com/docs/deployment-guide/aws-quickstart-deployment-graphic.png" alt="QS" width="80" height="80">
 </div>
 </div>
 <div class="paragraph text-center">
-<p><strong>January 2021</strong><br>
-<em>Dave May and Santiago Cardenas, Solutions Architects, AWS Quick Start team</em></p>
+<p><strong>July 2023</strong><br>
+<em>Dave May and Santiago Cardenas, AWS Integration &amp; Automation team</em><br></p>
 </div>
-<div class="admonitionblock tip text-left">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway" target="_blank" rel="noopener">GitHub repository</a> for source files and to post feedback,
-report bugs, or submit feature ideas for this Quick Start.
-</td>
-</tr>
-</table>
+<div class="imageblock text-left image-container">
+<div class="content">
+<img src="https://aws-quickstart.s3.amazonaws.com/partner-solution-microsoft-rdgateway/docs/boilerplate/.images/aws-quickstart-graphic.png" alt="">
 </div>
-<div class="paragraph text-left">
-<p>This Quick Start was created by Microsoft in collaboration with Amazon Web Services (AWS). <a href="http://aws.amazon.com/quickstart/" target="_blank" rel="noopener">Quick Starts</a> are automated reference deployments that use AWS CloudFormation templates to deploy key technologies on AWS, following AWS best practices.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_overview">Overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This Quick Start is for users who require one or more Microsoft Remote Desktop servers to provide remote access to their environments.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Amazon may share user-deployment information with the AWS Partner that collaborated with AWS on the Quick Start.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_remote_desktop_gateway_on_aws">Remote Desktop Gateway on AWS</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>AWS provides a comprehensive set of services and tools for deploying Microsoft Windows-based workloads on its highly reliable and secure cloud infrastructure. Remote Desktop Gateway uses Remote Desktop Protocol (RDP) over HTTPS to establish a secure, encrypted connection between remote users on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This helps reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.</p>
-</div>
-<div class="paragraph">
-<p>This Quick Start automatically deploys and configures an RD Gateway infrastructure in the AWS Cloud from scratch, so you can securely administer your Windows-based, Amazon EC2 fleet using RDP over HTTPS. You can use the AWS CloudFormation templates included with the Quick Start to deploy a fully configured RD Gateway infrastructure in a new or existing VPC in your AWS account. You can also use the AWS CloudFormation templates as a starting point for your own implementation.</p>
-</div>
-<div class="paragraph">
-<p>We’ve also published a set of <a href="https://aws.amazon.com/quickstart/">Quick Starts</a> that provide solutions for deploying common Microsoft workloads, such as Microsoft Active Directory, Microsoft SharePoint, Microsoft Exchange, and Microsoft SQL Server, on AWS. Those Quick Starts include the RD Gateway deployment and architecture described in this guide. You can use them to deploy RD Gateway along with the additional Microsoft workload. For example, for an automated deployment that includes Active Directory Domain Services and RD gateways, see the <a href="https://fwd.aws/N6e7B">AWS Quick Start for Active Directory Domain Services</a>.</p>
-</div>
-<div class="paragraph">
-<p>Implementing the RD Gateway on the AWS Cloud is an advanced topic. We recommend reviewing the Microsoft documentation for Windows Server 2016 and the AWS documentation <a href="https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/connecting_to_windows_instance.html">Connecting to Your Windows Instance</a>.</p>
-</div>
-<div class="paragraph">
-<p>This guide focuses on infrastructure configuration topics that require careful consideration when you are planning and deploying an RD Gateway infrastructure on the AWS Cloud. It doesn’t cover general Windows Server installation and software configuration tasks. For general software configuration guidance and best practices, consult the Microsoft product documentation.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_aws_costs">AWS costs</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>You are responsible for the cost of the AWS services and any third-party licenses used while running this Quick Start. There is no additional cost for
-using the Quick Start.</p>
-</div>
-<div class="paragraph">
-<p>The AWS CloudFormation templates for Quick Starts include
-configuration parameters that you can customize. Some of the settings,
-such as the instance type, affect the cost of deployment. For cost estimates,
-see the pricing pages for each AWS service you use. Prices are subject to change.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -963,18 +911,32 @@ see the pricing pages for each AWS service you use. Prices are subject to change
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-After you deploy the Quick Start, create <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-gettingstarted-turnonreports.html" target="_blank" rel="noopener">AWS Cost and Usage Reports</a> to deliver billing metrics to an Amazon Simple Storage Service (Amazon S3) bucket in your account. These reports provide cost estimates based on usage throughout each month and aggregate the data at the end of the month. For more information, see <a href="https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html" target="_blank" rel="noopener">What are AWS Cost and Usage Reports?</a>
+Refer to the <a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway" target="_blank" rel="noopener">GitHub repository</a> to view source files, report bugs, submit feature ideas, and post feedback about this Partner Solution. To comment on the documentation, refer to <a href="#_feedback">Feedback</a>.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph text-left">
+<p>This Partner Solution was created by Microsoft in collaboration with Amazon Web Services (AWS). <a href="https://aws.amazon.com/solutions/partners/" target="_blank" rel="noopener">Partner Solutions</a> are automated reference deployments that help people deploy popular technologies on AWS according to AWS best practices. If you&#8217;re unfamiliar with AWS Partner Solutions, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Partner Solution General Information Guide</a>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_software_licenses">Software licenses</h2>
+<h2 id="_overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide covers the information you need to deploy the Remote Desktop Gateway Partner Solution in the AWS Cloud.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_costs_and_licenses">Costs and licenses</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This product deploys one or more Amazon Elastic Compute Cloud (Amazon EC2) instances running Microsoft Windows Server. The Windows Server licenses are provided by Amazon.</p>
+</div>
+<div class="paragraph">
+<p>There is no cost to use this Partner Solution, but you will be billed for any AWS services or resources that this Partner Solution deploys. For more information, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Partner Solution General Information Guide</a>.</p>
 </div>
 </div>
 </div>
@@ -982,21 +944,17 @@ After you deploy the Quick Start, create <a href="https://docs.aws.amazon.com/aw
 <h2 id="_architecture">Architecture</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploying this Quick Start for a new virtual private cloud (VPC) with
-<strong>default parameters</strong> builds the following <em>Remote Desktop Gateway</em> environment in the
+<p>Deploying this Partner Solution with default parameters builds the following RD Gateway environment in the
 AWS Cloud.</p>
-</div>
-<div class="paragraph">
-<p>Deploying this Quick Start for a new VPC with default parameters builds the following RD Gateway environment in the AWS Cloud.</p>
 </div>
 <div id="architecture1" class="imageblock">
 <div class="content">
-<img src="images/rdgateway-architecture-diagram.png" alt="image" width="948" height="629">
+<img src="docs/deployment_guide/images/rdgateway-architecture-diagram.png" alt="Architecture">
 </div>
-<div class="title">Figure 1. Quick Start architecture for RD Gateway on AWS</div>
+<div class="title">Figure 1. Partner Solution architecture for RD Gateway on AWS</div>
 </div>
 <div class="paragraph">
-<p>The Quick Start sets up the following:</p>
+<p>As shown in <a href="#architecture1">Figure 1</a>, this Partner Solution sets up the following:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1004,7 +962,7 @@ AWS Cloud.</p>
 <p>A highly available architecture that spans two Availability Zones.*</p>
 </li>
 <li>
-<p>A VPC configured with public and private subnets according to AWS best practices, to provide you with your own virtual network on AWS.*</p>
+<p>A virtual private cloud (VPC) configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*</p>
 </li>
 <li>
 <p>An internet gateway to allow access to the internet. This gateway is used by the RD Gateway instances to send and receive traffic.*</p>
@@ -1013,7 +971,14 @@ AWS Cloud.</p>
 <p>Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*</p>
 </li>
 <li>
-<p>In each public subnet, up to four RD Gateway instances in an Auto Scaling group to provide secure remote access to instances in the private subnets. Each instance is assigned an Elastic IP address so it’s reachable directly from the internet.</p>
+<p>In the public subnets:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Up to four RD Gateway instances in an Auto Scaling group to provide secure remote access to instances in the private subnets. Each instance is assigned an Elastic IP address so it’s reachable directly from the internet.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>A Network Load Balancer to provide RDP access to the RD Gateway instances.</p>
@@ -1033,156 +998,50 @@ AWS Cloud.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>*The template that deploys the Quick Start into an existing VPC skips the tasks marked by asterisks and prompts you for your existing VPC configuration.</p>
-</div>
-<div class="paragraph">
-<p>The Quick Start also installs a self-signed SSL certificate and configures RD CAP and RD RAP policies.</p>
+<p><span class="small">* The template that deploys this Partner Solution into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.</span></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_planning_the_deployment">Planning the deployment</h2>
+<h2 id="_deployment_options">Deployment options</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_specialized_knowledge">Specialized knowledge</h3>
 <div class="paragraph">
-<p>This deployment requires a moderate level of familiarity with
-AWS services. If you’re new to AWS, see <a href="https://aws.amazon.com/getting-started/" target="_blank" rel="noopener">Getting Started Resource Center</a>
-and <a href="https://aws.amazon.com/training/" target="_blank" rel="noopener">AWS Training and Certification</a>. These sites provide materials for learning how to design,
-deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
-</div>
-<div class="paragraph">
-<p>This Quick Start assumes familiarity with RD Gateway.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_aws_account">AWS account</h3>
-<div class="paragraph">
-<p>If you don’t already have an AWS account, create one at <a href="https://aws.amazon.com/" target="_blank" rel="noopener">https://aws.amazon.com</a> by following the on-screen instructions. Part of the sign-up process involves receiving a phone call and entering a PIN using the phone keypad.</p>
-</div>
-<div class="paragraph">
-<p>Your AWS account is automatically signed up for all AWS services. You are charged only for the services you use.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_technical_requirements">Technical requirements</h3>
-<div class="paragraph">
-<p>Before you launch the Quick Start, review the following information and ensure that your account is properly configured. Otherwise, deployment might fail.</p>
-</div>
-<div class="sect3">
-<h4 id="_resource_quotas">Resource quotas</h4>
-<div class="paragraph">
-<p>If necessary, request <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">service quota increases</a> for the following resources. You might need to request increases if your existing deployment currently uses these resources and if this Quick Start deployment could result in exceeding the default quotas. The <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">Service Quotas console</a> displays your usage and quotas for some aspects of some services. For more information, see <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html" target="_blank" rel="noopener">What is Service Quotas?</a> and <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html" target="_blank" rel="noopener">AWS service quotas</a>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Resource</th>
-<th class="tableblock halign-left valign-top">This deployment uses</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPCs</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Elastic IP addresses</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AWS Identity and Access Management (IAM) security groups</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IAM roles</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Auto Scaling groups</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EC2 instances</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1-4</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_supported_aws_regions">Supported AWS Regions</h4>
-<div class="paragraph">
-<p>For any Quick Start to work in a Region other than its default Region, all the services it deploys must be supported in that Region. You can launch a Quick Start in any Region and see if it works. If you get an error such as “Unrecognized resource type,” the Quick Start is not supported in that Region.</p>
-</div>
-<div class="paragraph">
-<p>For an up-to-date list of AWS Regions and the AWS services they support, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/" target="_blank" rel="noopener">AWS Regional Services</a>.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Certain Regions are available on an opt-in basis. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/rande-manage.html" target="_blank" rel="noopener">Managing AWS Regions</a>.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_iam_permissions">IAM permissions</h4>
-<div class="paragraph">
-<p>Before launching the Quick Start, you must sign in to the AWS Management Console with IAM permissions for the resources that the templates deploy. The <em>AdministratorAccess</em> managed policy within IAM provides sufficient permissions, although your organization may choose to use a custom policy with more restrictions. For more information, see <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html" target="_blank" rel="noopener">AWS managed policies for job functions</a>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_deployment_options">Deployment options</h4>
-<div class="paragraph">
-<p>This Quick Start provides three deployment options:</p>
+<p>This Partner Solution provides the following deployment options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Deploy RD Gateway into a new VPC (end-to-end deployment)</strong> This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, and other infrastructure components, and then deploys RD Gateway into this new VPC.</p>
+<p><a href="https://fwd.aws/66VB5?" target="_blank" rel="noopener">Deploy RD Gateway into a new VPC</a>. This option builds a new AWS environment that consists of the VPC, subnets, NAT gateways, security groups, bastion hosts, and other infrastructure components. It then deploys RD Gateway into this new VPC.</p>
 </li>
 <li>
-<p><strong>Deploy RD Gateway into an existing VPC</strong>. This option provisions standalone RD Gateway instances in your existing AWS infrastructure.</p>
+<p><a href="https://fwd.aws/QmmJN?" target="_blank" rel="noopener">Deploy RD Gateway into an existing VPC</a>. This option provisions RD Gateway in your existing AWS infrastructure.</p>
 </li>
 <li>
-<p><strong>Deploy domain-joined RD Gateway into an existing VPC.</strong> This is similar to the second option, except that it provides domain-joined RD Gateway instances in the existing VPC, and provides a few additional parameters for customizing this configuration.</p>
+<p><a href="https://fwd.aws/EwEqm?" target="_blank" rel="noopener">Deploy domain-joined RD Gateway into an existing VPC</a>. This is similar to the second option, except that it provides domain-joined RD Gateway instances in the existing VPC, and provides a few additional parameters for customizing this configuration.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The Quick Start provides separate templates for these three options. You can also configure CIDR blocks, instance types, and RD Gateway settings, as discussed later in the deployment steps.</p>
-</div>
-</div>
+<p>This Partner Solution provides separate templates for these options. It also lets you configure Classless Inter-Domain Routing (CIDR) blocks, instance types, and RD Gateway settings.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_deployment_steps">Deployment steps</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_sign_in_to_your_aws_account">Sign in to your AWS account</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Sign in to your AWS account at <a href="https://aws.amazon.com" class="bare">https://aws.amazon.com</a> with an IAM user role that has the necessary permissions. For details, see <a href="#_planning_the_deployment">Planning the deployment</a> earlier in this guide.</p>
+<p>Sign in to your AWS account, and launch this Partner Solution, as described under <a href="#_deployment_options">Deployment options</a>. The AWS CloudFormation console opens with a prepopulated template.</p>
 </li>
 <li>
-<p>Ensure that your AWS account is configured correctly, as discussed in the <a href="#_technical_requirements">Technical requirements</a> section.</p>
+<p>Choose the correct AWS Region, and then choose <strong>Next</strong>.</p>
 </li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_launch_the_quick_start">Launch the Quick Start</h3>
+<li>
+<p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1190,89 +1049,33 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using this Quick Start. For full details, see the pricing pages for each AWS service used by this Quick Start. Prices are subject to change.
+Unless you&#8217;re customizing the Partner Solution templates or are instructed otherwise in this guide&#8217;s <strong>Predeployment</strong> section, don&#8217;t change the default settings for the following parameters: <code>QSS3BucketName</code>, <code>QSS3BucketRegion</code>, and <code>QSS3KeyPrefix</code>. Changing the values of these parameters will modify code references that point to the Amazon Simple Storage Service (Amazon S3) bucket name and key prefix. For more information, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">AWS Partner Solutions Contributor&#8217;s Guide</a>.
 </td>
 </tr>
 </table>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
-<p>Sign in to your AWS account, and choose one of the following options to launch the AWS CloudFormation template. For help with choosing an option, see <a href="#_deployment_options">Deployment options</a> earlier in this guide.</p>
+<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select all of the check boxes to acknowledge that the template creates AWS Identity and Access Management (IAM)  resources that might require the ability to automatically expand macros.</p>
+</li>
+<li>
+<p>Choose <strong>Create stack</strong>. The stack takes about 20 minutes to deploy.</p>
+</li>
+<li>
+<p>Monitor the stack&#8217;s status, and when the status is <strong>CREATE_COMPLETE</strong>, the Remote Desktop Gateway deployment is ready.</p>
+</li>
+<li>
+<p>To view the created resources, choose the <strong>Outputs</strong> tab.</p>
 </li>
 </ol>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/66VB5" target="_blank" rel="noopener">Deploy Remote Desktop Gateway into a new VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-master.template" target="_blank" rel="noopener">View template</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/QmmJN" target="_blank" rel="noopener">Deploy a standalone Remote Desktop Gateway into an existing VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-standalone.template" target="_blank" rel="noopener">View template</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/EwEqm" target="_blank" rel="noopener">Deploy a domain-joined Remote Desktop Gateway into an existing VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway/blob/main/templates/rdgw-domain.template" target="_blank" rel="noopener">View template</a></p></td>
-</tr>
-</tbody>
-</table>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-If you deploy RD Gateway into an existing VPC, ensure that your VPC has two private subnets in different Availability Zones for the workload instances, and that the subnets aren’t shared. This Quick Start doesn’t support <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html" target="_blank" rel="noopener">shared subnets</a>. These subnets require <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html" target="_blank" rel="noopener">NAT gateways</a> in their route tables, to allow the instances to download packages and software without exposing them to the internet.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Also, ensure that the domain name option in the DHCP options is configured as explained in <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_DHCP_Options.html" target="_blank" rel="noopener">DHCP options sets</a>. You provide your VPC settings when you launch the Quick Start.</p>
-</div>
-<div class="paragraph">
-<p>Each deployment takes about 20 minutes to complete.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="2">
-<li>
-<p>Check the AWS Region that’s displayed in the upper-right corner of the navigation bar, and change it if necessary. This Region is where the network infrastructure for RD Gateway is built. The template is launched in the us-east-1 Region by default.</p>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="3">
-<li>
-<p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
-</li>
-<li>
-<p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>+</p>
-</div>
-<div class="paragraph">
-<p>+
-. On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.
-. On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources and might require the ability to automatically expand macros.
-. Choose <strong>Create stack</strong> to deploy the stack.
-. Monitor the status of the stack. When the status is <strong>CREATE_COMPLETE</strong>, the RD Gateway deployment is ready.
-. To view the created resources, see the values displayed in the <strong>Outputs</strong> tab for the stack.</p>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_post_deployment_steps">Post-deployment steps</h2>
+<h2 id="_postdeployment_steps">Postdeployment steps</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>After you launch the AWS CloudFormation template for one of the non-domain scenarios in the previous sections and build the stack, follow these steps to complete the configuration of your AWS environment:</p>
@@ -1283,7 +1086,7 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <p>Create security groups for your Windows-based instances that will be located in private VPC subnets. Create an ingress rule permitting TCP port 3389 from the RD Gateway security group, CIDR range, or IP address. Associate these groups with instances as they are launched into the private subnets.</p>
 </li>
 <li>
-<p>Make sure that your administrative clients can resolve the name for the RD Gateway endpoint (e.g., win-1a2b3c4d5e6.example.com). You can create an A (Host) record in DNS that maps the FQDN to the RD gateway’s Elastic IP or public IP address. For testing purposes, you can configure this mapping in the local host’s file on the machine.</p>
+<p>Make sure that your administrative clients can resolve the name for the RD Gateway endpoint (for example, win-1a2b3c4d5e6.example.com). You can create an A (Host) record in DNS that maps the FQDN to the RD Gateway’s Elastic IP or public IP address. For testing purposes, you can configure this mapping in the local host’s file on the machine.</p>
 </li>
 <li>
 <p>Configure administrative clients with the proper configuration settings. This includes installing the root certificate from each RD Gateway server on the client machines (see the next section for instructions). When you use the AWS CloudFormation templates, the default location for the root certificate will be c:\&lt;servername&gt;.cer on each RD Gateway server.</p>
@@ -1295,14 +1098,14 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <p>Make sure that instances in private subnets are associated with a security group containing ingress rules permitting the RD Gateway server IP address to connect via TCP port 3389.</p>
 </li>
 <li>
-<p>Configure the Remote Desktop connection for administrative clients, as described later in this section</p>
+<p>Configure the Remote Desktop connection for administrative clients, as described later in this section.</p>
 </li>
 </ol>
 </div>
 <div class="sect2">
 <h3 id="_steps_for_non_domain_joined_deployment">Steps for non-domain-joined deployment</h3>
 <div class="paragraph">
-<p>The Quick Start implements a self-signed certificate on the RD gateway intances. After deployment, you must install the root certificate on your administrative clients before you configure the RDP client to connect to your RD gateway instances. The root certificate will automatically be stored as c:\&lt;servername&gt;.cer.</p>
+<p>The Partner Solution implements a self-signed certificate on the RD Gateway intances. After deployment, you must install the root certificate on your administrative clients before you configure the RDP client to connect to your RD Gateway instances. The root certificate will automatically be stored as c:\&lt;servername&gt;.cer.</p>
 </div>
 <div class="paragraph">
 <p>To distribute this file to administrator workstations and install it, follow these steps:</p>
@@ -1340,10 +1143,10 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <p>Under <strong>Certificates (Local Computer)</strong>, expand <strong>Trusted Root Certification Authorities</strong>.</p>
 </li>
 <li>
-<p>Open the context (right-click) window for <strong>Certificates</strong>, and choose <strong>All Tasks &gt; Import</strong>.</p>
+<p>Open the context window (right-click) for <strong>Certificates</strong>, and choose <strong>All Tasks &gt; Import</strong>.</p>
 </li>
 <li>
-<p>Navigate to the root certificate (e.g., RDGW1.cer) to complete the installation.</p>
+<p>Navigate to the root certificate (for example, RDGW1.cer) to complete the installation.</p>
 </li>
 </ol>
 </div>
@@ -1354,32 +1157,10 @@ If you deploy RD Gateway into an existing VPC, ensure that your VPC has two priv
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gateway when deploying servers using the CloudFormation templates.
+The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD Gateway when deploying servers using the CloudFormation templates.
 </td>
 </tr>
 </table>
-</div>
-<div class="sect3">
-<h4 id="_add_hosts_entries_for_servers_in_private_subnets">Add HOSTS entries for servers in private subnets</h4>
-<div class="paragraph">
-<p>In order to utilize the Remote Desktop Gateway functionality in a non-domain environment, each Remote Desktop Gateway server must be able to resolve the hostnames of servers and workstations in the private subnets. To accomplish this, add the IP addresses and hostnames to each Remote Desktop Gateway&#8217;s HOSTS file.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open Notepad with administrative privileges.</p>
-</li>
-<li>
-<p>From the <strong>File</strong> menu, select <strong>Open</strong> and navigate to C:\Windows\System32\drivers\etc.</p>
-</li>
-<li>
-<p>Open the <strong>HOSTS</strong> file.</p>
-</li>
-<li>
-<p>Add entries for any internal resources to which you will be connecting.</p>
-</li>
-</ol>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -1427,10 +1208,10 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 <p>Under <strong>Certificates (Local Computer)</strong>, expand <strong>Personal</strong>.</p>
 </li>
 <li>
-<p>Open the context (right-click) window for <strong>Certificates</strong>, and choose <strong>All Tasks &gt; Import</strong>.</p>
+<p>Open the context window (right-click) for <strong>Certificates</strong>, and choose <strong>All Tasks &gt; Import</strong>.</p>
 </li>
 <li>
-<p>Navigate to the trusted certificate (e.g., test.example.com.cer) to complete the installation.</p>
+<p>Navigate to the trusted certificate (for example, test.example.com.cer) to complete the installation.</p>
 </li>
 </ol>
 </div>
@@ -1449,13 +1230,13 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 <p>Start the Remote Desktop Connection client.</p>
 </li>
 <li>
-<p>In the computer name field, type the name or IP address of the Windows instance you want to connect to. Keep in mind that this instance needs to be reachable only from the RD gateway, not from the client machine.</p>
+<p>In the computer name field, type the name or IP address of the Windows instance you want to connect to. Keep in mind that this instance needs to be reachable only from the RD Gateway, not from the client machine.</p>
 </li>
 </ol>
 </div>
 <div id="postdeploy1" class="imageblock">
 <div class="content">
-<img src="images/image21.png" alt="Post-deployment 1" width="50%">
+<img src="docs/deployment_guide/images/image21.png" alt="Post-deployment 1" width="50%">
 </div>
 <div class="title">Figure 2. The Remote Desktop Connection client</div>
 </div>
@@ -1465,13 +1246,13 @@ The root certificate will be stored as c:\&lt;servername&gt;.cer on each RD gate
 <p>Choose <strong>Show Options</strong>. On the <strong>Advanced</strong> tab, choose <strong>Settings</strong>.</p>
 </li>
 <li>
-<p>Choose <strong>Use these RD Gateway server settings</strong>. For server name, specify the FQDN of the RD gateway. If the RD gateway and the server you want to connect to are in the same domain, choose <strong>Use my RD Gateway credentials for the remote computer</strong>, and then choose <strong>OK</strong>.</p>
+<p>Choose <strong>Use these RD Gateway server settings</strong>. For server name, specify the FQDN of the RD Gateway. If the RD Gateway and the server you want to connect to are in the same domain, choose <strong>Use my RD Gateway credentials for the remote computer</strong>, and then choose <strong>OK</strong>.</p>
 </li>
 </ol>
 </div>
 <div id="postdeploy2" class="imageblock">
 <div class="content">
-<img src="images/image22.png" alt="Post-deployment 2" width="50%">
+<img src="docs/deployment_guide/images/image22.png" alt="Post-deployment 2" width="50%">
 </div>
 <div class="title">Figure 3. Advanced properties for the Remote Desktop Connection client</div>
 </div>
@@ -1490,21 +1271,21 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <div class="olist arabic">
 <ol class="arabic" start="5">
 <li>
-<p>Enter your credentials, and then choose <strong>OK</strong> to connect to the server. You can supply the same set of credentials for the RD gateway and the destination server, as shown. If your servers are not domain-joined, you will need to authenticate twice: once for the RD gateway and once for the destination server. If your servers aren’t domain-joined, when prompted for the RD Gateway server credentials, provide the <strong>Admin User Name</strong> and <strong>Admin Password</strong> credentials you set in when you launched the Quick Start. Check the <strong>Remember my credentials</strong> box. (Otherwise, if you’re connecting from a Windows computer, you’ll get prompted for your credentials repeatedly, and will be blocked from entering your remote computer credentials.)</p>
+<p>Enter your credentials, and then choose <strong>OK</strong> to connect to the server. You can supply the same set of credentials for the RD Gateway and the destination server, as shown. If your servers are not domain-joined, you will need to authenticate twice: once for the RD Gateway and once for the destination server. If your servers aren’t domain-joined, when prompted for the RD Gateway server credentials, provide the <strong>Admin User Name</strong> and <strong>Admin Password</strong> credentials you set in when you launched the Partner Solution. Check the <strong>Remember my credentials</strong> box. (Otherwise, if you’re connecting from a Windows computer, you’ll get prompted for your credentials repeatedly, and will be blocked from entering your remote computer credentials.)</p>
 </li>
 </ol>
 </div>
 <div id="postdeploy3" class="imageblock">
 <div class="content">
-<img src="images/image23.png" alt="Post-deployment 3" width="50%">
+<img src="docs/deployment_guide/images/image23.png" alt="Post-deployment 3" width="50%">
 </div>
-<div class="title">Figure 4. Providing credentials for the RD gateway and destination server</div>
+<div class="title">Figure 4. Providing credentials for the RD Gateway and destination server</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_run_windows_updates">Run Windows Updates</h3>
 <div class="paragraph">
-<p>In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.</p>
+<p>To ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1518,7 +1299,7 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <p>Open <strong>Update &amp; Security</strong>.</p>
 </li>
 <li>
-<p>Click <strong>Check for updates</strong>.</p>
+<p>Choose <strong>Check for updates</strong>.</p>
 </li>
 <li>
 <p>Install any updates and reboot if necessary.</p>
@@ -1549,7 +1330,7 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <p>Amazon VPC lets you provision a private, isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. With Amazon VPC, you can define a virtual network topology closely resembling a traditional network that you might operate on your own premises. You have complete control over your virtual networking environment, including selection of your own IP address range, creation of subnets, and configuration of route tables and network gateways.</p>
 </div>
 <div class="paragraph">
-<p>When deploying a Windows-based architecture on the AWS Cloud, we recommend an VPC configuration that supports the following requirements:</p>
+<p>When deploying a Windows-based architecture on the AWS Cloud, we recommend a VPC configuration that supports the following requirements:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1563,27 +1344,27 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <p>Internal application servers and other non-internet facing servers should be placed in private subnets to prevent direct access to these instances from the internet.</p>
 </li>
 <li>
-<p>RD gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.</p>
+<p>RD Gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>This Quick Start supports these best practices, as illustrated earlier in this guide. For details on the VPC design used in this Quick Start, see the <a href="https://fwd.aws/9VdxN">Quick Start for building a modular and scalable virtual network architecture with Amazon VPC</a>.</p>
+<p>This Partner Solution supports these best practices, as illustrated earlier in this guide. For details on the VPC design used in this Partner Solution, see the <a href="https://fwd.aws/9VdxN">Quick Start for building a modular and scalable virtual network architecture with Amazon VPC</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_network_access_control_lists">Network Access Control Lists</h3>
 <div class="paragraph">
-<p>A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based on IP protocol, service port, or source or destination IP address. Figure 3 shows the default ACL configuration for a VPC subnet. This configuration is used for the subnets in the Quick Start architecture.</p>
+<p>A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based on IP protocol, service port, or source or destination IP address. Figure 3 shows the default ACL configuration for a VPC subnet. This configuration is used for the subnets in the Partner Solution architecture.</p>
 </div>
 <div id="additional1" class="imageblock">
 <div class="content">
-<img src="images/image3.png" alt="image" width="543" height="255">
+<img src="docs/deployment_guide/images/image3.png" alt="image" width="543" height="255">
 </div>
 <div class="title">Figure 5. Default network ACL configuration for a VPC subnet</div>
 </div>
 <div class="paragraph">
-<p>You may choose to keep the default network ACL configuration, or you may choose to lock it down with more specific rules to restrict traffic between subnets at the network level. For example, you could set a rule that would allow inbound administrative traffic on TCP port 3389 from a specific set of IP addresses. In either case, you’ll also need to implement security group rules to permit access from users connecting to RD gateways and between tiered groups of EC2 instances.</p>
+<p>You may choose to keep the default network ACL configuration, or you may choose to lock it down with more specific rules to restrict traffic between subnets at the network level. For example, you could set a rule that would allow inbound administrative traffic on TCP port 3389 from a specific set of IP addresses. In either case, you’ll also need to implement security group rules to permit access from users connecting to RD Gateways and between tiered groups of EC2 instances.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1593,43 +1374,43 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 </div>
 <div id="additional2" class="imageblock">
 <div class="content">
-<img src="images/image2.png" alt="image" width="648" height="336">
+<img src="docs/deployment_guide/images/image2.png" alt="image" width="648" height="336">
 </div>
 <div class="title">Figure 6. Security groups for RD Gateway administrative access</div>
 </div>
 <div class="paragraph">
-<p>Notice that inbound connections from the internet are only permitted over TCP port 443 to the RD gateways. The RD gateways have an Elastic IP address assigned and have direct access to the internet. The remaining Windows instances are deployed into private subnets and are assigned private IP addresses only. Security group rules allow only the RD gateways to initiate inbound connections for remote administration to TCP port 3389 for instances in the private subnets.</p>
+<p>Notice that inbound connections from the internet are only permitted over TCP port 443 to the RD gateways. The RD Gateways have an Elastic IP address assigned and have direct access to the internet. The remaining Windows instances are deployed into private subnets and are assigned private IP addresses only. Security group rules allow only the RD Gateways to initiate inbound connections for remote administration to TCP port 3389 for instances in the private subnets.</p>
 </div>
 <div class="paragraph">
-<p>In this architecture, RDP connections are established over HTTPS to the RD gateway and proxied to backend instances on the standard RDP TCP port 3389. This configuration helps you reduce the attack surface on your Windows-based instances while allowing administrators to establish connections to all your instances through a single gateway.</p>
+<p>In this architecture, RDP connections are established over HTTPS to the RD Gateway and proxied to backend instances on the standard RDP TCP port 3389. This configuration helps you reduce the attack surface on your Windows-based instances while allowing administrators to establish connections to all your instances through a single gateway.</p>
 </div>
 <div class="paragraph">
-<p>It’s possible to provide remote administrative access to all your Windows-based instances through one RD gateway, but we recommend placing gateways in each Availability Zone for redundancy. The Quick Start implements this best practice, as illustrated in Figure 5.</p>
+<p>It’s possible to provide remote administrative access to all your Windows-based instances through one RD Gateway, but we recommend placing gateways in each Availability Zone for redundancy. The Partner Solution implements this best practice, as illustrated in Figure 5.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_initial_remote_administration_architecture">Initial Remote Administration Architecture</h3>
 <div class="paragraph">
-<p>In an initial RD gateway configuration, the servers in the public subnet will need an inbound security group rule permitting TCP port 3389 from the administrator’s source IP address or subnet. Windows instances sitting behind the RD Gateway in a private subnet will be in their own isolated tier. For example, a group of web server instances in a private subnet may be associated with their own web tier security group. This security group will need an inbound rule allowing connections from the RD Gateway on TCP port 3389.</p>
+<p>In an initial RD Gateway configuration, the servers in the public subnet will need an inbound security group rule permitting TCP port 3389 from the administrator’s source IP address or subnet. Windows instances sitting behind the RD Gateway in a private subnet will be in their own isolated tier. For example, a group of web server instances in a private subnet may be associated with their own web tier security group. This security group will need an inbound rule allowing connections from the RD Gateway on TCP port 3389.</p>
 </div>
 <div class="paragraph">
-<p>Using this architecture, an administrator can use a traditional RDP connection to an RD gateway to configure the local server. The RD gateway can also be used as a jump box; that is, when an RDP connection is established to the desktop of the RD gateway, an administrator can start a new RDP client session to initiate a connection to an instance in a private subnet, as illustrated in Figure 1.</p>
+<p>Using this architecture, an administrator can use a traditional RDP connection to an RD Gateway to configure the local server. The RD Gateway can also be used as a jump box; that is, when an RDP connection is established to the desktop of the RD Gateway, an administrator can start a new RDP client session to initiate a connection to an instance in a private subnet, as illustrated in Figure 1.</p>
 </div>
 <div id="additional4" class="imageblock">
 <div class="content">
-<img src="images/image1.png" alt="image" width="739" height="384">
+<img src="docs/deployment_guide/images/image1.png" alt="image" width="739" height="384">
 </div>
 <div class="title">Figure 7. Initial architecture for remote administration</div>
 </div>
 <div class="paragraph">
-<p>Although this architecture works well for initial administration, it is not recommended for the long term. To further secure connections and reduce the number of RDP sessions required to administer the servers in the private subnets, the inbound rule should be changed to permit TCP port 443, and the RD gateway service should be installed and configured with an SSL certificate, and connection and authorization policies.</p>
+<p>Although this architecture works well for initial administration, it is not recommended for the long term. To further secure connections and reduce the number of RDP sessions required to administer the servers in the private subnets, the inbound rule should be changed to permit TCP port 443, and the RD Gateway service should be installed and configured with an SSL certificate, and connection and authorization policies.</p>
 </div>
 <div class="paragraph">
-<p>The Quick Start sets up a standard TCP port 3389 connection from the administrator’s IP address. You’ll need to follow the <a href="https://aws-quickstart.github.io/quickstart-microsoft-rdgateway/#_post_deployment_steps">post-deployment steps</a> to modify the security group for RD Gateway to use a single inbound rule permitting TCP port 443, as illustrated in Figure 2. This modification will allow a Transport Layer Security (TLS) encrypted RDP connection to be proxied through the gateway over TCP port 443 directly to one or more Windows-based instances in private subnets on TCP port 3389. This configuration increases the security of the connection and also prevents the need to initiate an RDP session to the desktop of the RD gateway.</p>
+<p>The Partner Solution sets up a standard TCP port 3389 connection from the administrator’s IP address. You’ll need to follow the <a href="https://aws-quickstart.github.io/quickstart-microsoft-rdgateway/#_post_deployment_steps">post-deployment steps</a> to modify the security group for RD Gateway to use a single inbound rule permitting TCP port 443, as illustrated in Figure 2. This modification will allow a Transport Layer Security (TLS) encrypted RDP connection to be proxied through the gateway over TCP port 443 directly to one or more Windows-based instances in private subnets on TCP port 3389. This configuration increases the security of the connection and also prevents the need to initiate an RDP session to the desktop of the RD Gateway.</p>
 </div>
 <div id="additional5" class="imageblock">
 <div class="content">
-<img src="images/image2.png" alt="image" width="648" height="336">
+<img src="docs/deployment_guide/images/image2.png" alt="image" width="648" height="336">
 </div>
 <div class="title">Figure 8. Architecture for RD Gateway administrative access</div>
 </div>
@@ -1637,7 +1418,7 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <div class="sect2">
 <h3 id="ssl-certificates">SSL Certificates</h3>
 <div class="paragraph">
-<p>The RD Gateway role uses Transport Layer Security (TLS) to encrypt communications over the internet between administrators and gateway servers. To support TLS, a valid X.509 SSL certificate must be installed on each RD gateway. Certificates can be acquired in a number of ways, including:</p>
+<p>The RD Gateway role uses Transport Layer Security (TLS) to encrypt communications over the internet between administrators and gateway servers. To support TLS, a valid X.509 SSL certificate must be installed on each RD Gateway. Certificates can be acquired in a number of ways, including:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1653,13 +1434,13 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 </ul>
 </div>
 <div class="paragraph">
-<p>For smaller test environments, implementing a self-signed certificate is a straightforward process that helps you get up and running quickly. This Quick Start automatically generates a self-signed certificate for RD Gateway.</p>
+<p>For smaller test environments, implementing a self-signed certificate is a straightforward process that helps you get up and running quickly. This Partner Solution automatically generates a self-signed certificate for RD Gateway.</p>
 </div>
 <div class="paragraph">
 <p>However, if you have a large number of varying administrative devices that need to establish a connection to your gateways, we recommend using a public certificate.</p>
 </div>
 <div class="paragraph">
-<p>In order for an RDP client to establish a secure connection with an RD gateway, the following certificate and DNS requirements must be met:</p>
+<p>For an RDP client to establish a secure connection with an RD Gateway, the following certificate and DNS requirements must be met:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1681,7 +1462,7 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <div class="sect2">
 <h3 id="connection-and-resource-authorization-policies">Connection and Resource Authorization Policies</h3>
 <div class="paragraph">
-<p>Users must meet specific requirements in order to connect to RD Gateway instances:</p>
+<p>Users must meet specific requirements to connect to RD Gateway instances:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1694,31 +1475,16 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 </ul>
 </div>
 <div class="paragraph">
-<p>This Quick Start automatically sets up connection and resource authorization policies.</p>
+<p>This Partner Solution automatically sets up connection and resource authorization policies.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_faq">FAQ</h2>
+<h2 id="_troubleshooting">Troubleshooting</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Q.</strong> I encountered a <strong>CREATE_FAILED</strong> error when I launched the Quick Start.</p>
-</div>
-<div class="paragraph">
-<p><strong>A.</strong> If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with <strong>Rollback on failure</strong> set to <strong>No</strong>. (This setting is under <strong>Advanced</strong> in the AWS CloudFormation console, <strong>Options</strong> page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)</p>
-</div>
-<div class="paragraph">
-<p><strong>Important:</strong> When you set <strong>Rollback on failure</strong> to <strong>No</strong>, you continue to incur AWS charges for this stack. Be sure to delete the stack when you finish troubleshooting.</p>
-</div>
-<div class="paragraph">
-<p>For additional information, see <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html">Troubleshooting AWS CloudFormation</a> on the AWS website.</p>
-</div>
-<div class="paragraph">
-<p><strong>Q.</strong> I encountered a size limitation error when I deployed the AWS CloudFormation templates.</p>
-</div>
-<div class="paragraph">
-<p><strong>A.</strong> Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html">AWS CloudFormation quotas</a> in the AWS documentation.</p>
+<p>For troubleshooting common Partner Solution issues, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Partner Solution General Information Guide</a> and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html" target="_blank" rel="noopener">Troubleshooting CloudFormation</a>.</p>
 </div>
 </div>
 </div>
@@ -1726,70 +1492,53 @@ The FQDN server name of the RD Gateway host must match the certificate and the D
 <h2 id="_customer_responsibility">Customer responsibility</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After you successfully deploy this Quick Start, confirm that your resources and services are updated and configured — including any required patches — to meet your security and other needs. For more information, see the <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">AWS Shared Responsibility Model</a>.</p>
+<p>After you deploy a Partner Solution, confirm that your resources and services are updated and configured—including any required patches—to meet your security and other needs. For more information, refer to the <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">Shared Responsibility Model</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_parameter_reference">Parameter reference</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Unless you are customizing the Quick Start templates for your own deployment projects, keep the default settings for the parameters labeled <strong>Quick Start S3 bucket name</strong>, <strong>Quick Start S3 bucket Region</strong>, and <strong>Quick Start S3 key prefix</strong>. Changing these parameter settings automatically updates code references to point to a new Quick Start location. For more information, see the <a href="https://aws-quickstart.github.io/option1.html" target="_blank" rel="noopener">AWS Quick Start Contributor’s Guide</a>.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_send_us_feedback">Send us feedback</h2>
+<h2 id="_feedback">Feedback</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To post feedback, submit feature ideas, or report bugs, use the <strong>Issues</strong> section of the <a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway" target="_blank" rel="noopener">GitHub repository</a> for this Quick Start. To submit code, see the <a href="https://aws-quickstart.github.io/" target="_blank" rel="noopener">Quick Start Contributor’s Guide</a>.</p>
+<p>To submit feature ideas and report bugs, use the <strong>Issues</strong> section of the <a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway" target="_blank" rel="noopener">GitHub repository</a> for this Partner Solution. To submit code, refer to the <a href="https://fwd.aws/NwqYA?" target="_blank" rel="noopener">Partner Solution Contributor&#8217;s Guide</a>. To submit feedback on this deployment guide, use the following GitHub links:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway/issues/new?labels=documentation,grammar+or+spelling&amp;title=Deployment+guide+feedback&amp;body=Section+heading:%0ADocumentation+issue+description:%0A" target="_blank" rel="noopener">Grammar or spelling</a></p>
+</li>
+<li>
+<p><a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway/issues/new?labels=documentation,broken+link&amp;title=Deployment+guide+feedback&amp;body=Section+heading:%0ADocumentation+issue+description:%0A" target="_blank" rel="noopener">Broken link</a></p>
+</li>
+<li>
+<p><a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway/issues/new?labels=documentation,inaccurate+content&amp;title=Deployment+guide+feedback&amp;body=Section+heading:%0ADocumentation+issue+description:%0A" target="_blank" rel="noopener">Inaccurate content</a></p>
+</li>
+<li>
+<p><a href="https://github.com/{partner-solution-github-org}/partner-solution-microsoft-rdgateway/issues/new?labels=documentation,display+and+design&amp;title=Deployment+guide+feedback&amp;body=Section+heading:%0ADocumentation+issue+description:%0A" target="_blank" rel="noopener">Display or design</a></p>
+</li>
+</ul>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_quick_start_reference_deployments">Quick Start reference deployments</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>See the <a href="https://aws.amazon.com/quickstart/" target="_blank" rel="noopener">AWS Quick Start home page</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_github_repository">GitHub repository</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Visit our <a href="https://github.com/aws-quickstart/quickstart-microsoft-rdgateway" target="_blank" rel="noopener">GitHub repository</a> to download
-the templates and scripts for this Quick Start, to post your comments,
-and to share your customizations with others.</p>
-</div>
-<hr>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_notices">Notices</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document is provided for informational purposes only. It represents AWS’s current product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of AWS’s products or services, each of which is provided “as is” without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from AWS, its affiliates, suppliers, or licensors. The responsibilities and liabilities of AWS to its customers are controlled by AWS agreements, and this document is not part of, nor does it modify, any agreement between AWS and its customers.</p>
+<p>This document is provided for informational purposes only. It represents current AWS product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of AWS products or services, each of which is provided "as is" without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from AWS, its affiliates, suppliers, or licensors. The responsibilities and liabilities of AWS to its customers are controlled by AWS agreements, and this document is not part of, nor does it modify, any agreement between AWS and its customers.</p>
 </div>
 <div class="paragraph">
-<p>The software included with this paper is licensed under the Apache License, version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at <a href="http://aws.amazon.com/apache2.0/" target="_blank" rel="noopener">http://aws.amazon.com/apache2.0/</a> or in the accompanying "license" file. This code is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied. See the License for specific language governing permissions and limitations.</p>
+<p>The software included with this paper is licensed under the Apache License, version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at <a href="https://aws.amazon.com/apache2.0/" target="_blank" rel="noopener">https://aws.amazon.com/apache2.0/</a> or in the accompanying "license" file. This code is distributed on an "as is" basis, without warranties or conditions of any kind, either expressed or implied. Refer to the License for specific language governing permissions and limitations.</p>
 </div>
 </div>
 </div>
 </div>
-<p class="footer-text">
-<!-- We can use document attributes: -->
-<!-- Generated with Asciidoctor v2.0.15. -->
-<a href="https://aws.amazon.com/privacy/">Privacy</a> | <a href="https://aws.amazon.com/terms/">Site terms</a> | &copy; 2022, Amazon Web Services, Inc. or its affiliates and Microsoft. All rights reserved.
-</p>
+<footer>
+    <p class="footer-text">
+        <!-- We can use document attributes: -->
+        <!-- Generated with Asciidoctor v2.0.16. -->
+        <a href="https://aws.amazon.com/privacy/">Privacy</a> | <a href="https://aws.amazon.com/terms/">Site terms</a> |
+        &copy; 2023, Amazon Web Services, Inc. or its affiliates and Microsoft. All rights reserved.
+    </p>
+</footer>
 </body>
 </html>
