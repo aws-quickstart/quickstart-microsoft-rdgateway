@@ -6,3 +6,5 @@
 	path = submodules/quickstart-microsoft-utilities
 	url = ../../aws-quickstart/quickstart-microsoft-utilities.git
 	branch = main
+[submodule "docs/boilerplate"]
+	path = docs/boilerplate
